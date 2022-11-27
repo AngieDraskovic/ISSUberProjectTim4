@@ -16,7 +16,8 @@ public class User {
     private String address;
     private String password;
 
-    public User(String name, String surname, String imgPath, String phone, String email, String address, String password){
+    public User(Long id, String name, String surname, String imgPath, String phone, String email, String address, String password){
+        this.id = id;
         this.name = name;
         this.surname = surname;
         this.imgPath = imgPath;
@@ -25,5 +26,6 @@ public class User {
         this.address = address;
         this.password = password;
     }
+
 
 }

@@ -13,7 +13,7 @@ public class PassengerServiceImpl implements PassengerService {
     @Autowired
     private InMemoryPassengerRepository passengerRepository;
 
-    @Overridegit 
+    @Override
     public Collection<Passenger> findAll() {
         return passengerRepository.findAll();
     }
