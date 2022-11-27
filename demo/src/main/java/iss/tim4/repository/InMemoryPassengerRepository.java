@@ -16,8 +16,8 @@ public class InMemoryPassengerRepository implements PassengerRepository{
 
     @Override
     public Collection<Passenger> findAll() {
-        passengers.put(1L, new Passenger("Ana", "Draskovic", "image", "aa", "aa", "a", "a"));
-        passengers.put(3L, new Passenger("Ananas", "Draskovic", "image", "aa", "aa", "a", "a"));
+        passengers.put(1L, new Passenger("Isidora", "Tadic", "image", "aa", "aa", "a", "a"));
+        passengers.put(3L, new Passenger("Igor", "Milosevic", "image", "aa", "aa", "a", "a"));
         return this.passengers.values();
     }
 
