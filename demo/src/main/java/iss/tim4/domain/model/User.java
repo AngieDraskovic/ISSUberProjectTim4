@@ -13,8 +13,8 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Passenger {
-
+@Table(name = "users")
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -49,35 +49,21 @@ public class Passenger {
     @Column(name = "active", nullable = false)
     private String active;
 
-    /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
-    *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */
-    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"))
+    @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<Ride> rides = new HashSet<Ride>();
+    private Set<Remark> remarks = new HashSet<Remark>();
 
-    /* Unidirekciona veza putnika i njegovih omiljenih ruta. U tabeli FavouriteRoute se cuva id putnika. */
-    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "passenger_id")
-    @ToString.Exclude
-    private Set<Route> favouriteRoutes = new HashSet<Route>();
-
-    public void addRide(Ride ride) {
-        rides.add(ride);
-        ride.getPassengers().add(this);
+    public void addRemark(Remark remark){
+        remarks.add(remark);
+        remark.setUser(this);
     }
-
-    public void addFavouriteRoute(Route route){
-        favouriteRoutes.add(route);
-    }
-
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Passenger that = (Passenger) o;
-        return id != null && Objects.equals(id, that.id);
+        User user = (User) o;
+        return id != null && Objects.equals(id, user.id);
     }
 
     @Override

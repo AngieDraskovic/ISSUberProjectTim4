@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.util.Locale;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Getter
@@ -12,29 +12,32 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Route {
+public class Rejection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "start_location_id", referencedColumnName = "id")
-    private Location startLocation;
+    @OneToOne(mappedBy = "rejection")
+    private Ride ride;
+
+    @Column(name = "reason", nullable = false)
+    private String reason;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "end_location_id", referencedColumnName = "id")
-    private Location endLocation;
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 
-    @Column(name = "kilometers", nullable = false)
-    private Double kilometers;
+    @Column(name = "time", nullable = false)
+    private LocalDateTime time;
+
 
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Route route = (Route) o;
-        return id != null && Objects.equals(id, route.id);
+        Rejection rejection = (Rejection) o;
+        return id != null && Objects.equals(id, rejection.id);
     }
 
     @Override

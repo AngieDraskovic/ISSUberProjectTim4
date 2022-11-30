@@ -1,9 +1,11 @@
 package iss.tim4.domain.model;
 
+import iss.tim4.domain.RideStatus;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -19,18 +21,71 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "start_time", nullable = false)
+    private LocalDateTime startTime;
+
+    @Column(name = "end_time", nullable = false)
+    private LocalDateTime endTime;
+
+    @Column(name = "price", nullable = false)
+    private Double price;
+
+    @Column(name = "estimated_time", nullable = false)
+    private Double estimatedTime;
+
+    @Column(name = "status", nullable = false)
+    private RideStatus rideStatus;
+
+    @Column(name = "panic", nullable = false)
+    private Boolean panic;
+
+    @Column(name = "babies", nullable = false)
+    private Boolean babyProof;
+
+    @Column(name = "pets", nullable = false)
+    private Boolean pets;
+
+
+
 
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"))
     @ToString.Exclude
     private Set<Passenger> passengers = new HashSet<Passenger>();
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id")
+    @ToString.Exclude
     private Driver driver;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "route_id", referencedColumnName = "id")
+    private Route route;
 
-    @Override
+    @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<Review> reviews = new HashSet<Review>();
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "rejection_id", referencedColumnName = "id")
+    private Rejection rejection;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "vehicle_type", referencedColumnName = "id")
+    private VehicleType vehicleType;
+
+
+    public void addPassenger(Passenger passenger) {
+        passengers.add(passenger);
+        passenger.getRides().add(this);
+    }
+
+    public void addReview(Review review){
+        reviews.add(review);
+        review.setRide(this);
+    }
+
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;

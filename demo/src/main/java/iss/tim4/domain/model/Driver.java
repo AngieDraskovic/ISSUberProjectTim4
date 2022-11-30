@@ -50,14 +50,31 @@ public class Driver {
     private String active;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<DriverDocument> documents = new HashSet<DriverDocument>();
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
     private Set<Ride> rides = new HashSet<Ride>();
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     private Vehicle vehicle;
+
+    public void addDocument(DriverDocument document){
+        documents.add(document);
+        document.setDriver(this);
+    }
+
+    public void addRide(Ride ride) {
+        rides.add(ride);
+        ride.setDriver(this);
+    }
+
+    public void setVehicle(Vehicle vehicle) {
+        this.vehicle = vehicle;
+        vehicle.setDriver(this);
+    }
 
     @Override
     public boolean equals(Object o) {
