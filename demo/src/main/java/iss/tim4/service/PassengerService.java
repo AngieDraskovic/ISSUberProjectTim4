@@ -1,18 +1,18 @@
 package iss.tim4.service;
 
-import iss.tim4.domain.Passenger;
+import iss.tim4.domain.dto.PassengerDTO;
 
 import java.util.Collection;
 
 public interface PassengerService {
 
-    Collection<Passenger> findAll();
+    Collection<PassengerDTO> findAll();
 
-    Passenger findOne(Long id);
+    PassengerDTO findOne(Long id);
 
-    Passenger create(Passenger user) throws Exception;
+    PassengerDTO create(PassengerDTO user) throws Exception;
 
-    Passenger update(Passenger user) throws Exception;
+    PassengerDTO update(PassengerDTO user) throws Exception;
 
     void delete(Long id);
 }

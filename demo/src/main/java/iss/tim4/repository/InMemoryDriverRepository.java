@@ -1,6 +1,6 @@
 package iss.tim4.repository;
 
-import iss.tim4.domain.Driver;
+import iss.tim4.domain.dto.DriverDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -12,17 +12,17 @@ import java.util.concurrent.atomic.AtomicLong;
 public class InMemoryDriverRepository implements DriverRepository {
     private static AtomicLong counter = new AtomicLong();
 
-    private final ConcurrentMap<Long, Driver> drivers = new ConcurrentHashMap<Long, Driver>();
+    private final ConcurrentMap<Long, DriverDTO> drivers = new ConcurrentHashMap<Long, DriverDTO>();
 
     @Override
-    public Collection<Driver> findAll() {
-        drivers.put(4L, new Driver(4L,"Ana", "Draskovic", "image", "0654233234", "a@gmail.com", "Majke Jugoiva 9", "xq"));
-        drivers.put(6L, new Driver(6L,"Milica", "Simic", "image", "065243243", "y@gmail.com", "Trg Slobode 5", "yt"));
+    public Collection<DriverDTO> findAll() {
+        drivers.put(4L, new DriverDTO(4L,"Ana", "Draskovic", "image", "0654233234", "a@gmail.com", "Majke Jugoiva 9", "xq"));
+        drivers.put(6L, new DriverDTO(6L,"Milica", "Simic", "image", "065243243", "y@gmail.com", "Trg Slobode 5", "yt"));
         return this.drivers.values();
     }
 
     @Override
-    public Driver create(Driver user) {
+    public DriverDTO create(DriverDTO user) {
         Long id = user.getId();
 
         if (id == null) {
@@ -35,7 +35,7 @@ public class InMemoryDriverRepository implements DriverRepository {
     }
 
     @Override
-    public Driver findOne(Long id) {
+    public DriverDTO findOne(Long id) {
         return this.drivers.get(id);
     }
 
@@ -45,7 +45,7 @@ public class InMemoryDriverRepository implements DriverRepository {
     }
 
     @Override
-    public Driver update(Driver driver) {
+    public DriverDTO update(DriverDTO driver) {
         Long id = driver.getId();
 
         if (id != null) {

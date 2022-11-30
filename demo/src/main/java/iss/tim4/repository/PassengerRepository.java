@@ -1,18 +1,18 @@
 package iss.tim4.repository;
 
-import iss.tim4.domain.Passenger;
-import iss.tim4.domain.User;
+import iss.tim4.domain.dto.PassengerDTO;
+import iss.tim4.domain.dto.UserDTO;
 
 import java.util.Collection;
 
 public interface PassengerRepository {
-    Collection<Passenger> findAll();
+    Collection<PassengerDTO> findAll();
 
-    User create(Passenger passenger);
+    UserDTO create(PassengerDTO passenger);
 
-    User findOne(Long id);
+    UserDTO findOne(Long id);
 
-    User update(Passenger passenger);
+    UserDTO update(PassengerDTO passenger);
 
     void delete(Long id);
 

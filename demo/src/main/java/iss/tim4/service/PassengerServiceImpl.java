@@ -1,6 +1,6 @@
 package iss.tim4.service;
 
-import iss.tim4.domain.Passenger;
+import iss.tim4.domain.dto.PassengerDTO;
 import iss.tim4.repository.InMemoryPassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +14,17 @@ public class PassengerServiceImpl implements PassengerService {
     private InMemoryPassengerRepository passengerRepository;
 
     @Override
-    public Collection<Passenger> findAll() {
+    public Collection<PassengerDTO> findAll() {
         return passengerRepository.findAll();
     }
 
     @Override
-    public Passenger findOne(Long id) {
+    public PassengerDTO findOne(Long id) {
         return passengerRepository.findOne(id);
     }
 
     @Override
-    public Passenger create(Passenger passenger) throws Exception {
+    public PassengerDTO create(PassengerDTO passenger) throws Exception {
         if (passenger.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
@@ -32,8 +32,8 @@ public class PassengerServiceImpl implements PassengerService {
     }
 
     @Override
-    public Passenger update(Passenger passenger) throws Exception {
-        Passenger passengerToUpdate = findOne(passenger.getId());
+    public PassengerDTO update(PassengerDTO passenger) throws Exception {
+        PassengerDTO passengerToUpdate = findOne(passenger.getId());
         if (passengerToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
