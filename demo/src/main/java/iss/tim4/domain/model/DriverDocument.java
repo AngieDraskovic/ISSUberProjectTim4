@@ -21,7 +21,7 @@ public class DriverDocument {
     private String name;
 
     @Column(name = "img_path")
-    private String img_path;
+    private String imgPath;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "driver_id")

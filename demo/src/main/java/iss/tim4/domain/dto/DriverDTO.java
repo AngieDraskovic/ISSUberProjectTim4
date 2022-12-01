@@ -1,9 +1,39 @@
 package iss.tim4.domain.dto;
 
-public class DriverDTO extends UserDTO {
+import iss.tim4.domain.model.Driver;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-    public DriverDTO(Long id, String name, String surname, String imgPath, String phone, String email, String address, String password) {
-        super(id , name, surname, imgPath, phone, email, address, password);
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class DriverDTO {
+
+    private Long id;
+    private String name;
+    private String surname;
+    private String imgPath;
+    private String phone;
+    private String email;
+    private String address;
+    private String password;
+    private boolean blocked;
+    private boolean active;
+    private VehicleDTO vehicle;
+
+    public DriverDTO(Driver driver) {
+        this.id = driver.getId();
+        this.name = driver.getName();
+        this.surname = driver.getSurname();
+        this.email = driver.getEmail();
+        this.imgPath = driver.getImgPath();
+        this.phone = driver.getPhone();
+        this.address = driver.getAddress();
+        this.password = driver.getPassword();
+        this.blocked = driver.getBlocked();
+        this.active = driver.getActive();
+        this.vehicle = new VehicleDTO(driver.getVehicle());
     }
 
     public void copyValues(DriverDTO driver) {

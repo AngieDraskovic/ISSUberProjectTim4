@@ -47,7 +47,7 @@ public class Driver {
     nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
      */
     @Column(name = "active", nullable = false)
-    private String active;
+    private Boolean active;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude

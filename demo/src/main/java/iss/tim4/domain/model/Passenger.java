@@ -47,7 +47,7 @@ public class Passenger {
        nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
      */
     @Column(name = "active", nullable = false)
-    private String active;
+    private Boolean active;
 
     /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
     *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */
