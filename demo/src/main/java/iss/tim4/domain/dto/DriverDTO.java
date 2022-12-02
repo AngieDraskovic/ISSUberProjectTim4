@@ -13,8 +13,8 @@ public class DriverDTO {
     private Long id;
     private String name;
     private String surname;
-    private String imgPath;
-    private String phone;
+    private String profilePicture;
+    private String telephoneNumber;
     private String email;
     private String address;
     private String password;
@@ -27,8 +27,8 @@ public class DriverDTO {
         this.name = driver.getName();
         this.surname = driver.getSurname();
         this.email = driver.getEmail();
-        this.imgPath = driver.getImgPath();
-        this.phone = driver.getPhone();
+        this.profilePicture = driver.getProfilePicture();
+        this.telephoneNumber = driver.getTelephoneNumber();
         this.address = driver.getAddress();
         this.password = driver.getPassword();
         this.blocked = driver.getBlocked();

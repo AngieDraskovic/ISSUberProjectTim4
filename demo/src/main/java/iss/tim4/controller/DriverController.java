@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/api/vozac")
+@RequestMapping("/api/driver")
 @AllArgsConstructor
 public class DriverController {
     @Autowired

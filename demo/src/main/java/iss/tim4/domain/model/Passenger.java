@@ -25,11 +25,11 @@ public class Passenger {
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "img_path")  // nullable=true (default value)
-    private String imgPath;
+    @Column(name = "profilePicture")  // nullable=true (default value)
+    private String profilePicture;
 
-    @Column(name = "phone", unique = true, nullable = false)
-    private String phone;
+    @Column(name = "telephoneNumber", unique = true, nullable = false)
+    private String telephoneNumber;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;

@@ -31,12 +31,12 @@ public class RideDTO {
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
         this.driver = new DriverDTO(ride.getDriver());
-        this.estimatedTime = ride.getEstimatedTime();
-        this.rideStatus = ride.getRideStatus();
+        this.estimatedTime = ride.getEstimatedTimeInMinutes();
+        this.rideStatus = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());
         this.panic = ride.getPanic();
         this.babyProof = ride.getBabyProof();
-        this.pets = ride.getPets();
+        this.pets = ride.getPetTransport();
         this.vehicleType = new VehicleTypeDTO(ride.getVehicleType());
     }
 

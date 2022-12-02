@@ -12,14 +12,14 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 
 @RestController
-@RequestMapping("/api/putnik")
+@RequestMapping("/api/passenger")
 @AllArgsConstructor
 public class PassengerControlller {
 
     @Autowired
     private PassengerService passengerService;
 
-    // get all
+    // get all - /api/passenger
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Collection<PassengerDTO>> getPassengers() {
         Collection<PassengerDTO> passengers = passengerService.findAll();
@@ -27,7 +27,7 @@ public class PassengerControlller {
     }
 
 
-    // get by id
+    // get by id - /api/passenger/1
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PassengerDTO> getPassenger(@PathVariable("id") Long id) {
         PassengerDTO passenger = passengerService.findOne(id);
@@ -39,21 +39,50 @@ public class PassengerControlller {
         return new ResponseEntity<PassengerDTO>(passenger , HttpStatus.OK);
     }
 
-    // create
+    // create /api/passenger
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PassengerDTO> createPassenger(@RequestBody PassengerDTO passenger) throws Exception {
         PassengerDTO savedPassenger = passengerService.create(passenger);
         return new ResponseEntity<PassengerDTO>(savedPassenger, HttpStatus.CREATED);
     }
 
-    // update   --> for now only changes the name of passenger
+    //TODO: /api/passenger{activationId}
+    @PostMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PassengerDTO> activatePassenger(@RequestBody PassengerDTO passenger) throws Exception {
+        PassengerDTO savedPassenger = passengerService.create(passenger);
+        return new ResponseEntity<PassengerDTO>(savedPassenger, HttpStatus.CREATED);
+    }
+
+    // update   --> /api/passenger/1
+    // radi i ukoliko proslijedimo samo ona polja koja zelimo da promjenimo
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PassengerDTO> updateDriver(@RequestBody PassengerDTO passenger, @PathVariable Long id)
             throws Exception {
         PassengerDTO passengerForUpdate = passengerService.findOne(id);
-        passengerForUpdate.copyValues(passenger);
-
-        PassengerDTO updatedPassenger = passengerService.update(passengerForUpdate);
+        // passenger -> the one sent by the request
+        // passengerForUpdate -> the one we are updating
+       if(passenger.getName() != null){
+            passengerForUpdate.setName(passenger.getName());
+        }
+        if(passenger.getSurname() != null){
+            passengerForUpdate.setSurname(passenger.getSurname());
+        }
+        if(passenger.getProfilePicture() != null){
+            passengerForUpdate.setProfilePicture(passenger.getProfilePicture());
+        }
+        if(passenger.getTelephoneNumber() != null){
+            passengerForUpdate.setTelephoneNumber(passenger.getTelephoneNumber());
+        }
+        if(passenger.getPassword() != null){
+            passengerForUpdate.setPassword(passenger.getPassword());
+        }
+        if(passenger.getAddress() != null){
+            passengerForUpdate.setAddress(passenger.getAddress());
+        }
+        if(passenger.getEmail() != null) {
+            passengerForUpdate.setEmail(passenger.getEmail());
+        }
+        PassengerDTO updatedPassenger = passengerService.update(passengerForUpdate); // TODO:provjeri ovaj update
 
         if (updatedPassenger == null) {
             return new ResponseEntity<PassengerDTO>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -62,11 +91,20 @@ public class PassengerControlller {
         return new ResponseEntity<PassengerDTO>(updatedPassenger, HttpStatus.OK);
     }
 
-    @DeleteMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTO> deletePassenger(@PathVariable("id") Long id) {
-        passengerService.delete(id);
-        return new ResponseEntity<PassengerDTO>(HttpStatus.NO_CONTENT);
+
+    // get passengers rides -> /api/passenger/1/ride
+    @GetMapping(value = "/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<PassengerDTO> getPassengerRides(@PathVariable("id") Long id) {
+        PassengerDTO passenger = passengerService.findOne(id);
+
+        if (passenger == null) {
+            return new ResponseEntity<PassengerDTO>(HttpStatus.NOT_FOUND);
+        }
+
+        return new ResponseEntity<PassengerDTO>(passenger , HttpStatus.OK);
     }
+
+
 
 
 

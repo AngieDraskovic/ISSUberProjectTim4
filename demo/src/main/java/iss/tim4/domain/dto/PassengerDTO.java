@@ -1,9 +1,7 @@
 package iss.tim4.domain.dto;
 
 import iss.tim4.domain.model.Passenger;
-import iss.tim4.domain.model.User;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,8 +13,8 @@ public class PassengerDTO {
     private Long id;
     private String name;
     private String surname;
-    private String imgPath;
-    private String phone;
+    private String profilePicture;
+    private String telephoneNumber;
     private String email;
     private String address;
     private String password;
@@ -28,8 +26,8 @@ public class PassengerDTO {
         this.name = passenger.getName();
         this.surname = passenger.getSurname();
         this.email = passenger.getEmail();
-        this.imgPath = passenger.getImgPath();
-        this.phone = passenger.getPhone();
+        this.profilePicture = passenger.getProfilePicture();
+        this.telephoneNumber = passenger.getTelephoneNumber();
         this.address = passenger.getAddress();
         this.password = passenger.getPassword();
         this.blocked = passenger.getBlocked();
