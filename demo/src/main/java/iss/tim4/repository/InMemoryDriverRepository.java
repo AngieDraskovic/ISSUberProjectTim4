@@ -16,8 +16,8 @@ public class InMemoryDriverRepository implements DriverRepository {
 
     @Override
     public Collection<DriverDTO> findAll() {
-        drivers.put(4L, new DriverDTO(4L,"Ana", "Draskovic", "image", "0654233234", "a@gmail.com", "Majke Jugoiva 9", "xq", true, true, null));
-        drivers.put(6L, new DriverDTO(6L,"Milica", "Simic", "image", "065243243", "y@gmail.com", "Trg Slobode 5", "yt", true, true, null));
+        drivers.put(4L, new DriverDTO(4L,"Ana", "Draskovic", "image", "0654233234", "a@gmail.com", "Majke Jugoiva 9", "xq", true, true));
+        drivers.put(6L, new DriverDTO(6L,"Milica", "Simic", "image", "065243243", "y@gmail.com", "Trg Slobode 5", "yt", true, true));
         return this.drivers.values();
     }
 

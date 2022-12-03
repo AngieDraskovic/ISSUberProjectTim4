@@ -8,4 +8,5 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/ride")
 @AllArgsConstructor
 public class RideController {
+
 }

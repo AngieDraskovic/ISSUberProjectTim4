@@ -20,8 +20,9 @@ public class DriverDTO {
     private String password;
     private boolean blocked;
     private boolean active;
-    private VehicleDTO vehicle;
-
+    /*
+    private VehicleDTO vehicle;         // mislim da ne bi trebao vehicle da bude u DTO jer ni oni nemaju
+*/
     public DriverDTO(Driver driver) {
         this.id = driver.getId();
         this.name = driver.getName();
@@ -33,7 +34,7 @@ public class DriverDTO {
         this.password = driver.getPassword();
         this.blocked = driver.getBlocked();
         this.active = driver.getActive();
-        this.vehicle = new VehicleDTO(driver.getVehicle());
+     //   this.vehicle = new VehicleDTO(driver.getVehicle());
     }
 
     public void copyValues(DriverDTO driver) {
