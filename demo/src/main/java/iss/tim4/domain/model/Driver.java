@@ -25,11 +25,11 @@ public class Driver {
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "img_path")  // nullable=true (default value)
-    private String imgPath;
+    @Column(name = "profilePicture")  // nullable=true (default value)
+    private String profilePicture;
 
-    @Column(name = "phone", unique = true, nullable = false)
-    private String phone;
+    @Column(name = "telephoneNumber", unique = true, nullable = false)
+    private String telephoneNumber;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -47,7 +47,7 @@ public class Driver {
     nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
      */
     @Column(name = "active", nullable = false)
-    private String active;
+    private Boolean active;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude

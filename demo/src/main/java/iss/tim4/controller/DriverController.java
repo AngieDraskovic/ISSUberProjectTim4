@@ -1,7 +1,11 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.DriverDTO;
+import iss.tim4.domain.dto.PassengerDTO;
+import iss.tim4.domain.model.Driver;
+import iss.tim4.domain.model.Passenger;
 import iss.tim4.service.DriverService;
+import iss.tim4.service.DriverServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,22 +13,34 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 @RestController
-@RequestMapping("/api/vozac")
+@RequestMapping("/api/driver")
 @AllArgsConstructor
 public class DriverController {
     @Autowired
-    private DriverService driverService;
+    private DriverServiceJPA driverServiceJPA;
 
-    // get all
-    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Collection<DriverDTO>> getDrivers() {
-        Collection<DriverDTO> drivers = driverService.findAll();
-        return new ResponseEntity<Collection<DriverDTO>>(drivers, HttpStatus.OK);
+
+    @GetMapping
+    public ResponseEntity<List<DriverDTO>> getDrivers() {
+        List<Driver> drivers = driverServiceJPA.findAll();
+
+
+        // we have to convert passengers to passengers DTOs
+        List<DriverDTO> driverDTOS = new ArrayList<>();
+        for (Driver d : drivers) {
+            driverDTOS.add(new DriverDTO(d));
+        }
+
+        return new ResponseEntity<>(driverDTOS, HttpStatus.OK);
+
     }
 
+    /*
 
     // get by id
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -66,7 +82,7 @@ public class DriverController {
         driverService.delete(id);
         return new ResponseEntity<DriverDTO>(HttpStatus.NO_CONTENT);
     }
-
+*/
 
 
 }

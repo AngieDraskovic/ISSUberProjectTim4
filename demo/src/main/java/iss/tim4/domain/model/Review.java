@@ -17,6 +17,9 @@ public class Review {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "grade")
+    private Integer grade;
+
     @Column(name = "comment")
     private String comment;
 

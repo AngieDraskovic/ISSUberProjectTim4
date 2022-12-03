@@ -23,8 +23,8 @@ public class Location {
     @Column(name = "geo_width", nullable = false)
     private Double geoWidth;
 
-    @Column(name = "geo_height", nullable = false)
-    private Double geoHeight;
+    @Column(name = "geo_length", nullable = false)
+    private Double geoLength;
 
 
     @Override

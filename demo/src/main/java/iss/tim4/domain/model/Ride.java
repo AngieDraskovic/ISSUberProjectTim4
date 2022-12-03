@@ -21,33 +21,29 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start_time", nullable = false)
+    @Column(name = "start-time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end-time", nullable = false)
     private LocalDateTime endTime;
 
-    @Column(name = "price", nullable = false)
-    private Double price;
+    @Column(name = "total-cost", nullable = false)
+    private Double totalCost;
 
-    @Column(name = "estimated_time", nullable = false)
-    private Double estimatedTime;
+    @Column(name = "estimated-time-in-minutes", nullable = false)
+    private Double estimatedTimeInMinutes;
 
     @Column(name = "status", nullable = false)
-    private RideStatus rideStatus;
+    private RideStatus status;
 
     @Column(name = "panic", nullable = false)
     private Boolean panic;
 
     @Column(name = "babies", nullable = false)
-    private Boolean babyProof;
+    private Boolean babyTransport;
 
     @Column(name = "pets", nullable = false)
-    private Boolean pets;
-
-
-
-
+    private Boolean petTransport;
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"))
     @ToString.Exclude

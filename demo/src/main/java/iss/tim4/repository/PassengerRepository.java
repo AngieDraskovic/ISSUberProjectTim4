@@ -8,11 +8,11 @@ import java.util.Collection;
 public interface PassengerRepository {
     Collection<PassengerDTO> findAll();
 
-    UserDTO create(PassengerDTO passenger);
+    PassengerDTO create(PassengerDTO passenger);
 
-    UserDTO findOne(Long id);
+    PassengerDTO findOne(Long id);
 
-    UserDTO update(PassengerDTO passenger);
+    PassengerDTO update(PassengerDTO passenger);
 
     void delete(Long id);
 
