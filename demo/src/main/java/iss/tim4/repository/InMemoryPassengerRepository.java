@@ -1,6 +1,6 @@
 package iss.tim4.repository;
 
-import iss.tim4.domain.Passenger;
+import iss.tim4.domain.dto.PassengerDTO;
 import org.springframework.stereotype.Repository;
 
 import java.util.Collection;
@@ -12,17 +12,17 @@ public class InMemoryPassengerRepository implements PassengerRepository{
 
     private static AtomicLong counter = new AtomicLong();
 
-    private final ConcurrentMap<Long, Passenger> passengers = new ConcurrentHashMap<Long, Passenger>();
+    private final ConcurrentMap<Long, PassengerDTO> passengers = new ConcurrentHashMap<Long, PassengerDTO>();
 
     @Override
-    public Collection<Passenger> findAll() {
-        passengers.put(1L, new Passenger(1L,"Isidora", "Tadic", "image", "aa", "aa", "a", "a"));
-        passengers.put(3L, new Passenger(3L, "Igor", "Milosevic", "image", "aa", "aa", "a", "a"));
+    public Collection<PassengerDTO> findAll() {
+        passengers.put(1L, new PassengerDTO(1L,"Isidora", "Tadic", "image", "aa", "aa", "a", "a"));
+        passengers.put(3L, new PassengerDTO(3L, "Igor", "Milosevic", "image", "aa", "aa", "a", "a"));
         return this.passengers.values();
     }
 
     @Override
-    public Passenger create(Passenger user) {
+    public PassengerDTO create(PassengerDTO user) {
         Long id = user.getId();
 
         if (id == null) {
@@ -35,7 +35,7 @@ public class InMemoryPassengerRepository implements PassengerRepository{
     }
 
     @Override
-    public Passenger findOne(Long id) {
+    public PassengerDTO findOne(Long id) {
         return this.passengers.get(id);
     }
 
@@ -45,7 +45,7 @@ public class InMemoryPassengerRepository implements PassengerRepository{
     }
 
     @Override
-    public Passenger update(Passenger passenger) {
+    public PassengerDTO update(PassengerDTO passenger) {
         Long id = passenger.getId();
 
         if (id != null) {

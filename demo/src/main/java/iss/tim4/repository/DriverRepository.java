@@ -1,18 +1,18 @@
 package iss.tim4.repository;
 
-import iss.tim4.domain.Driver;
-import iss.tim4.domain.User;
+import iss.tim4.domain.dto.DriverDTO;
+import iss.tim4.domain.dto.UserDTO;
 
 import java.util.Collection;
 
 public interface DriverRepository {
-    Collection<Driver> findAll();
+    Collection<DriverDTO> findAll();
 
-    User create(Driver driver);
+    UserDTO create(DriverDTO driver);
 
-    User findOne(Long id);
+    UserDTO findOne(Long id);
 
-    User update(Driver driver);
+    UserDTO update(DriverDTO driver);
 
     void delete(Long id);
 }

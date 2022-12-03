@@ -1,8 +1,7 @@
 package iss.tim4.service;
 
-import iss.tim4.domain.Driver;
+import iss.tim4.domain.dto.DriverDTO;
 import iss.tim4.repository.InMemoryDriverRepository;
-import iss.tim4.repository.InMemoryPassengerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,17 +12,17 @@ public class DriverServiceImpl implements DriverService{
     private InMemoryDriverRepository driverRepository;
 
     @Override
-    public Collection<Driver> findAll() {
+    public Collection<DriverDTO> findAll() {
         return driverRepository.findAll();
     }
 
     @Override
-    public Driver findOne(Long id) {
+    public DriverDTO findOne(Long id) {
         return driverRepository.findOne(id);
     }
 
     @Override
-    public Driver create(Driver driver) throws Exception {
+    public DriverDTO create(DriverDTO driver) throws Exception {
         if (driver.getId() != null) {
             throw new Exception("Id mora biti null prilikom perzistencije novog entiteta.");
         }
@@ -31,8 +30,8 @@ public class DriverServiceImpl implements DriverService{
     }
 
     @Override
-    public Driver update(Driver driver) throws Exception {
-        Driver driverToUpdate = findOne(driver.getId());
+    public DriverDTO update(DriverDTO driver) throws Exception {
+        DriverDTO driverToUpdate = findOne(driver.getId());
         if (driverToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }

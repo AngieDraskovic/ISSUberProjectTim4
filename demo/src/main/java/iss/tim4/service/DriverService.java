@@ -1,18 +1,18 @@
 package iss.tim4.service;
 
-import iss.tim4.domain.Driver;
+import iss.tim4.domain.dto.DriverDTO;
 
 import java.util.Collection;
 
 public interface DriverService {
 
-    Collection<Driver> findAll();
+    Collection<DriverDTO> findAll();
 
-    Driver findOne(Long id);
+    DriverDTO findOne(Long id);
 
-    Driver create(Driver user) throws Exception;
+    DriverDTO create(DriverDTO user) throws Exception;
 
-    Driver update(Driver user) throws Exception;
+    DriverDTO update(DriverDTO user) throws Exception;
 
     void delete(Long id);
 }

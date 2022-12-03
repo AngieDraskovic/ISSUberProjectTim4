@@ -1,11 +1,9 @@
-package iss.tim4.domain;
+package iss.tim4.domain.dto;
 
 import lombok.Data;
 
-import java.util.Objects;
-
 @Data
-public class User {
+public class UserDTO {
 
     private Long id;
     private String name;
@@ -15,8 +13,10 @@ public class User {
     private String email;
     private String address;
     private String password;
+    private boolean blocked;
+    private boolean active;
 
-    public User(Long id, String name, String surname, String imgPath, String phone, String email, String address, String password){
+    public UserDTO(Long id, String name, String surname, String imgPath, String phone, String email, String address, String password){
         this.id = id;
         this.name = name;
         this.surname = surname;
