@@ -1,3 +1,0 @@
-2022-12-04 16:19:09 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "DRIVER" not found (this database is empty); SQL statement:
-DELETE FROM DRIVER WHERE ID < 6 [42104-214]
