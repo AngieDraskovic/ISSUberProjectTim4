@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/passenger")
@@ -24,8 +25,6 @@ public class PassengerController {
     @GetMapping
     public ResponseEntity<List<PassengerDTO>> getPassengers() {
         List<Passenger> passengers = passengerServiceJPA.findAll();
-
-
         // we have to convert passengers to passengers DTOs
         List<PassengerDTO> passengerDTOS = new ArrayList<>();
         for (Passenger p : passengers) {
@@ -70,7 +69,7 @@ public class PassengerController {
     // update   --> /api/passenger/1
     // radi i ukoliko proslijedimo samo ona polja koja zelimo da promjenimo
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTO> updateDriver(@RequestBody PassengerDTO passengerDTO, @PathVariable Integer id)
+    public ResponseEntity<PassengerDTO> updatePassenger(@RequestBody PassengerDTO passengerDTO, @PathVariable Integer id)
             throws Exception {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
@@ -108,7 +107,7 @@ public class PassengerController {
         return new ResponseEntity<PassengerDTO>(new PassengerDTO(passengerForUpdate), HttpStatus.OK);
     }
 
-
+    }
 
     /*
 
@@ -119,10 +118,12 @@ public class PassengerController {
         return new ResponseEntity<PassengerDTO>(savedPassenger, HttpStatus.CREATED);
     }
 
-    // get passengers rides -> /api/passenger/1/ride TODO
-    @GetMapping(value = "/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
+    // get passengers rides -> /api/passenger/1/ride
+    // TODO
+    @GetMapping(value = "/{id}/ride")
     public ResponseEntity<PassengerDTO> getPassengerRides(@PathVariable("id") Long id) {
-        PassengerDTO passenger = passengerService.findOne(id);
+        // moramo naci onoga koji ima rides
+        Passenger passenger = passengerServiceJPA.findOne(id);
 
         if (passenger == null) {
             return new ResponseEntity<PassengerDTO>(HttpStatus.NOT_FOUND);
@@ -133,6 +134,29 @@ public class PassengerController {
 
 
 
-*/
+    @GetMapping(value = "/{studentId}/exams")
+    public ResponseEntity<List<ExamDTO>> getStudentExams(@PathVariable Integer studentId) {
+
+        //traze se polozeni ispiti studenta, sto znaci da moramo uputiti JOIN FETCH upit
+        //kako bismo dobili sve trazene podatke
+        Student student = studentService.findOneWithExams(studentId);
+
+        //ako je podesen fetchType LAZY i pozovemo findOne umesto findOneWithExams,
+        //na poziv getExams bismo dobili LazyInitializationException
+        Set<Exam> exams = student.getExams();
+        List<ExamDTO> examsDTO = new ArrayList<>();
+        for (Exam e : exams) {
+            ExamDTO examDTO = new ExamDTO();
+            examDTO.setId(e.getId());
+            examDTO.setGrade(e.getGrade());
+            examDTO.setDate(e.getDate());
+            examDTO.setCourse(new CourseDTO(e.getCourse()));
+            examDTO.setStudent(new StudentDTO(e.getStudent()));
+
+            examsDTO.add(examDTO);
+        }
+        return new ResponseEntity<>(examsDTO, HttpStatus.OK);
+    }
 
 }
+*/

@@ -30,6 +30,7 @@ public class RideDTO {
         this.id = ride.getId();
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
+        this.price = ride.getTotalCost();
         this.driver = new DriverDTO(ride.getDriver());
         this.estimatedTime = ride.getEstimatedTimeInMinutes();
         this.rideStatus = ride.getStatus();

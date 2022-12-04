@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PassengerDTO {
 
-    private Long id;
     private String name;
     private String surname;
     private String profilePicture;
@@ -18,11 +17,10 @@ public class PassengerDTO {
     private String email;
     private String address;
     private String password;
-    private boolean blocked;
+    private boolean blocked;        // TODO: da li izbaciti ova dva atributa
     private boolean active;
 
     public PassengerDTO(Passenger passenger){
-        this.id = passenger.getId();
         this.name = passenger.getName();
         this.surname = passenger.getSurname();
         this.email = passenger.getEmail();

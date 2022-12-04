@@ -29,8 +29,6 @@ public class DriverController {
     public ResponseEntity<List<DriverDTO>> getDrivers() {
         List<Driver> drivers = driverServiceJPA.findAll();
 
-
-        // we have to convert passengers to passengers DTOs
         List<DriverDTO> driverDTOS = new ArrayList<>();
         for (Driver d : drivers) {
             driverDTOS.add(new DriverDTO(d));
