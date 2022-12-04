@@ -16,8 +16,8 @@ public class InMemoryPassengerRepository implements PassengerRepository{
 
     @Override
     public Collection<PassengerDTO> findAll() {
-        passengers.put(1L, new PassengerDTO(1L,"Isidora", "Tadic", "image", "aa", "aa", "a", "a"));
-        passengers.put(3L, new PassengerDTO(3L, "Igor", "Milosevic", "image", "aa", "aa", "a", "a"));
+        passengers.put(1L, new PassengerDTO(1L,"Isidora", "Tadic", "image", "aa", "aa", "a", "a", true, true));
+        passengers.put(3L, new PassengerDTO(3L, "Igor", "Milosevic", "image", "aa", "aa", "a", "a", true, true));
         return this.passengers.values();
     }
 

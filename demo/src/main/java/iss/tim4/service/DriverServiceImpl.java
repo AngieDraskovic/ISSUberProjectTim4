@@ -36,7 +36,7 @@ public class DriverServiceImpl implements DriverService{
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
         driverToUpdate.setName(driver.getName());
-        return driverRepository.create(driverToUpdate);
+        return driverRepository.update(driverToUpdate);
     }
 
     @Override

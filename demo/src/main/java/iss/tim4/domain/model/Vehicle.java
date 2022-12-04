@@ -34,17 +34,17 @@ public class Vehicle {
     private Integer numSeats;
 
     @Column(name = "baby_proof", nullable = false)
-    private String babyProof;
+    private Boolean babyProof;
 
     @Column(name = "pets_allowed", nullable = false)
-    private String petsAllowed;
+    private Boolean petsAllowed;
 
     @OneToOne(mappedBy = "vehicle")
     private Driver driver;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "location_id", referencedColumnName = "id")
-    private Location location;
+    private Location currLocation;
 
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "vehicle_id")

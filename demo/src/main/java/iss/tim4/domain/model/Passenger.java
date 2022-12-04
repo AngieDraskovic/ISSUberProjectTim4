@@ -25,11 +25,11 @@ public class Passenger {
     @Column(name = "surname", nullable = false)
     private String surname;
 
-    @Column(name = "img_path")  // nullable=true (default value)
-    private String imgPath;
+    @Column(name = "profile_picture")  // nullable=true (default value)
+    private String profilePicture;
 
-    @Column(name = "phone", unique = true, nullable = false)
-    private String phone;
+    @Column(name = "telephone_number", unique = true, nullable = false)
+    private String telephoneNumber;
 
     @Column(name = "email", unique = true, nullable = false)
     private String email;
@@ -47,7 +47,7 @@ public class Passenger {
        nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
      */
     @Column(name = "active", nullable = false)
-    private String active;
+    private Boolean active;
 
     /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
     *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */

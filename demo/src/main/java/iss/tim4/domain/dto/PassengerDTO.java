@@ -1,9 +1,37 @@
 package iss.tim4.domain.dto;
 
+import iss.tim4.domain.model.Passenger;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-public class PassengerDTO extends UserDTO {
-    public PassengerDTO(Long id, String name, String surname, String imgPath, String phone, String email, String address, String password) {
-        super(id, name, surname, imgPath, phone, email, address, password);
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
+public class PassengerDTO {
+
+    private Long id;
+    private String name;
+    private String surname;
+    private String profilePicture;
+    private String telephoneNumber;
+    private String email;
+    private String address;
+    private String password;
+    private boolean blocked;
+    private boolean active;
+
+    public PassengerDTO(Passenger passenger){
+        this.id = passenger.getId();
+        this.name = passenger.getName();
+        this.surname = passenger.getSurname();
+        this.email = passenger.getEmail();
+        this.profilePicture = passenger.getProfilePicture();
+        this.telephoneNumber = passenger.getTelephoneNumber();
+        this.address = passenger.getAddress();
+        this.password = passenger.getPassword();
+        this.blocked = passenger.getBlocked();
+        this.active = passenger.getActive();
     }
 
     public void copyValues(PassengerDTO passenger) {

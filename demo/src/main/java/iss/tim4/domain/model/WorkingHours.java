@@ -19,10 +19,10 @@ public class WorkingHours {
     private Long id;
 
     @Column(name = "start_time")
-    private LocalDateTime start;
+    private LocalDateTime startTime;
 
     @Column(name = "end_time")
-    private LocalDateTime end;
+    private LocalDateTime endTime;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "driver_id", referencedColumnName = "id")

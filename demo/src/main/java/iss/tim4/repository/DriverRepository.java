@@ -8,11 +8,11 @@ import java.util.Collection;
 public interface DriverRepository {
     Collection<DriverDTO> findAll();
 
-    UserDTO create(DriverDTO driver);
+    DriverDTO create(DriverDTO driver);
 
-    UserDTO findOne(Long id);
+    DriverDTO findOne(Long id);
 
-    UserDTO update(DriverDTO driver);
+    DriverDTO update(DriverDTO driver);
 
     void delete(Long id);
 }

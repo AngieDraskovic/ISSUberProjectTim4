@@ -37,8 +37,8 @@ public class PassengerServiceImpl implements PassengerService {
         if (passengerToUpdate == null) {
             throw new Exception("Trazeni entitet nije pronadjen.");
         }
-        passengerToUpdate.setName(passenger.getName());
-        return passengerRepository.create(passengerToUpdate);
+        passengerToUpdate.copyValues(passenger);
+        return passengerRepository.update(passengerToUpdate);
     }
 
     @Override
