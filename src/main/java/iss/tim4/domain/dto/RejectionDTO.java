@@ -12,17 +12,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RejectionDTO {
 
-    private Long id;
-    private RideDTO ride;
-    private String reason;
-    private UserDTO user;
+    private String reasonOfRejection;
     private LocalDateTime time;
 
     public RejectionDTO(Rejection rejection) {
-        this.id = rejection.getId();
-        this.ride = new RideDTO(rejection.getRide());
-        this.reason = rejection.getReason();
-        this.user = new UserDTO(rejection.getUser());
+        this.reasonOfRejection = rejection.getReason();
         this.time = rejection.getTime();
     }
+
 }
