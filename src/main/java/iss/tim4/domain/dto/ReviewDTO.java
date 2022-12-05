@@ -14,13 +14,13 @@ public class ReviewDTO {
     private Integer grade;
     private String comment;
     private RideDTO ride;
-    private PassengerDTO passenger;
+    private PassengerDTOResponse passenger;
 
     public ReviewDTO(Review review) {
         this.id = review.getId();
         this.grade = review.getGrade();
         this.comment = review.getComment();
         this.ride = new RideDTO(review.getRide());
-        this.passenger = new PassengerDTO(review.getPassenger());
+        this.passenger = new PassengerDTOResponse(review.getPassenger());
     }
 }

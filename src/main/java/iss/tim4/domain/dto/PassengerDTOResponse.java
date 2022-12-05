@@ -8,9 +8,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PassengerDTO {
+public class PassengerDTOResponse {
 
-    private Long id;
     private String name;
     private String surname;
     private String profilePicture;
@@ -18,11 +17,10 @@ public class PassengerDTO {
     private String email;
     private String address;
     private String password;
-    private boolean blocked;
-    private boolean active;
+    //private boolean blocked;      // TODO: da li smijem ostaviti ova dva atributa ili ipak da ih se rijesim :D
+   // private boolean active;
 
-    public PassengerDTO(Passenger passenger){
-        this.id = passenger.getId();
+    public PassengerDTOResponse(Passenger passenger){
         this.name = passenger.getName();
         this.surname = passenger.getSurname();
         this.email = passenger.getEmail();
@@ -30,11 +28,11 @@ public class PassengerDTO {
         this.telephoneNumber = passenger.getTelephoneNumber();
         this.address = passenger.getAddress();
         this.password = passenger.getPassword();
-        this.blocked = passenger.getBlocked();
-        this.active = passenger.getActive();
+        // this.blocked = passenger.getBlocked();
+        // this.active = passenger.getActive();
     }
 
-    public void copyValues(PassengerDTO passenger) {
+    public void copyValues(PassengerDTOResponse passenger) {
         this.setName(passenger.getName());
     }
 }
