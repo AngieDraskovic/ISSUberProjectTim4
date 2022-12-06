@@ -52,24 +52,25 @@ public class Passenger {
     /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
     *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
-    @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"))
+    @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"))
     @ToString.Exclude
     private Set<Ride> rides = new HashSet<Ride>();
 
-    /* Unidirekciona veza putnika i njegovih omiljenih ruta. U tabeli FavouriteRoute se cuva id putnika. */
+    /* Unidirekciona veza putnika i njegovih omiljenih ruta. U tabeli FavouriteRoute se cuva id putnika.    TODO:promjeniti da bude klasa FavouriteRoute
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "passenger_id")
     @ToString.Exclude
     private Set<Route> favouriteRoutes = new HashSet<Route>();
-
+     public void addFavouriteRoute(Route route){
+        favouriteRoutes.add(route);
+    }
+     */
     public void addRide(Ride ride) {
         rides.add(ride);
         ride.getPassengers().add(this);
     }
 
-    public void addFavouriteRoute(Route route){
-        favouriteRoutes.add(route);
-    }
+
 
 
     @Override

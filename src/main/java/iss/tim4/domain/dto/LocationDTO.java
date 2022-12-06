@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 public class LocationDTO {
 
     private String address;
-    private Double geoLength;
-    private Double geoWidth;
+    private Double latitude;
+    private Double longitude;
 
     public LocationDTO(Location location) {
         this.address = location.getAddress();
-        this.geoLength = location.getGeoLength();
-        this.geoWidth = location.getGeoWidth();
+        this.latitude = location.getGeoLength();
+        this.longitude = location.getGeoWidth();
     }
 }

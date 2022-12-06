@@ -1,7 +1,7 @@
 package iss.tim4.domain;
 
 public enum VehicleName {
-    STANDARD,
+    STANDARDNO,
     LUXURY,
     VAN
 }

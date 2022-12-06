@@ -16,7 +16,7 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "start_location_id", referencedColumnName = "id")

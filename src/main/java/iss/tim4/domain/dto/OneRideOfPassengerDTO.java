@@ -15,23 +15,21 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RideDTOResponse {
-
+public class OneRideOfPassengerDTO {
     private Long id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double totalCost;
     private DriverRideDTO driver;
     private Double estimatedTimeInMinutes;
-    private RideStatus status;
-    private RejectionDTO rejection;
     private Boolean babyTransport;
     private Boolean petTransport;
     private VehicleName vehicleType;
     private PassengerRideDTO[] passengers;
     private RouteDTO[] locations;
+    private RejectionDTO rejection;
 
-    public RideDTOResponse(Ride ride) {
+    public OneRideOfPassengerDTO(Ride ride){
         this.id = ride.getId();
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
@@ -49,8 +47,6 @@ public class RideDTOResponse {
         this.vehicleType = ride.getVehicleType().getVehicleName();
         this.babyTransport = ride.getBabyTransport();
         this.petTransport = ride.getPetTransport();
-        this.status = ride.getStatus();
-        this.rejection = new RejectionDTO(ride.getRejection());
         Set<Route> routes = ride.getRoutes();
         RouteDTO[] locationDTOS = new RouteDTO[routes.size()];
         iter = 0;
@@ -59,6 +55,7 @@ public class RideDTOResponse {
             iter++;
         }
         this.locations = locationDTOS;
+        this.rejection = new RejectionDTO(ride.getRejection());
 
     }
 }
