@@ -16,7 +16,7 @@ public class Route {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "start_location_id", referencedColumnName = "id")
@@ -28,6 +28,10 @@ public class Route {
 
     @Column(name = "kilometers", nullable = false)
     private Double kilometers;
+
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ride_id")
+    private Ride ride;
 
     @Override
     public boolean equals(Object o) {

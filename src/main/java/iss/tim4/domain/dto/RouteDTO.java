@@ -10,15 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class RouteDTO {
 
-    private Long id;
-    private LocationDTO startLocation;
-    private LocationDTO endLocation;
-    private Double kilometers;
+    private LocationDTO departure;
+    private LocationDTO destination;
 
     public RouteDTO(Route route) {
-        this.id = route.getId();
-        this.startLocation = new LocationDTO(route.getStartLocation());
-        this.endLocation = new LocationDTO(route.getEndLocation());
-        this.kilometers = route.getKilometers();
+        this.departure = new LocationDTO(route.getStartLocation());
+        this.destination =  new LocationDTO(route.getEndLocation());
     }
 }

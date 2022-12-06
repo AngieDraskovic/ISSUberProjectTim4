@@ -1,9 +1,8 @@
 package iss.tim4.controller;
 
-import iss.tim4.domain.dto.PassengerDTORequest;
-import iss.tim4.domain.dto.PassengerDTOResponse;
-import iss.tim4.domain.dto.PassengerDTOResult;
+import iss.tim4.domain.dto.*;
 import iss.tim4.domain.model.Passenger;
+import iss.tim4.domain.model.Ride;
 import iss.tim4.service.PassengerServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,8 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/api/passenger")
@@ -24,7 +23,7 @@ public class PassengerController {
 
     // get all - /api/passenger
     @GetMapping
-    public ResponseEntity<PassengerDTORequest> getPassengers() {
+    public ResponseEntity<PassengerDTOGetAll> getPassengers() {
         List<Passenger> passengers = passengerServiceJPA.findAll();
         int totalCount = passengers.size();
 
@@ -32,7 +31,7 @@ public class PassengerController {
         for(int i = 0; i < passengers.size(); i++) {
             results[i] = new PassengerDTOResult(passengers.get(i));
         }
-        PassengerDTORequest passengerDTORequest = new PassengerDTORequest(results, totalCount);
+        PassengerDTOGetAll passengerDTORequest = new PassengerDTOGetAll(results, totalCount);
         return new ResponseEntity<>(passengerDTORequest, HttpStatus.OK);
 
     }
@@ -52,7 +51,7 @@ public class PassengerController {
 
     // create /api/passenger
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<PassengerDTOResponse> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
+    public ResponseEntity<PassengerDTOResult> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
         Passenger passenger = new Passenger();
         passenger.setName(passengerDTO.getName());
         passenger.setSurname(passengerDTO.getSurname());
@@ -64,7 +63,7 @@ public class PassengerController {
         passenger.setActive(false);
         passenger.setBlocked(false);
         passenger = passengerServiceJPA.save(passenger);
-        return new ResponseEntity<>(new PassengerDTOResponse(passenger), HttpStatus.CREATED);
+        return new ResponseEntity<>(new PassengerDTOResult(passenger), HttpStatus.CREATED);
     }
 
     // update   --> /api/passenger/1
@@ -120,20 +119,26 @@ public class PassengerController {
         return new ResponseEntity<PassengerDTO>(savedPassenger, HttpStatus.CREATED);
     }
 
-    // get passengers rides -> /api/passenger/1/ride TODO
-    @GetMapping(value = "/{id}/ride", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PassengerDTO> getPassengerRides(@PathVariable("id") Long id) {
-        PassengerDTO passenger = passengerService.findOne(id);
+*/
 
-        if (passenger == null) {
-            return new ResponseEntity<PassengerDTO>(HttpStatus.NOT_FOUND);
+    //get passengers rides -> /api/passenger/1/ride TODO
+    @GetMapping(value = "/{id}/ride")
+    public ResponseEntity<RidesOfPassengerDTO> getPassengerRides(@PathVariable("id") Integer id) {
+        Passenger passenger = passengerServiceJPA.findOne(id);
+        Set<Ride> rides = passenger.getRides();
+        int totalCount = rides.size();
+
+        OneRideOfPassengerDTO[] results = new OneRideOfPassengerDTO[totalCount];
+        int iter = 0;
+        for(Ride ride : rides){
+            results[iter] = new OneRideOfPassengerDTO(ride);
+            iter++;
         }
-
-        return new ResponseEntity<PassengerDTO>(passenger , HttpStatus.OK);
+        RidesOfPassengerDTO ridesOfPassengerDTO = new RidesOfPassengerDTO(results, totalCount);
+        return new ResponseEntity<>(ridesOfPassengerDTO, HttpStatus.OK);
     }
 
 
 
-*/
 
 }
