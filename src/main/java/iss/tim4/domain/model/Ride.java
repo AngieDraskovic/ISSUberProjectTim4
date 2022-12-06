@@ -21,16 +21,16 @@ public class Ride {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "start-time", nullable = false)
+    @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end-time", nullable = false)
+    @Column(name = "end_time", nullable = false)
     private LocalDateTime endTime;
 
-    @Column(name = "total-cost", nullable = false)
+    @Column(name = "total_cost", nullable = false)
     private Double totalCost;
 
-    @Column(name = "estimated-time-in-minutes", nullable = false)
+    @Column(name = "estimated_time_in_minutes", nullable = false)
     private Double estimatedTimeInMinutes;
 
     @Column(name = "status", nullable = false)
@@ -54,9 +54,9 @@ public class Ride {
     @ToString.Exclude
     private Driver driver;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "route_id", referencedColumnName = "id")
-    private Route route;
+    @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<Route> routes = new HashSet<Route>();
 
     @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -81,6 +81,10 @@ public class Ride {
         review.setRide(this);
     }
 
+    public void addRoute(Route route){
+        routes.add(route);
+        route.setRide(this);
+    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

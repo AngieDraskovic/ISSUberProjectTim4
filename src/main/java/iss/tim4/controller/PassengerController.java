@@ -52,7 +52,7 @@ public class PassengerController {
 
     // create /api/passenger
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<PassengerDTOResponse> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
+    public ResponseEntity<PassengerDTOResult> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
         Passenger passenger = new Passenger();
         passenger.setName(passengerDTO.getName());
         passenger.setSurname(passengerDTO.getSurname());
@@ -64,7 +64,7 @@ public class PassengerController {
         passenger.setActive(false);
         passenger.setBlocked(false);
         passenger = passengerServiceJPA.save(passenger);
-        return new ResponseEntity<>(new PassengerDTOResponse(passenger), HttpStatus.CREATED);
+        return new ResponseEntity<>(new PassengerDTOResult(passenger), HttpStatus.CREATED);
     }
 
     // update   --> /api/passenger/1
