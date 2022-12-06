@@ -1,5 +1,6 @@
 package iss.tim4.domain.model;
 
+import iss.tim4.domain.dto.LocationDTO;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -26,6 +27,11 @@ public class Location {
     @Column(name = "geo_length", nullable = false)
     private Double geoLength;
 
+    public Location(LocationDTO locationDTO) {
+        this.address = locationDTO.getAddress();
+        this.geoWidth = locationDTO.getLongitude();
+        this.geoLength = locationDTO.getLatitude();
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -38,5 +44,11 @@ public class Location {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void update(LocationDTO locationDTO) {
+        this.address = locationDTO.getAddress();
+        this.geoWidth = locationDTO.getLatitude();
+        this.geoLength = locationDTO.getLongitude();
     }
 }

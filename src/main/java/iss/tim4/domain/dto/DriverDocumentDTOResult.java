@@ -8,17 +8,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverDocumentDTO {
+public class DriverDocumentDTOResult {
 
     private Long id;
     private String name;
-    private String imgPath;
-    private DriverDTO driver;
+    private String documentImage;
+    private Long driverId;
 
-    public DriverDocumentDTO(DriverDocument driverDocument) {
+    public DriverDocumentDTOResult(DriverDocument driverDocument) {
         this.id = driverDocument.getId();
         this.name = driverDocument.getName();
-        this.imgPath = driverDocument.getImgPath();
-        this.driver = new DriverDTO(driverDocument.getDriver());
+        this.documentImage = driverDocument.getDocumentImage();
+        this.driverId = driverDocument.getDriver().getId();
     }
 }

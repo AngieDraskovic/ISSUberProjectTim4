@@ -17,7 +17,7 @@ public class RideDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double price;
-    private DriverDTO driver;
+    private DriverDTOResult driver;
     private Double estimatedTime;
     private RideStatus rideStatus;
     private RejectionDTO rejectionDTO;
@@ -30,7 +30,7 @@ public class RideDTO {
         this.id = ride.getId();
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
-        this.driver = new DriverDTO(ride.getDriver());
+        this.driver = new DriverDTOResult(ride.getDriver());
         this.estimatedTime = ride.getEstimatedTimeInMinutes();
         this.rideStatus = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());

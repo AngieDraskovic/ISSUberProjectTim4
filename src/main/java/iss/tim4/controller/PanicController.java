@@ -1,6 +1,5 @@
 package iss.tim4.controller;
 
-import iss.tim4.domain.dto.DriverDTO;
 import iss.tim4.domain.dto.PanicDTO;
 import iss.tim4.service.PanicServiceJPA;
 import lombok.AllArgsConstructor;

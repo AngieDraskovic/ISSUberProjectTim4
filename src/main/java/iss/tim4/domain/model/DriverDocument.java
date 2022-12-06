@@ -1,5 +1,6 @@
 package iss.tim4.domain.model;
 
+import iss.tim4.domain.dto.DriverDocumentDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -20,12 +21,19 @@ public class DriverDocument {
     @Column(name = "name", nullable = false)
     private String name;
 
-    @Column(name = "img_path")
-    private String imgPath;
+    @Column(name = "document_image")
+    private String documentImage;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id")
+    @ToString.Exclude
     private Driver driver;
+
+    public DriverDocument(DriverDocumentDTOResponse driverDocumentDTOResponse, Driver driver) {
+        this.name = driverDocumentDTOResponse.getName();
+        this.documentImage = driverDocumentDTOResponse.getDocumentImage();
+        this.driver = driver;
+    }
 
     @Override
     public boolean equals(Object o) {

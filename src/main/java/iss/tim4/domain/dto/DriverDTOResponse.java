@@ -3,14 +3,14 @@ package iss.tim4.domain.dto;
 import iss.tim4.domain.model.Driver;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverDTO {
+public class DriverDTOResponse {
 
-    private Long id;
     private String name;
     private String surname;
     private String profilePicture;
@@ -18,13 +18,8 @@ public class DriverDTO {
     private String email;
     private String address;
     private String password;
-    private boolean blocked;
-    private boolean active;
-    /*
-    private VehicleDTO vehicle;         // mislim da ne bi trebao vehicle da bude u DTO jer ni oni nemaju
-*/
-    public DriverDTO(Driver driver) {
-        this.id = driver.getId();
+
+    public DriverDTOResponse(Driver driver) {
         this.name = driver.getName();
         this.surname = driver.getSurname();
         this.email = driver.getEmail();
@@ -32,12 +27,9 @@ public class DriverDTO {
         this.telephoneNumber = driver.getTelephoneNumber();
         this.address = driver.getAddress();
         this.password = driver.getPassword();
-        this.blocked = driver.getBlocked();
-        this.active = driver.getActive();
-     //   this.vehicle = new VehicleDTO(driver.getVehicle());
     }
 
-    public void copyValues(DriverDTO driver) {
+    public void copyValues(DriverDTOResult driver) {
         this.setName(driver.getName());
     }
 }
