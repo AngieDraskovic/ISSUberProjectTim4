@@ -5,6 +5,7 @@ DELETE FROM DRIVER;
 DELETE FROM VEHICLE;
 DELETE FROM VEHICLE_TYPE;
 DELETE FROM LOCATION;
+DELETE FROM PASSENGER_ACTIVATION;
 DELETE FROM PASSENGER;
 DELETE FROM REJECTION;
 DELETE FROM USERS;
@@ -26,6 +27,10 @@ INSERT INTO PASSENGER
         ( 5342, true, 'NS, 21000 3', true, 'c@a.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+7 977 977 27 22' ),
         ( 1555, true, 'NS, 21000 4', false, 'd@a.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+7 977 977 27 23' ),
         ( 9322, true, 'NS, 21000', false, 'e@y.ru', 'Elex', 'kekekekekek', '4.png', 'Petrovicсcсс', '+7 977 977 27 24' );
+
+INSERT INTO PASSENGER_ACTIVATION(ACTIVATION_ID, CREATION_DATE, LIFE_LENGTH, PASSENGER_ID
+    ) VALUES
+       (1111, '2022-11-11 10:32:01', 2.1, 1555);
 
 INSERT INTO LOCATION (ID, ADDRESS, GEO_LENGTH, GEO_WIDTH)
     VALUES ( 1, 'NS 1', 54.6, 64.2 ),

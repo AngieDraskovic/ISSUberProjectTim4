@@ -3,7 +3,8 @@ package iss.tim4.domain;
 public enum RideStatus {
     PENDING,
     ACCEPTED,
-    REJECTED,
+    CANCELED,
     ACTIVE,
-    FINISHED
+    FINISHED,
+    REJECTED
 }
