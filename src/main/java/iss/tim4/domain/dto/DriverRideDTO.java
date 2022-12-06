@@ -13,12 +13,11 @@ public class DriverRideDTO {
 
     private Long id;
     private String email;
-    private String type;
+
 
     public DriverRideDTO(Driver d){
         this.id = d.getId();
         this.email = d.getEmail();
-        this.type = "VOZAC";
     }
 }
 

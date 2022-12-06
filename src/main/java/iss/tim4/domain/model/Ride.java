@@ -54,9 +54,9 @@ public class Ride {
     @ToString.Exclude
     private Driver driver;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "route_id", referencedColumnName = "id")
-    private Route route;
+    @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @ToString.Exclude
+    private Set<Route> routes = new HashSet<Route>();
 
     @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -81,6 +81,10 @@ public class Ride {
         review.setRide(this);
     }
 
+    public void addRoute(Route route){
+        routes.add(route);
+        route.setRide(this);
+    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -13,11 +13,11 @@ import java.time.LocalDateTime;
 public class RejectionDTO {
 
     private String reasonOfRejection;
-    private LocalDateTime time;
+    private LocalDateTime timeOfRejection;
 
     public RejectionDTO(Rejection rejection) {
         this.reasonOfRejection = rejection.getReason();
-        this.time = rejection.getTime();
+        this.timeOfRejection = rejection.getTime();
     }
 
 }

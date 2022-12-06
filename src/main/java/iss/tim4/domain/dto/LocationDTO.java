@@ -10,13 +10,11 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LocationDTO {
 
-    private Long id;
     private String address;
     private Double geoLength;
     private Double geoWidth;
 
     public LocationDTO(Location location) {
-        this.id = location.getId();
         this.address = location.getAddress();
         this.geoLength = location.getGeoLength();
         this.geoWidth = location.getGeoWidth();

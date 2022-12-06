@@ -12,13 +12,13 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PassengerRideDTO {
 
-    private Long id;
+    private Integer id;
     private String email;
-    private String type;
+
 
     public PassengerRideDTO(Passenger p){
         this.id = p.getId();
         this.email = p.getEmail();
-        this.type = "Putnik";
+
     }
 }

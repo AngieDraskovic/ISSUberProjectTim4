@@ -29,6 +29,10 @@ public class Route {
     @Column(name = "kilometers", nullable = false)
     private Double kilometers;
 
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "ride_id")
+    private Ride ride;
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

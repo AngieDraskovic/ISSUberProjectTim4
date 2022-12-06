@@ -4,6 +4,7 @@ import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Ride;
+import iss.tim4.domain.model.Route;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,6 +28,7 @@ public class RideDTOResponse {
     private Boolean petTransport;
     private VehicleName vehicleType;
     private PassengerRideDTO[] passengers;
+    private LocationDTO[] locations;
 
     public RideDTOResponse(Ride ride) {
         this.startTime = ride.getStartTime();
@@ -47,7 +49,17 @@ public class RideDTOResponse {
         this.petTransport = ride.getPetTransport();
         this.status = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());
+        Set<Route> routes = ride.getRoutes();
+        LocationDTO[] locationDTOS = new LocationDTO[routes.size()*2];
 
+        // imacu niz lokacija iz sv
+        iter = 0;
+        for(Route route : routes){
+            locationDTOS[iter] = new LocationDTO(route.getStartLocation());
+            locationDTOS[iter+1] = new LocationDTO(route.getEndLocation());
+            iter++;
+        }
+        this.locations = locationDTOS;
 
     }
 }
