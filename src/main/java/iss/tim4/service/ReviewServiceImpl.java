@@ -1,26 +1,29 @@
 package iss.tim4.service;
 
-import iss.tim4.domain.dto.ReviewDTO;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+import iss.tim4.domain.dto.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
+@Service
 public class ReviewServiceImpl implements ReviewService {
+    @Autowired
+    private PassengerServiceJPA passengerServiceJPA;
+
     private ReviewDTO mockReviewDTO() {
-        return new ReviewDTO(1L, 5, "KEK", null, null);
+        return new ReviewDTO(
+                1L,
+                5,
+                "KEK",
+                new PassengerDTOResponse(passengerServiceJPA.findAll().get(0)));
     }
 
     @Override
-    public Map<String, ReviewDTO> findReviewByRideId(Long id) {
-        Map<String, ReviewDTO> answer = new HashMap<>();
-        answer.put("vehicleReview", mockReviewDTO());
-        answer.put("driverReview", mockReviewDTO());
-        return answer;
+    public Collection<RideReviewsDTO> findReviewByRideId(Long id) {
+        return List.of(new RideReviewsDTO(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
@@ -29,8 +32,8 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<ReviewDTO> findReviewByVehicleId(Long vehicleId, Pageable pageable) {
-        return new PageImpl<ReviewDTO>(List.of(mockReviewDTO(), mockReviewDTO()));
+    public UberPageDTO<ReviewDTO> findReviewByVehicleId(Long vehicleId, Pageable pageable) {
+        return new UberPageDTO<ReviewDTO>(2L, List.of(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
@@ -39,17 +42,17 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Page<ReviewDTO> findReviewByDriverId(Long driverId, Pageable pageable) {
-        return new PageImpl<ReviewDTO>(List.of(mockReviewDTO(), mockReviewDTO()));
+    public UberPageDTO<ReviewDTO> findReviewByDriverId(Long driverId, Pageable pageable) {
+        return new UberPageDTO<>(2L, List.of(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
-    public ReviewDTO createForVehicle(ReviewDTO review, Long rideId, Long vehicleId) {
+    public ReviewDTO createForVehicle(CreateReviewDTO review, Long rideId, Long vehicleId) {
         return mockReviewDTO();
     }
 
     @Override
-    public ReviewDTO createForDriver(ReviewDTO review, Long rideId, Long driverId) {
+    public ReviewDTO createForDriver(CreateReviewDTO review, Long rideId, Long driverId) {
         return mockReviewDTO();
     }
 }
