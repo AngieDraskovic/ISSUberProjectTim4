@@ -31,6 +31,9 @@ public class RideController {
     @Autowired
     private RejectionServiceJPA rejectionServiceJPA;
 
+    @Autowired
+    private UserServiceJPA userServiceJPA;
+
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public ResponseEntity<RideDTOResponse> getRide(@PathVariable("id") Integer id) {
@@ -91,5 +94,79 @@ public class RideController {
         ride.setPanic(false);
         ride = rideServiceJPA.save(ride);
         return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.CREATED);
+    }
+
+
+    @GetMapping(value = "/passenger/{passengerId}/active")
+    public ResponseEntity<RideDTOResponse> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
+        Passenger passenger = passengerServiceJPA.findOne(passengerId);
+        Set<Ride> rides = passenger.getRides();
+        Ride activeRide = rides.iterator().next();      // ovdje samo zelim da uzmem prvi element liste da vrati, jer sad necu implementirati logiku za aktinu voznju
+        activeRide.setStatus(RideStatus.ACTIVE);
+        RideDTOResponse result = new RideDTOResponse(activeRide);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @GetMapping(value = "/driver/{driverId}/active")
+    public ResponseEntity<RideDTOResponse> getDriverActiveRide(@PathVariable("driverId") Integer driverId) {
+        Driver driver = driverServiceJPA.findOne(driverId);
+        Set<Ride> rides = driver.getRides();
+        Ride activeRide = rides.iterator().next();          // i ovdje kao i u gornjoj metodi :D
+        activeRide.setStatus(RideStatus.ACTIVE);
+        RideDTOResponse result = new RideDTOResponse(activeRide);
+
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PutMapping(value = "/{id}/withdraw")
+    public ResponseEntity<RideDTOResponse> cancelRide(@PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        ride.getRejection().setReason("Ride is cancelled by passenger");
+        ride.setStatus(RideStatus.CANCELED);
+        RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PutMapping(value = "/{id}/panic")
+    public ResponseEntity<PanicDTO> panicRide(@RequestBody  ReasonDTO reasonDTO, @PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        Panic p = new Panic();
+        p.setId(563);
+        p.setReason(reasonDTO.getReason());
+        p.setTime(LocalDateTime.parse("2022-10-10T10:32:32"));
+        p.setUser(userServiceJPA.findOne(1));
+        p.setRide(ride);
+        PanicDTO result = new PanicDTO(p);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PutMapping(value = "/{id}/accept")
+    public ResponseEntity<RideDTOResponse> acceptRide(@PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        ride.setStatus(RideStatus.ACCEPTED);
+        RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PutMapping(value = "/{id}/end")
+    public ResponseEntity<RideDTOResponse> finishRide(@PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        ride.setStatus(RideStatus.FINISHED);
+        RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PutMapping(value = "/{id}/cancel")
+    public ResponseEntity<RideDTOResponse> rejectRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        ride.setStatus(RideStatus.REJECTED);
+        ride.getRejection().setReason(reasonDTO.getReason());
+        RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 }

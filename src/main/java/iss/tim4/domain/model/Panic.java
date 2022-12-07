@@ -19,7 +19,7 @@ public class Panic {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "time", nullable = false)
     private LocalDateTime time;
