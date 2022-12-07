@@ -31,6 +31,9 @@ public class RideController {
     @Autowired
     private RejectionServiceJPA rejectionServiceJPA;
 
+    @Autowired
+    private UserServiceJPA userServiceJPA;
+
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public ResponseEntity<RideDTOResponse> getRide(@PathVariable("id") Integer id) {
@@ -117,11 +120,25 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/withdraw")
-    public ResponseEntity<RideDTOResponse> cancelRide(@RequestBody PassengerDTOResponse passengerDTO, @PathVariable Integer id){
+    public ResponseEntity<RideDTOResponse> cancelRide(@PathVariable Integer id){
         Ride ride = rideServiceJPA.findOne(id);
         ride.getRejection().setReason("Ride is cancelled by passenger");
         ride.setStatus(RideStatus.CANCELED);
         RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+
+    @PutMapping(value = "/{id}/panic")
+    public ResponseEntity<PanicDTO> panicRide(@RequestBody  ReasonDTO reasonDTO, @PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        Panic p = new Panic();
+        p.setId(563);
+        p.setReason(reasonDTO.getReason());
+        p.setTime(LocalDateTime.parse("2022-10-10T10:32:32"));
+        p.setUser(userServiceJPA.findOne(1));
+        p.setRide(ride);
+        PanicDTO result = new PanicDTO(p);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }

@@ -2,7 +2,9 @@ package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
 import iss.tim4.domain.model.Passenger;
+import iss.tim4.domain.model.PassengerActivation;
 import iss.tim4.domain.model.Ride;
+import iss.tim4.service.PassengerActivationService;
 import iss.tim4.service.PassengerServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,8 @@ public class PassengerController {
 
     @Autowired
     private PassengerServiceJPA passengerServiceJPA;
+    @Autowired
+    private PassengerActivationService passengerActivationService;
 
     // get all - /api/passenger
     @GetMapping
@@ -109,17 +113,14 @@ public class PassengerController {
     }
 
 
-
-    /*
-
-    //TODO: /api/passenger{activationId}
-    @PostMapping(value="{id}", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<PassengerDTO> activatePassenger(@RequestBody PassengerDTO passenger) throws Exception {
-        PassengerDTO savedPassenger = passengerService.create(passenger);
-        return new ResponseEntity<PassengerDTO>(savedPassenger, HttpStatus.CREATED);
+    @GetMapping(value="/activate/{activationId}")
+    public ResponseEntity<Void> activatePassenger(@PathVariable("activationId") Integer activationId){
+        PassengerActivation passengerForActivation = passengerActivationService.findOne(activationId);
+        Passenger p = passengerForActivation.getPassenger();
+        p.setActive(true);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-*/
 
     //get passengers rides -> /api/passenger/1/ride TODO
     @GetMapping(value = "/{id}/ride")

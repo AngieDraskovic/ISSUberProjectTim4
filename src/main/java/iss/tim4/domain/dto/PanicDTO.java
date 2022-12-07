@@ -12,16 +12,16 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class PanicDTO {
 
-    private Long id;
+    private Integer id;
     private UserDTO user;
-    private RideDTO ride;
+    private RideDTOResponse ride;
     private LocalDateTime time;
     private String reason;
 
     public PanicDTO(Panic panic){
         this.id = panic.getId();
         this.user = new UserDTO(panic.getUser());
-        this.ride = new RideDTO(panic.getRide());
+        this.ride = new RideDTOResponse(panic.getRide());
         this.time = panic.getTime();
         this.reason = panic.getReason();
     }
