@@ -18,7 +18,7 @@ public class PassengerDTOResponse {
     private String email;
     private String address;
     private String password;
-    //private boolean blocked;      // TODO: da li smijem ostaviti ova dva atributa ili ipak da ih se rijesim :D
+    //private boolean blocked;
    // private boolean active;
 
     public PassengerDTOResponse(Passenger passenger){

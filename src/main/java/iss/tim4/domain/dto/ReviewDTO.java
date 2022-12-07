@@ -11,16 +11,14 @@ import lombok.NoArgsConstructor;
 public class ReviewDTO {
 
     private Long id;
-    private Integer grade;
+    private Integer rating;
     private String comment;
-    private RideDTO ride;
     private PassengerDTOResponse passenger;
 
     public ReviewDTO(Review review) {
         this.id = review.getId();
-        this.grade = review.getGrade();
+        this.rating = review.getGrade();
         this.comment = review.getComment();
-        this.ride = new RideDTO(review.getRide());
         this.passenger = new PassengerDTOResponse(review.getPassenger());
     }
 }

@@ -16,7 +16,7 @@ public class LocationServiceJPA {
     @Autowired
     private LocationRepositoryJPA locationRepositoryJPA;
 
-    public Location findOne(Long id) {
+    public Location findOne(Integer id) {
         return locationRepositoryJPA.findById(id).orElseGet(null);
     }
 
@@ -32,7 +32,7 @@ public class LocationServiceJPA {
         return locationRepositoryJPA.save(location);
     }
 
-    public void remove(Long id) {
+    public void remove(Integer id) {
         locationRepositoryJPA.deleteById(id);
     }
 

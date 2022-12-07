@@ -1,6 +1,6 @@
 package iss.tim4.domain.dto;
 
-import iss.tim4.domain.model.Passenger;
+import iss.tim4.domain.model.Ride;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,13 +8,14 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PassengerDTORequest {
+public class RidesOfPassengerDTO {
 
     private int totalCount;
-    private PassengerDTOResult[] results;
+    private OneRideOfPassengerDTO[] results;
 
-    public PassengerDTORequest(PassengerDTOResult[] results, int totalCount){
+    public RidesOfPassengerDTO(OneRideOfPassengerDTO[] results, int totalCount){
         this.totalCount = totalCount;
         this.results = results;
     }
+
 }
