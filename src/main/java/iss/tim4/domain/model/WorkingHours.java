@@ -1,5 +1,6 @@
 package iss.tim4.domain.model;
 
+import iss.tim4.domain.dto.WorkingHoursDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -19,14 +20,21 @@ public class WorkingHours {
     private Long id;
 
     @Column(name = "start_time")
-    private LocalDateTime startTime;
+    private LocalDateTime start;
 
     @Column(name = "end_time")
-    private LocalDateTime endTime;
+    private LocalDateTime end;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "driver_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Driver driver;
+
+    public WorkingHours(Driver driver, WorkingHoursDTOResponse workingHoursDTOResponse) {
+        this.driver = driver;
+        this.start = workingHoursDTOResponse.getStart();
+        this.end = workingHoursDTOResponse.getEnd();
+    }
 
 
     @Override
@@ -40,5 +48,10 @@ public class WorkingHours {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void update(WorkingHoursDTOResponse workingHoursDTOResponse) {
+        this.start = workingHoursDTOResponse.getStart();
+        this.end = workingHoursDTOResponse.getEnd();
     }
 }

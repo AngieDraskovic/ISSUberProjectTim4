@@ -3,6 +3,7 @@ package iss.tim4.domain.dto;
 import iss.tim4.domain.model.Passenger;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Data

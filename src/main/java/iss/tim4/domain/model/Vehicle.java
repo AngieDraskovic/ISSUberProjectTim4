@@ -1,11 +1,11 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.VehicleName;
+import iss.tim4.domain.dto.VehicleDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
-import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
@@ -50,6 +50,17 @@ public class Vehicle {
     @JoinColumn(name = "vehicle_id")
     @ToString.Exclude
     private Set<Review> reviews = new HashSet<Review>();
+
+    public Vehicle(Driver driver, VehicleDTOResponse vehicleDTOResponse) {
+        this.model = vehicleDTOResponse.getModel();
+        this.vehicleName = VehicleName.valueOf(vehicleDTOResponse.getVehicleType());
+        this.regPlates = vehicleDTOResponse.getLicenseNumber();
+        this.numSeats = vehicleDTOResponse.getPassengerSeats();
+        this.currLocation = new Location(vehicleDTOResponse.getCurrentLocation());
+        this.babyProof = vehicleDTOResponse.getBabyTransport();
+        this.petsAllowed = vehicleDTOResponse.getPetTransport();
+        this.driver = driver;
+    }
 
 
     public void addReview(Review review) {

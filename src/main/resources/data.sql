@@ -39,6 +39,14 @@ INSERT INTO VEHICLE_TYPE
     (ID, PRICE, VEHICLE_NAME) VALUES ( 1, 200.00,  1), ( 2, 299.99,  2);
 
 
+--INSERT INTO DRIVER_DOCUMENT (ID, DOCUMENT_IMAGE, NAME, DRIVER_ID)
+--    VALUES ( 1, '1.png', 'driver license', 1 ),
+--        ( 2, '2.png', 'driver license', 2 ),
+--        ( 3, '3.png', 'driver license', 3 ),
+--        ( 4, '3.png', 'driver license', 4 ),
+--        ( 5, '4.png', 'driver license', 5 );
+
+
 INSERT INTO VEHICLE
     (ID, BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID) VALUES
     ( 1, true, 'Tesla', 4, true,  'Sta?', 1, 1),
@@ -100,3 +108,4 @@ INSERT INTO RIDE
 INSERT INTO PARTICIPATION(RIDE_ID, PASSENGER_ID) VALUES ( 7, 5423);
 
 INSERT INTO ROUTE (ID, KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, PASSENGER_ID, RIDE_ID) values (1, 2.5, 1, 2, 5423, 7);
+
