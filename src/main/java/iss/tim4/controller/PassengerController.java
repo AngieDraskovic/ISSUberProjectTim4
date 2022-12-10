@@ -1,6 +1,9 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerDTOGetAll;
+import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
+import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.PassengerActivation;
 import iss.tim4.domain.model.Ride;

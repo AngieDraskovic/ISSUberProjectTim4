@@ -1,5 +1,6 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.review;
 
+import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.model.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -11,16 +12,14 @@ import lombok.NoArgsConstructor;
 public class ReviewDTO {
 
     private Long id;
-    private Integer grade;
+    private Integer rating;
     private String comment;
-    private RideDTO ride;
     private PassengerDTOResponse passenger;
 
     public ReviewDTO(Review review) {
         this.id = review.getId();
-        this.grade = review.getGrade();
+        this.rating = review.getGrade();
         this.comment = review.getComment();
-        this.ride = new RideDTO(review.getRide());
         this.passenger = new PassengerDTOResponse(review.getPassenger());
     }
 }

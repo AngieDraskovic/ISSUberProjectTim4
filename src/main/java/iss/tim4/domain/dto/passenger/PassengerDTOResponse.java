@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.passenger;
 
 import iss.tim4.domain.model.Passenger;
 import lombok.AllArgsConstructor;
@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PassengerDTOResponse {
 
+    private Integer id;
     private String name;
     private String surname;
     private String profilePicture;
@@ -21,6 +22,7 @@ public class PassengerDTOResponse {
    // private boolean active;
 
     public PassengerDTOResponse(Passenger passenger){
+        this.id = passenger.getId();
         this.name = passenger.getName();
         this.surname = passenger.getSurname();
         this.email = passenger.getEmail();

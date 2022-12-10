@@ -1,5 +1,6 @@
 package iss.tim4.domain.model;
 
+import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -59,7 +60,20 @@ public class Driver {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
+    @ToString.Exclude
     private Vehicle vehicle;
+
+    public Driver(DriverDTOResponse driverDTOResponse) {
+        this.name = driverDTOResponse.getName();
+        this.surname = driverDTOResponse.getSurname();
+        this.profilePicture = driverDTOResponse.getProfilePicture();
+        this.telephoneNumber = driverDTOResponse.getTelephoneNumber();
+        this.email = driverDTOResponse.getEmail();
+        this.address = driverDTOResponse.getAddress();
+        this.password = driverDTOResponse.getPassword();
+        this.active = false;
+        this.blocked = false;
+    }
 
     public void addDocument(DriverDocument document){
         documents.add(document);
@@ -87,5 +101,15 @@ public class Driver {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public void updateDriver(DriverDTOResponse driverDTOResponse) {
+        this.name = driverDTOResponse.getName();
+        this.surname = driverDTOResponse.getSurname();
+        this.profilePicture = driverDTOResponse.getProfilePicture();
+        this.telephoneNumber = driverDTOResponse.getTelephoneNumber();
+        this.email = driverDTOResponse.getEmail();
+        this.address = driverDTOResponse.getAddress();
+        this.password = driverDTOResponse.getPassword();
     }
 }

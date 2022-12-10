@@ -1,6 +1,9 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.ride;
 
 import iss.tim4.domain.RideStatus;
+import iss.tim4.domain.dto.RejectionDTO;
+import iss.tim4.domain.dto.VehicleTypeDTO;
+import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.model.Ride;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -17,7 +20,7 @@ public class RideDTO {
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double price;
-    private DriverDTO driver;
+    private DriverDTOResult driver;
     private Double estimatedTime;
     private RideStatus rideStatus;
     private RejectionDTO rejectionDTO;
@@ -30,7 +33,7 @@ public class RideDTO {
         this.id = ride.getId();
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
-        this.driver = new DriverDTO(ride.getDriver());
+        this.driver = new DriverDTOResult(ride.getDriver());
         this.estimatedTime = ride.getEstimatedTimeInMinutes();
         this.rideStatus = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());

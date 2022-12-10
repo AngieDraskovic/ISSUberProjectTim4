@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.user;
 
 import iss.tim4.domain.model.User;
 import lombok.AllArgsConstructor;
