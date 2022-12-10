@@ -1,7 +1,6 @@
 package iss.tim4.domain.model;
 
-import iss.tim4.domain.dto.DriverDTOResponse;
-import iss.tim4.domain.dto.DriverDTOResult;
+import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

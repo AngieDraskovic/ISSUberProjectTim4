@@ -1,5 +1,7 @@
 package iss.tim4.domain.dto;
 
+import iss.tim4.domain.dto.ride.RideDTOResponse;
+import iss.tim4.domain.dto.user.UserDTO;
 import iss.tim4.domain.model.Panic;
 import lombok.AllArgsConstructor;
 import lombok.Data;

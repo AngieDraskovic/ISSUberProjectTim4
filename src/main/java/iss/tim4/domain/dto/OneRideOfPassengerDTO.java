@@ -1,7 +1,8 @@
 package iss.tim4.domain.dto;
 
-import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
+import iss.tim4.domain.dto.driver.DriverRideDTO;
+import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.domain.model.Route;

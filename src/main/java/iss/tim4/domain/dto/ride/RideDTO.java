@@ -1,6 +1,9 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.ride;
 
 import iss.tim4.domain.RideStatus;
+import iss.tim4.domain.dto.RejectionDTO;
+import iss.tim4.domain.dto.VehicleTypeDTO;
+import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.model.Ride;
 import lombok.AllArgsConstructor;
 import lombok.Data;

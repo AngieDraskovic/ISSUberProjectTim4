@@ -1,6 +1,5 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.driver;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

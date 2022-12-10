@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.working.hours;
 
 import iss.tim4.domain.model.WorkingHours;
 import lombok.AllArgsConstructor;

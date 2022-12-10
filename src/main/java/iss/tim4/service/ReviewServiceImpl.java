@@ -1,6 +1,8 @@
 package iss.tim4.service;
 
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
+import iss.tim4.domain.dto.review.ReviewDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;

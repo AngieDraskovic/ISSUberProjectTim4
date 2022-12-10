@@ -1,6 +1,6 @@
 package iss.tim4.domain.model;
 
-import iss.tim4.domain.dto.WorkingHoursDTOResponse;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;

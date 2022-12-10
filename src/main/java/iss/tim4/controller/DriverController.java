@@ -1,6 +1,14 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.driver.DriverDTORequest;
+import iss.tim4.domain.dto.driver.DriverDTOResponse;
+import iss.tim4.domain.dto.driver.DriverDTOResult;
+import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResponse;
+import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResult;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResult;
 import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.DriverDocument;
 import iss.tim4.domain.model.Vehicle;

@@ -17,14 +17,14 @@ public class PanicServiceImpl implements PanicService {
 
     @Override
     public Collection<PanicDTO> findAll() {
-        return List.of(new PanicDTO(1L, null, null, LocalDateTime.now(), "KEKEKEKEKEK"));
+        return List.of(new PanicDTO(1, null, null, LocalDateTime.now(), "KEKEKEKEKEK"));
     }
 
     @Override
     public UberPageDTO<PanicDTO> findAll(Pageable pageable) {
         return new UberPageDTO<PanicDTO>(
                 1L,
-                List.of(new PanicDTO(1L, null, null, LocalDateTime.now(), "KEKEKEKEKEK"))
+                List.of(new PanicDTO(1, null, null, LocalDateTime.now(), "KEKEKEKEKEK"))
         );
     }
 }
