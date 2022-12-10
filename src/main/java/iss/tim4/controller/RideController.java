@@ -2,6 +2,9 @@ package iss.tim4.controller;
 
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerRideDTO;
+import iss.tim4.domain.dto.ride.RideDTORequest;
+import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.model.*;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;

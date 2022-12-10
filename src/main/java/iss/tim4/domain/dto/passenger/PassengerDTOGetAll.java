@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.passenger;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

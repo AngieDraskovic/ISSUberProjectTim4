@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.driver.document;
 
 import iss.tim4.domain.model.DriverDocument;
 import lombok.AllArgsConstructor;
@@ -8,14 +8,17 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class DriverDocumentDTOResponse {
+public class DriverDocumentDTOResult {
 
+    private Long id;
     private String name;
     private String documentImage;
+    private Long driverId;
 
-
-    public DriverDocumentDTOResponse(DriverDocument driverDocument) {
+    public DriverDocumentDTOResult(DriverDocument driverDocument) {
+        this.id = driverDocument.getId();
         this.name = driverDocument.getName();
         this.documentImage = driverDocument.getDocumentImage();
+        this.driverId = driverDocument.getDriver().getId();
     }
 }

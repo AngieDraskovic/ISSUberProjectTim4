@@ -1,11 +1,8 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.LocationDTO;
-import iss.tim4.domain.dto.WorkingHoursDTOResponse;
-import iss.tim4.domain.dto.WorkingHoursDTOResult;
 import iss.tim4.domain.model.Location;
 import iss.tim4.domain.model.Vehicle;
-import iss.tim4.domain.model.WorkingHours;
 import iss.tim4.service.LocationServiceJPA;
 import iss.tim4.service.VehicleServiceJPA;
 import lombok.AllArgsConstructor;

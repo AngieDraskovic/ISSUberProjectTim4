@@ -1,5 +1,6 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.review;
 
+import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.model.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;

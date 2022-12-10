@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.driver;
 
 import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.User;

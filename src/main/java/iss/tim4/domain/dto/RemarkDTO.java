@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto;
 
+import iss.tim4.domain.dto.user.UserDTO;
 import iss.tim4.domain.model.Remark;
 import lombok.AllArgsConstructor;
 import lombok.Data;

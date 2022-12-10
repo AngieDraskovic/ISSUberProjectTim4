@@ -1,14 +1,12 @@
 package iss.tim4.service;
 
 import iss.tim4.domain.dto.CreateReviewDTO;
-import iss.tim4.domain.dto.ReviewDTO;
+import iss.tim4.domain.dto.review.ReviewDTO;
 import iss.tim4.domain.dto.RideReviewsDTO;
 import iss.tim4.domain.dto.UberPageDTO;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
 import java.util.Collection;
-import java.util.Map;
 
 public interface ReviewService {
     Collection<RideReviewsDTO> findReviewByRideId(Long id);
