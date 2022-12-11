@@ -96,7 +96,7 @@ public class RideController {
         ride.setStartTime(LocalDateTime.parse("2022-11-11T11:31:31"));
         ride.setPanic(false);
         ride = rideServiceJPA.save(ride);
-        return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.CREATED);
+        return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.OK);   // trebalo bi ovdje created
     }
 
 

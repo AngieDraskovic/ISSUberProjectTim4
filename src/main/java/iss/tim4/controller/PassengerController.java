@@ -70,11 +70,10 @@ public class PassengerController {
         passenger.setActive(false);
         passenger.setBlocked(false);
         passenger = passengerServiceJPA.save(passenger);
-        return new ResponseEntity<>(new PassengerDTOResult(passenger), HttpStatus.CREATED);
+        return new ResponseEntity<>(new PassengerDTOResult(passenger), HttpStatus.OK);  // it should be created......
     }
 
     // update   --> /api/passenger/1
-    // radi i ukoliko proslijedimo samo ona polja koja zelimo da promjenimo
     @PutMapping(value = "/{id}")
     public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOResponse passengerDTO, @PathVariable Integer id)
             throws Exception {
@@ -82,8 +81,6 @@ public class PassengerController {
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        // passengerDTO -> the one sent by the request
-        // passengerForUpdate -> the one we are updating
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());
         }
@@ -119,13 +116,17 @@ public class PassengerController {
     @GetMapping(value="/activate/{activationId}")
     public ResponseEntity<Void> activatePassenger(@PathVariable("activationId") Integer activationId){
         PassengerActivation passengerForActivation = passengerActivationService.findOne(activationId);
+
+        if (passengerForActivation == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Passenger p = passengerForActivation.getPassenger();
         p.setActive(true);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
-    //get passengers rides -> /api/passenger/1/ride TODO
+    //get passengers rides -> /api/passenger/1/ride
     @GetMapping(value = "/{id}/ride")
     public ResponseEntity<RidesOfPassengerDTO> getPassengerRides(@PathVariable("id") Integer id) {
         Passenger passenger = passengerServiceJPA.findOne(id);
