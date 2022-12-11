@@ -9,10 +9,7 @@ import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResult;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResult;
-import iss.tim4.domain.model.Driver;
-import iss.tim4.domain.model.DriverDocument;
-import iss.tim4.domain.model.Vehicle;
-import iss.tim4.domain.model.WorkingHours;
+import iss.tim4.domain.model.*;
 import iss.tim4.service.DriverDocumentServiceJPA;
 import iss.tim4.service.DriverServiceJPA;
 import iss.tim4.service.VehicleServiceJPA;
@@ -51,7 +48,7 @@ public class DriverController {
         Driver driver = new Driver(driverDTOResponse);
         Driver savedDriver = driverServiceJPA.save(driver);
         DriverDTOResult driverDTOResult = new DriverDTOResult(savedDriver);
-        return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.CREATED);
+        return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
     }
 
 
@@ -80,11 +77,12 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<DriverDTOResponse> updateDriver(@RequestBody DriverDTOResponse driverDTOResponse, @PathVariable Integer id) {
+    public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOResponse driverDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         driver.updateDriver(driverDTOResponse);
         driverServiceJPA.save(driver);
-        return new ResponseEntity<DriverDTOResponse>(driverDTOResponse, HttpStatus.OK);
+        DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
+        return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
     }
 
 
@@ -102,11 +100,11 @@ public class DriverController {
 
 
     // #6 delete driver documents - DELETE api/driver/1/documents
-    @DeleteMapping(value = "/{id}/documents")
+    @DeleteMapping(value = "/document/{id}")
     public ResponseEntity<Void> deleteDriverDocuments(@PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         driverDocumentServiceJPA.removeByDriverId(driver.getId());
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
 
@@ -154,7 +152,7 @@ public class DriverController {
     }
 
     // #11 get driver working hours - GET api/driver/1/working-hours
-    @GetMapping(value = "/{id}/working-hours", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkingHoursDTORequest> getDriverWorkingHours(@PathVariable("id") Integer id) {
         List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(Long.valueOf(id));
 
@@ -169,7 +167,7 @@ public class DriverController {
 
 
     // #12 create driver working-hours - POST api/driver/1/working-hours
-    @PostMapping(value = "/{id}/working-hours", consumes = "application/json")
+    @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
     public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         WorkingHours workingHours = new WorkingHours(driver, workingHoursDTOResponse);
@@ -177,6 +175,25 @@ public class DriverController {
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
         return new ResponseEntity<>(workingHoursDTOResult, HttpStatus.OK);
     }
+
+
+    // #13 get driver rides - GET api/driver/1/ride
+    @GetMapping(value = "/{id}/ride")
+    public ResponseEntity<RidesOfPassengerDTO> getPassengerRides(@PathVariable("id") Integer id) {
+        Driver driver = driverServiceJPA.findOne(id);
+        Set<Ride> rides = driver.getRides();
+        int totalCount = rides.size();
+
+        OneRideOfPassengerDTO[] results = new OneRideOfPassengerDTO[totalCount];
+        int iter = 0;
+        for(Ride ride : rides){
+            results[iter] = new OneRideOfPassengerDTO(ride);
+            iter++;
+        }
+        RidesOfPassengerDTO ridesOfPassengerDTO = new RidesOfPassengerDTO(results, totalCount);
+        return new ResponseEntity<>(ridesOfPassengerDTO, HttpStatus.OK);
+    }
+
 
 
     // #14 get driver vehicle - GET api/driver/working-hour/1
