@@ -30,7 +30,7 @@ public class VehicleController {
         Location location = vehicle.getCurrLocation();
         location.update(locationDTO);
         locationServiceJPA.save(location);
-        return new ResponseEntity<String>("Coordinates successfully updated", HttpStatus.OK);
+        return new ResponseEntity<String>("Coordinates successfully updated", HttpStatus.NO_CONTENT);
     }
 
 }
