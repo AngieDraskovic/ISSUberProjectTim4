@@ -28,10 +28,10 @@ public class Passenger {
     @Column(name = "profile_picture")  // nullable=true (default value)
     private String profilePicture;
 
-    @Column(name = "telephone_number", unique = true, nullable = false)
+    @Column(name = "telephone_number", nullable = false)
     private String telephoneNumber;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "address", nullable = false)
