@@ -39,6 +39,8 @@ INSERT INTO DRIVER
 (ID, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
 VALUES (123, true, 'NS, 21000', false, 'f@y.ru', 'Flex', 'kekekekekek', '4.png', 'Petrovicсcсс', '+7 977 977 27 25', 5);
 
+INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID) VALUES ('2022-10-10 10:21:20','2022-10-10 10:21:20', 1);
+
 INSERT INTO USERS
 (active, address, blocked, email, name, password, img_path, surname, phone)
 VALUES (true, 'NS, 21000', false, 'a@a.ru', 'Alex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 20');
