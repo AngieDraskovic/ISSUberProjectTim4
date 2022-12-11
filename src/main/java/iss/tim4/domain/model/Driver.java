@@ -29,10 +29,10 @@ public class Driver {
     @Column(name = "profilePicture")  // nullable=true (default value)
     private String profilePicture;
 
-    @Column(name = "telephoneNumber", unique = true, nullable = false)
+    @Column(name = "telephoneNumber", nullable = false)
     private String telephoneNumber;
 
-    @Column(name = "email", unique = true, nullable = false)
+    @Column(name = "email", nullable = false)
     private String email;
 
     @Column(name = "address", nullable = false)
