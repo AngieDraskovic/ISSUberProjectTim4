@@ -1,6 +1,7 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOGetAll;
 import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
@@ -15,12 +16,15 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
 @RequestMapping("/api/passenger")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class PassengerController {
 
     @Autowired
@@ -43,6 +47,18 @@ public class PassengerController {
 
     }
 
+
+    @GetMapping("/all")
+    public ResponseEntity getAllPassengers() {
+        List<Passenger> passengers = passengerServiceJPA.findAll();
+        List<PassengerDTOResult> passengerDTOResults = new ArrayList<>();
+        for(Passenger p : passengers) {
+            PassengerDTOResult result = new PassengerDTOResult(p);
+            passengerDTOResults.add(result);
+        }
+        return new ResponseEntity<>(passengerDTOResults, HttpStatus.OK);
+
+    }
 
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
