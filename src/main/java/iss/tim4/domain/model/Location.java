@@ -1,7 +1,7 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.LocationDTO;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
