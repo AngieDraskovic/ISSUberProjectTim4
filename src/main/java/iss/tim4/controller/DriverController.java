@@ -28,6 +28,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/driver")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class DriverController {
     @Autowired
     private DriverServiceJPA driverServiceJPA;
