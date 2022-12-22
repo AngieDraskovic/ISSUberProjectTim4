@@ -1,6 +1,6 @@
 package iss.tim4.domain.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -18,6 +18,12 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Column(name = "username", nullable = false)
+    private String username;
+
+    @Column(name = "role", nullable = false)
+    private Role role;
 
     @Column(name = "name", nullable = false)
     private String name;
@@ -69,5 +75,13 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public org.springframework.security.core.userdetails.UserDetails toUserDetails() {
+        return org.springframework.security.core.userdetails.User
+                .withUsername(this.getUsername())
+                .password(this.getPassword())
+                .roles(this.getRole().toString())
+                .build();
     }
 }
