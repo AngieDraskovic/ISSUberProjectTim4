@@ -58,6 +58,11 @@ public class Ride {
     @ToString.Exclude
     private Set<Route> routes = new HashSet<Route>();
 
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "route_id", referencedColumnName = "id")
+//    @ToString.Exclude
+//    private Route route;
+
     @OneToMany(mappedBy = "ride", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Review> reviews = new HashSet<Review>();
@@ -81,10 +86,10 @@ public class Ride {
         review.setRide(this);
     }
 
-    public void addRoute(Route route){
-        routes.add(route);
-        route.setRide(this);
-    }
+//    public void addRoute(Route route){
+//        routes.add(route);
+//        route.setRide(this);
+//    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

@@ -19,7 +19,6 @@ public class DriverDTOResult {
     private String address;
 
 
-
     public DriverDTOResult(Driver driver) {
         this.id = driver.getId();
         this.name = driver.getName();
