@@ -14,41 +14,39 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Driver {
+@DiscriminatorValue("driver")
+public class Driver extends User {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @Column(name = "profilePicture")  // nullable=true (default value)
-    private String profilePicture;
-
-    @Column(name = "telephoneNumber", nullable = false)
-    private String telephoneNumber;
-
-    @Column(name = "email", nullable = false)
-    private String email;
-
-    @Column(name = "address", nullable = false)
-    private String address;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "blocked", nullable = false)
-    private Boolean blocked;
-
-    /* I nema neke velike potrebe da se u bazi cuva da li je korisnik trenutno aktivan, ali
-    nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
-     */
-    @Column(name = "active", nullable = false)
-    private Boolean active;
+//    @Id
+//    @GeneratedValue(strategy = GenerationType.IDENTITY)
+//    private Long id;
+//
+//    @Column(name = "name", nullable = false)
+//    private String name;
+//
+//    @Column(name = "surname", nullable = false)
+//    private String surname;
+//
+//    @Column(name = "profilePicture")  // nullable=true (default value)
+//    private String profilePicture;
+//
+//    @Column(name = "telephoneNumber", nullable = false)
+//    private String telephoneNumber;
+//
+//    @Column(name = "email", nullable = false)
+//    private String email;
+//
+//    @Column(name = "address", nullable = false)
+//    private String address;
+//
+//    @Column(name = "password", nullable = false)
+//    private String password;
+//
+//    @Column(name = "blocked", nullable = false)
+//    private Boolean blocked;
+//
+//    @Column(name = "active", nullable = false)
+//    private Boolean active;
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude

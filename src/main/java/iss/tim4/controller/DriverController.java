@@ -219,8 +219,8 @@ public class DriverController {
     }
 
 
+
     // #16 create new driver request - POST api/driver/driver-request/
-    // TODO: Napravi post metodu
     @PostMapping(value = "/driver-request", consumes = "application/json")
     public ResponseEntity<DriverRequestDTOResult> createDriverRequest(@RequestBody DriverRequestDTORequest driverRequestDTORequest) {
         Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId().intValue());
@@ -231,6 +231,8 @@ public class DriverController {
         return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
     }
 
+
+
     // #17 get driver request - GET api/driver/driver-request/1
     @GetMapping(value = "/driver-request/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DriverRequestDTOResult> getDriverRequest(@PathVariable("id") Integer id) {
@@ -238,5 +240,6 @@ public class DriverController {
         DriverRequestDTOResult driverRequestDTOResult = new DriverRequestDTOResult(driverRequest);
         return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
     }
+
 
 }

@@ -35,7 +35,7 @@ public class DriverDocumentServiceJPA {
         driverDocumentRepositoryJPA.deleteById(id);
     }
 
-    public Integer removeByDriverId(Long driverId) { return driverDocumentRepositoryJPA.deleteByDriverId(driverId); }
+    public Integer removeByDriverId(Integer driverId) { return driverDocumentRepositoryJPA.deleteByDriverId(driverId); }
 
 
 }

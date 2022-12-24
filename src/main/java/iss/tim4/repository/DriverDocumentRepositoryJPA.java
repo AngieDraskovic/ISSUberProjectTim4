@@ -14,5 +14,5 @@ public interface DriverDocumentRepositoryJPA extends JpaRepository<DriverDocumen
     @Modifying
     @Transactional
     @Query("Delete From DriverDocument where driver.id = :driverId")
-    public Integer deleteByDriverId(@Param("driverId") Long driverId);
+    public Integer deleteByDriverId(@Param("driverId") Integer driverId);
 }

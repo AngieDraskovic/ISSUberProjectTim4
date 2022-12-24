@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DriverDTOResult {
 
-    private Long id;
+    private Integer id;
     private String name;
     private String surname;
     private String profilePicture;

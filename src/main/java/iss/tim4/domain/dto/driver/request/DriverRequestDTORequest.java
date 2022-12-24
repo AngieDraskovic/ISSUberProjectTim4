@@ -10,7 +10,7 @@ public class DriverRequestDTORequest {
 
 
     // ABOUT DRIVER
-    private Long driverId;
+    private Integer driverId;
     private String newName;
     private String newSurname;
     private String newProfilePicture;

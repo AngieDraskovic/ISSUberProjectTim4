@@ -21,7 +21,7 @@ public class Panic {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "panic_time", nullable = false)
     private LocalDateTime time;
 
     @Column(name = "reason", nullable = false)

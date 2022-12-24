@@ -13,7 +13,7 @@ public class DriverDocumentDTOResult {
     private Long id;
     private String name;
     private String documentImage;
-    private Long driverId;
+    private Integer driverId;
 
     public DriverDocumentDTOResult(DriverDocument driverDocument) {
         this.id = driverDocument.getId();

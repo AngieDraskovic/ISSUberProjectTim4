@@ -28,7 +28,7 @@ public class Rejection {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "rejection_time", nullable = false)
     private LocalDateTime time;
 
 
