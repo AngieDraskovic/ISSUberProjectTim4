@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CreateDefaultUserOnStartup {
+
     @EventListener(ApplicationReadyEvent.class)
     public void createDefaultUser() {
         System.out.println("hello world, I have just started up");

@@ -7,10 +7,11 @@ import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface UserService {
+public interface UserService extends UserDetailsService {
     UberPageDTO<RideDTOResponse> getRidesOfUser(Pageable pageable, Long userId);
 
     UberPageDTO<UserDTO> getAllUsers(Pageable pageable);
