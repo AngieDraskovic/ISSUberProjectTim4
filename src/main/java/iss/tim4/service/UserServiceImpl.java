@@ -5,8 +5,10 @@ import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
+import iss.tim4.domain.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -62,5 +64,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserNoteDTO createUserNote(CreateUserNoteDTO createUserNoteDTO, Long userId) {
         return mockNote();
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) {
+        return org.springframework.security.core.userdetails.User
+                .withUsername(username)
+                .password("admin")
+                .roles(String.valueOf(Role.ADMIN))
+                .build();
     }
 }
