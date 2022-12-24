@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class DriverRideDTO {
 
-    private Long id;
+    private Integer id;
     private String email;
 
 

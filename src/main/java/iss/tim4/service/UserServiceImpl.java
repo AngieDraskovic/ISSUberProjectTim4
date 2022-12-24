@@ -19,7 +19,7 @@ public class UserServiceImpl implements UserService {
     RideServiceJPA rideServiceJPA;
 
     private UserDTO mockUser() {
-        return new UserDTO(1L, "Sasha", "P", "1", "3", "3", "3");
+        return new UserDTO(1, "Sasha", "P", "1", "3", "3", "3");
     }
 
     private SentUserMessageDTO mockMessage() {

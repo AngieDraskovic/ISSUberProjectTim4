@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserDTO {
 
-    private Long id;
+    private Integer id;
     private String name;
     private String surname;
     private String profilePicture;
@@ -24,8 +24,8 @@ public class UserDTO {
         this.name = user.getName();
         this.surname = user.getSurname();
         this.email = user.getEmail();
-        this.profilePicture = user.getImgPath();
-        this.telephoneNumber = user.getPhone();
+        this.profilePicture = user.getProfilePicture();
+        this.telephoneNumber = user.getTelephoneNumber();
         this.address = user.getAddress();
     }
 }

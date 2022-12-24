@@ -33,6 +33,10 @@ public class Route {
     @JoinColumn(name = "ride_id")
     private Ride ride;
 
+//    @OneToOne(mappedBy = "route")
+//    private Ride ride;
+
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

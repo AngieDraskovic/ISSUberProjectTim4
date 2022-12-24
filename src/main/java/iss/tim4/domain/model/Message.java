@@ -30,7 +30,7 @@ public class Message {
     @Column(name = "text", nullable = false)
     private String text;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "send_time", nullable = false)
     private LocalDateTime time;
 
     @Column(name = "type", nullable = false)

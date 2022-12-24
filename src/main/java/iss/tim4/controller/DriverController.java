@@ -6,14 +6,13 @@ import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResponse;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResult;
+import iss.tim4.domain.dto.driver.request.DriverRequestDTORequest;
+import iss.tim4.domain.dto.driver.request.DriverRequestDTOResult;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResult;
 import iss.tim4.domain.model.*;
-import iss.tim4.service.DriverDocumentServiceJPA;
-import iss.tim4.service.DriverServiceJPA;
-import iss.tim4.service.VehicleServiceJPA;
-import iss.tim4.service.WorkingHoursServiceJPA;
+import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,6 +40,9 @@ public class DriverController {
 
     @Autowired
     private WorkingHoursServiceJPA workingHoursServiceJPA;
+
+    @Autowired
+    private DriverRequestServiceJPA driverRequestServiceJPA;
 
 
     // #1 create new driver - POST api/driver
@@ -216,6 +218,28 @@ public class DriverController {
         return new ResponseEntity<WorkingHoursDTOResult>(workingHoursDTOResult, HttpStatus.OK);
     }
 
+
+
+    // #16 create new driver request - POST api/driver/driver-request/
+    @PostMapping(value = "/driver-request", consumes = "application/json")
+    public ResponseEntity<DriverRequestDTOResult> createDriverRequest(@RequestBody DriverRequestDTORequest driverRequestDTORequest) {
+        Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId().intValue());
+        Vehicle vehicle = vehicleServiceJPA.findOne(driverRequestDTORequest.getVehicleId());
+        DriverRequest driverRequest = new DriverRequest(driver, vehicle, driverRequestDTORequest);
+        driverRequestServiceJPA.save(driverRequest);
+        DriverRequestDTOResult driverRequestDTOResult = new DriverRequestDTOResult(driverRequest);
+        return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
+    }
+
+
+
+    // #17 get driver request - GET api/driver/driver-request/1
+    @GetMapping(value = "/driver-request/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DriverRequestDTOResult> getDriverRequest(@PathVariable("id") Integer id) {
+        DriverRequest driverRequest = driverRequestServiceJPA.findOne(id);
+        DriverRequestDTOResult driverRequestDTOResult = new DriverRequestDTOResult(driverRequest);
+        return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
+    }
 
 
 }

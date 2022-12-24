@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 public class VehicleDTOResult {
 
     private Long id;
-    private Long driverId;
+    private Integer driverId;
     private String vehicleType;
     private String model;
     private String licenseNumber;
