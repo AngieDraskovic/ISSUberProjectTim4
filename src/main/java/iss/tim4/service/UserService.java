@@ -6,6 +6,7 @@ import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -23,4 +24,6 @@ public interface UserService {
     UberPageDTO<UserNoteDTO> getUserNote(Pageable pageable, Long userId);
 
     UserNoteDTO createUserNote(CreateUserNoteDTO createUserNoteDTO, Long userId);
+
+    UserDetails loadUserByUsername(String username);
 }

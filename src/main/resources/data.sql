@@ -42,16 +42,20 @@ VALUES ('driver', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan12
        ('driver', true, 'NS, 21000 2', false, 'b@t.ru', 'Blex', 'kekekekekek', '2.png', 'Petrovicс', '+8 977 977 27 21', 2),
        ('driver', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
        ('driver', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4);
+       
+-- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS 
 --
 --INSERT INTO USERS
 --(ID, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
 --VALUES (123, true, 'NS, 21000', false, 'f@y.ru', 'Flex', 'kekekekekek', '4.png', 'Petrovicсcсс', '+7 977 977 27 25', 5);
 --
+
 INSERT INTO DRIVER_DOCUMENT (DOCUMENT_IMAGE, NAME, DRIVER_ID)
 VALUES  ('1.jpg', 'driver licence', 6),
         ('2.jpg', 'driver licence', 7),
         ('3.jpg', 'driver licence', 8),
         ('4.jpg', 'driver licence', 9);
+
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
 VALUES  ('2022-10-10 10:21:20','2022-10-10 17:21:20', 6),

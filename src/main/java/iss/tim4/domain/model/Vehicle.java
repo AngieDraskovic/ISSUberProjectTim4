@@ -2,7 +2,7 @@ package iss.tim4.domain.model;
 
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.VehicleDTOResponse;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
