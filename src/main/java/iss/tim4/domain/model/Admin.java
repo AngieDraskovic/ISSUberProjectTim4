@@ -11,27 +11,8 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Admin {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "username", nullable = false)
-    private String username;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @Column(name = "img_path")
-    private String imgPath;
-
+@DiscriminatorValue("ADMIN")
+public class Admin extends User {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

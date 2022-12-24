@@ -5,7 +5,7 @@ import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import iss.tim4.domain.dto.driver.request.DriverRequestDTORequest;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

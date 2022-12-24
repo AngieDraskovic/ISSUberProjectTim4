@@ -15,15 +15,15 @@ import java.util.Set;
 @Entity
 @Table(name = "users")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="role", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue("DEFAULT")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     protected Integer id;
 
-    @Column(name = "username", nullable = false)
-    private String username;
-
-    @Column(name = "role", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, insertable=false, updatable=false)
     private Role role;
 
     @Column(name = "name", nullable = false)
@@ -41,7 +41,7 @@ public class User {
     @Column(name = "email", unique = true, nullable = false)
     protected String email;
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     protected String address;
 
     @Column(name = "password", nullable = false)
@@ -77,7 +77,7 @@ public class User {
 
     public org.springframework.security.core.userdetails.UserDetails toUserDetails() {
         return org.springframework.security.core.userdetails.User
-                .withUsername(this.getUsername())
+                .withUsername(this.getEmail())
                 .password(this.getPassword())
                 .roles(this.getRole().toString())
                 .build();

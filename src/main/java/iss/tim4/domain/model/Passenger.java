@@ -13,39 +13,8 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
-@DiscriminatorValue("passenger")
+@DiscriminatorValue("PASSENGER")
 public class Passenger extends User {
-
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    private Integer id;
-//
-//    @Column(name = "name", nullable = false)
-//    private String name;
-//
-//    @Column(name = "surname", nullable = false)
-//    private String surname;
-//
-//    @Column(name = "profile_picture")  // nullable=true (default value)
-//    private String profilePicture;
-//
-//    @Column(name = "telephone_number", nullable = false)
-//    private String telephoneNumber;
-//
-//    @Column(name = "email", nullable = false)
-//    private String email;
-//
-//    @Column(name = "address", nullable = false)
-//    private String address;
-//
-//    @Column(name = "password", nullable = false)
-//    private String password;
-//
-//    @Column(name = "blocked", nullable = false)
-//    private Boolean blocked;
-//
-//    @Column(name = "active", nullable = false)
-//    private Boolean active;
 
     /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
     *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */

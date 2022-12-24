@@ -5,7 +5,7 @@ import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.DriverRequest;
 import iss.tim4.domain.model.Vehicle;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
