@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class AdminDTO {
 
-    private Long id;
+    private Integer id;
     private String username;
     private String password;
     private String name;
@@ -19,10 +19,10 @@ public class AdminDTO {
 
     public AdminDTO(Admin admin) {
         this.id = admin.getId();
-        this.username = admin.getUsername();
+        this.username = admin.getEmail();
         this.password = admin.getPassword();
         this.name = admin.getName();
         this.surname = admin.getSurname();
-        this.imgPath = admin.getImgPath();
+        this.imgPath = admin.getProfilePicture();
     }
 }

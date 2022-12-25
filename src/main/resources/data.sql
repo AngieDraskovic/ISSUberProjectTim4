@@ -1,12 +1,12 @@
-INSERT INTO USERS(DTYPE, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES  ('passenger', true, 'NS, 21000', false, 'a@a.ru', 'Alex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 20'),
-        ('passenger', true, 'NS, 21000', false, 'b@a.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 22'),
-        ('passenger', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', '1.png', 'Ivanic', '+7 977 977 27 23'),
-        ('passenger', true, 'NS, 21000', false, 'g@a.ru', 'Dlex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 24'),
-        ('passenger', true, 'NS, 21000', false, 'd@a.ru', 'Elex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 25');
+INSERT INTO USERS(role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
+VALUES  ('PASSENGER', true, 'NS, 21000', false, 'a@a.ru', 'Alex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 20'),
+        ('PASSENGER', true, 'NS, 21000', false, 'b@a.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 22'),
+        ('PASSENGER', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', '1.png', 'Ivanic', '+7 977 977 27 23'),
+        ('PASSENGER', true, 'NS, 21000', false, 'g@a.ru', 'Dlex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 24'),
+        ('PASSENGER', true, 'NS, 21000', false, 'd@a.ru', 'Elex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 25');
 
-INSERT INTO USERS(id, DTYPE, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES (123, 'passenger', true, 'NS, 21000', false, 'b@b.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 21');
+INSERT INTO USERS(id, role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
+VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'b@b.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 21');
 
 INSERT INTO PASSENGER_ACTIVATION (CREATION_DATE, LIFE_LENGTH, PASSENGER_ID)
 VALUES  ('2022-10-10 10:21:20', 1, 1),
@@ -37,11 +37,11 @@ VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1),
        (false, 'Belarus', 1, true, '5FK-3DS', 3, 5);
 
 INSERT INTO USERS
-(DTYPE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
-VALUES ('driver', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', '1.png', 'Stankovic', '+8 977 977 27 20', 1),
-       ('driver', true, 'NS, 21000 2', false, 'b@t.ru', 'Blex', 'kekekekekek', '2.png', 'Petrovicс', '+8 977 977 27 21', 2),
-       ('driver', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
-       ('driver', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4);
+(ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
+VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', '1.png', 'Stankovic', '+8 977 977 27 20', 1),
+       ('DRIVER', true, 'NS, 21000 2', false, 'b@t.ru', 'Blex', 'kekekekekek', '2.png', 'Petrovicс', '+8 977 977 27 21', 2),
+       ('DRIVER', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
+       ('DRIVER', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4);
        
 -- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS 
 --
@@ -51,10 +51,10 @@ VALUES ('driver', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan12
 --
 
 INSERT INTO DRIVER_DOCUMENT (DOCUMENT_IMAGE, NAME, DRIVER_ID)
-VALUES  ('1.jpg', 'driver licence', 6),
-        ('2.jpg', 'driver licence', 7),
-        ('3.jpg', 'driver licence', 8),
-        ('4.jpg', 'driver licence', 9);
+VALUES  ('1.jpg', 'DRIVER licence', 6),
+        ('2.jpg', 'DRIVER licence', 7),
+        ('3.jpg', 'DRIVER licence', 8),
+        ('4.jpg', 'DRIVER licence', 9);
 
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
@@ -109,9 +109,9 @@ VALUES  ('dobar', 3, 1, 1, 1),
         ('odlican', 5, 3, 2, 4);
 
 
-INSERT INTO ADMIN (IMG_PATH, NAME, PASSWORD, SURNAME, USERNAME)
-VALUES  ('1.jpg', 'Novak', 'novak123', 'Djokovic', 'nole'),
-        ('2.jpg', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza');
+INSERT INTO USERS (ROLE, PROFILE_PICTURE, NAME, PASSWORD, SURNAME, EMAIL, ACTIVE, BLOCKED, telephone_number)
+VALUES  ('ADMIN', '1.jpg', 'Novak', 'novak123', 'Djokovic', 'nole', TRUE, FALSE, '+7 1'),
+        ('ADMIN', '2.jpg', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza', TRUE, FALSE, '+8 1');
 
 INSERT INTO DRIVER_REQUEST(NEW_ADDRESS, NEW_BABY_PROOF, NEW_EMAIL, NEW_MODEL, NEW_NAME, NEW_NUM_SEATS, NEW_PETS_ALLOWED, NEW_PROFILE_PICTURE, NEW_REG_PLATES, NEW_SURNAME, NEW_TELEPHONE_NUMBER, NEW_VEHICLE_NAME, STATUS, DRIVER_ID, VEHICLE_ID)
 VALUES ('nova adresa', true, 'mejl@gmail.com', 'bmw', 'Marko', 4, true, 'slika.jpg', 'SFD-4S', 'Markovic', '034952398', 2, 1, 9, 4);

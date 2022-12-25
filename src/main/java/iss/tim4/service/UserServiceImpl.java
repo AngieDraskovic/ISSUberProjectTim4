@@ -7,8 +7,11 @@ import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
 import iss.tim4.domain.model.Role;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -66,11 +69,15 @@ public class UserServiceImpl implements UserService {
         return mockNote();
     }
 
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @Override
     public UserDetails loadUserByUsername(String username) {
         return org.springframework.security.core.userdetails.User
                 .withUsername(username)
-                .password("admin")
+                .password(passwordEncoder.encode("admin"))
                 .roles(String.valueOf(Role.ADMIN))
                 .build();
     }
