@@ -36,8 +36,11 @@ public class WebSecurityConfiguration {
 		http.cors().and().csrf().disable().authorizeRequests()
 				.antMatchers("/api/login/*").permitAll()
 				.antMatchers("/api/unregisteredUser/**").permitAll()
+				.antMatchers("/api/driver/**").permitAll()
+				.antMatchers("/h2-console/**").permitAll()
 				.antMatchers("/**").authenticated()
 				.and()
+				.headers().frameOptions().disable().and()
 				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
