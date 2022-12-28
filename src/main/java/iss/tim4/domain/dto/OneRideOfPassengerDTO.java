@@ -17,7 +17,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 public class OneRideOfPassengerDTO {
-    private Long id;
+    private Integer id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double totalCost;
