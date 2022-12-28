@@ -17,6 +17,7 @@ public class DriverDTOResult {
     private String telephoneNumber;
     private String email;
     private String address;
+    private String password;
 
 
     public DriverDTOResult(Driver driver) {
@@ -27,6 +28,7 @@ public class DriverDTOResult {
         this.profilePicture = driver.getProfilePicture();
         this.telephoneNumber = driver.getTelephoneNumber();
         this.address = driver.getAddress();
+        this.password = driver.getPassword();
     }
 
     public void copyValues(DriverDTOResult driver) {
