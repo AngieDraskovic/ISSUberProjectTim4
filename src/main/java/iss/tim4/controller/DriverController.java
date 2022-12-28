@@ -223,6 +223,7 @@ public class DriverController {
     // #16 create new driver request - POST api/driver/driver-request/
     @PostMapping(value = "/driver-request", consumes = "application/json")
     public ResponseEntity<DriverRequestDTOResult> createDriverRequest(@RequestBody DriverRequestDTORequest driverRequestDTORequest) {
+        System.out.println("USAOOO");
         Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId().intValue());
         Vehicle vehicle = vehicleServiceJPA.findOne(driverRequestDTORequest.getVehicleId());
         DriverRequest driverRequest = new DriverRequest(driver, vehicle, driverRequestDTORequest);
