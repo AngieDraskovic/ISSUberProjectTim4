@@ -19,7 +19,7 @@ public class Vehicle {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "model", nullable = false)
     private String model;
@@ -39,6 +39,9 @@ public class Vehicle {
     @Column(name = "pets_allowed", nullable = false)
     private Boolean petsAllowed;
 
+    @Column(name="available", nullable = false)
+    private Boolean available;
+
     @OneToOne(mappedBy = "vehicle")
     private Driver driver;
 
@@ -51,6 +54,8 @@ public class Vehicle {
     @ToString.Exclude
     private Set<Review> reviews = new HashSet<Review>();
 
+
+
     public Vehicle(Driver driver, VehicleDTOResponse vehicleDTOResponse) {
         this.model = vehicleDTOResponse.getModel();
         this.vehicleName = VehicleName.valueOf(vehicleDTOResponse.getVehicleType());
@@ -60,6 +65,7 @@ public class Vehicle {
         this.babyProof = vehicleDTOResponse.getBabyTransport();
         this.petsAllowed = vehicleDTOResponse.getPetTransport();
         this.driver = driver;
+        this.available = vehicleDTOResponse.getAvailable();
     }
 
 

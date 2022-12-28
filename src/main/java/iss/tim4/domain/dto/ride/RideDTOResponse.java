@@ -21,7 +21,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class RideDTOResponse {
 
-    private Long id;
+    private Integer id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double totalCost;

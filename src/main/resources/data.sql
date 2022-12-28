@@ -16,25 +16,31 @@ VALUES  ('2022-10-10 10:21:20', 1, 1),
         ('2022-10-10 10:21:24', 1, 5);
 
 INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
-VALUES ('NS 1', 54.6, 64.2),
-       ('NS 2', 54.2, 64.3),
-       ('NS 3', 54.4, 64.7),
-       ('NS 4', 54.4, 64.4),
-       ('NS 5', 54.8, 64.0);
+VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
+       ('Narodnog Fronta 12, Novi Sad', 54.2, 64.3),
+       ('Futoska 12, Novi Sad', 54.4, 64.7),
+       ('Strazilovska 24, Novi Sad', 54.4, 64.4),
+       ('Hadzi Ruvimova 22, Novi Sad', 54.8, 64.0),
+       ('Kisacka 56, Novi Sad', 54.8, 64.0),
+       ('Aleksandra Tisme 8 22, Novi Sad', 54.8, 64.0),
+       ('Patrijarha Rajacica 16a, Novi Sad', 42.3, 21.1);
 
 INSERT INTO VEHICLE_TYPE
     (PRICE, VEHICLE_NAME)
-VALUES (200.00, 1),
-       (299.99, 2),
-       (399.99, 3);
+VALUES (200.00, 0),
+       (299.99, 0),
+       (399.99, 0);
 
 INSERT INTO VEHICLE
-(BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID)
-VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1),
-       (false, 'Audi', 4, true, '2FK-3DS', 2, 2),
-       (true, 'Reno', 4, true, '3FK-3DS', 2, 3),
-       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 1, 4),
-       (false, 'Belarus', 1, true, '5FK-3DS', 3, 5);
+(BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID, AVAILABLE)
+VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
+       (false, 'Audi', 4, true, '2FK-3DS', 2, 2,  true),
+       (true, 'Reno', 4, true, '3FK-3DS', 2, 3, true),
+       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 1, 4, true),
+       (false, 'Belarus', 1, true, '5FK-3DS',2, 5, true),
+       (false, 'Citroen C4', 1, true, '5FK-3DS',2, 6, true),
+       (false, 'BMW X1', 1, true, '5FK-3DS',2, 7, true),
+       (false, 'BMW X2', 1, true, '5FK-3DS',2, 8, true);
 
 INSERT INTO USERS
 (ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
@@ -76,11 +82,11 @@ VALUES ('Headache', '2022-11-11 10:32:01', 1);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PANIC, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE)
-VALUES  (true, '2022-10-10 10:21:20', 10.2, false, false, '2022-10-10 10:11:01', 0, 500, 6, 1, 2),
-        (false, '2022-10-10 11:21:20', 14.2, false, false, '2022-10-10 10:15:01', 0, 600, 7, null, 2),
-        (true, '2022-10-10 12:21:20', 20.2, false, false, '2022-10-10 10:01:01', 0, 700, 6, null, 2),
-        (true, '2022-10-10 13:21:20', 12.2, false, true, '2022-10-10 10:11:01', 0, 550, 8, null, 2),
-        (true, '2022-10-10 14:21:20', 15.2, false, false, '2022-10-10 10:06:01', 0, 600, 9, null, 2);
+VALUES  (true, '2022-12-29 10:20:20', 10.2, false, false, '2022-12-28 10:11:01', 0, 500, 6, 1, 2),
+        (false, '2022-12-29 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 0, 600, 7, null, 2),
+        (true, '2022-12-29 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 0, 700, 6, null, 2),
+        (true, '2022-12-29 15:21:20', 12.2, false, true, '2022-12-29 08:11:01', 0, 550, 8, null, 2),
+        (true, '2022-12-29 15:21:20', 15.2, false, false, '2022-12-29 08:06:01', 0, 600, 9, null, 2);
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
 values  (2.5, 1, 2, 1),

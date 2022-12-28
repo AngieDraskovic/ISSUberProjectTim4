@@ -19,7 +19,7 @@ public class Ride {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;

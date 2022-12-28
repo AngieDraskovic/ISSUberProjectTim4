@@ -35,4 +35,8 @@ public class RideServiceJPA {
     public void remove(Integer id) {
         rideRepositoryJPA.deleteById(id);
     }
+
+    public List<Object[]> getRideWithLocation(){
+        return rideRepositoryJPA.getRidesFromRoutes();
+    }
 }

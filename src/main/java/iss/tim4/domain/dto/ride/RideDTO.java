@@ -16,7 +16,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 public class RideDTO {
 
-    private Long id;
+    private Integer id;
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double price;
