@@ -36,6 +36,8 @@ public class WebSecurityConfiguration {
 		http.cors().and().csrf().disable().authorizeRequests()
 				.antMatchers("/api/login/*").permitAll()
 				.antMatchers("/api/unregisteredUser/**").permitAll()
+				.antMatchers("/api/passenger/**").permitAll()
+				.antMatchers("/api/driver/**").permitAll()
 				.antMatchers("api/login").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
 				.antMatchers("/api/vehicle/all").permitAll()			//TODO: check with Alex
