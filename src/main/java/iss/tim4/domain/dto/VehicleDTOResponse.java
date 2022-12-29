@@ -17,6 +17,7 @@ public class VehicleDTOResponse {
     private Integer passengerSeats;
     private Boolean babyTransport;
     private Boolean petTransport;
+    private Boolean available;
 
 
     public VehicleDTOResponse(Vehicle vehicle){
@@ -27,6 +28,7 @@ public class VehicleDTOResponse {
         this.currentLocation = new LocationDTO(vehicle.getCurrLocation());
         this.babyTransport = vehicle.getBabyProof();
         this.petTransport = vehicle.getPetsAllowed();
+        this.available = vehicle.getAvailable();
     }
 
 }

@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VehicleDTOResult {
 
-    private Long id;
+    private Integer id;
     private Integer driverId;
     private String vehicleType;
     private String model;

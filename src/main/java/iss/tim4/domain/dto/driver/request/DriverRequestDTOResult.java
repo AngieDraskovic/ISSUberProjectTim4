@@ -33,7 +33,7 @@ public class DriverRequestDTOResult {
 
 
     // ABOUT VEHICLE
-    private Long vehicleId;
+    private Integer vehicleId;
     private String newModel;
     private String newVehicleName;
     private String newRegPlates;
