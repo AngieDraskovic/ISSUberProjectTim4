@@ -15,7 +15,7 @@ public class VehicleDTOResult {
     private String vehicleType;
     private String model;
     private String licenseNumber;
-//    private LocationDTO currentLocation;
+    private LocationDTO currentLocation;
     private Integer passengerSeats;
     private Boolean babyTransport;
     private Boolean petTransport;
@@ -27,7 +27,7 @@ public class VehicleDTOResult {
         this.vehicleType = vehicle.getVehicleName().toString();
         this.licenseNumber = vehicle.getRegPlates();
         this.passengerSeats = vehicle.getNumSeats();
-//        this.currentLocation = new LocationDTO(vehicle.getCurrLocation());
+        this.currentLocation = new LocationDTO(vehicle.getCurrLocation());
         this.babyTransport = vehicle.getBabyProof();
         this.petTransport = vehicle.getPetsAllowed();
     }
