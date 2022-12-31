@@ -3,6 +3,8 @@ package iss.tim4.controller;
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.*;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
+import iss.tim4.domain.dto.ride.RideDTO;
+import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.model.*;
@@ -20,6 +22,7 @@ import java.util.Set;
 @RestController
 @RequestMapping("/api/ride")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class RideController {
 
     @Autowired
@@ -171,5 +174,14 @@ public class RideController {
         ride.getRejection().setReason(reasonDTO.getReason());
         RideDTOResponse result = new RideDTOResponse(ride);
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/create-example", consumes = "application/json")
+    public ResponseEntity<RideDTOExample> createRideExample(@RequestBody RideDTOExample rideDTO) throws Exception {
+
+        System.out.println(rideDTO);
+        System.out.println("USAO");
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }
