@@ -15,7 +15,7 @@ public class DriverRequestServiceJPA {
     private DriverRequestRepositoryJPA driverRequestRepositoryJPA;
 
     public DriverRequest findOne(Integer id) {
-        return driverRequestRepositoryJPA.findById(id).orElseGet(null);
+        return driverRequestRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<DriverRequest> findAll() {
