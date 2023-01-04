@@ -28,7 +28,6 @@ public class WebSecurityConfiguration {
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
-	@Qualifier("userServiceImpl")
 	private UserService userService;
 	
 	@Bean
