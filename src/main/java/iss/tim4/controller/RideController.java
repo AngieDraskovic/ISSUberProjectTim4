@@ -1,7 +1,9 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.RideStatus;
+import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import iss.tim4.domain.dto.ride.RideDTO;
 import iss.tim4.domain.dto.ride.RideDTOExample;
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -33,7 +36,8 @@ public class RideController {
     private DriverServiceJPA driverServiceJPA;
     @Autowired
     private VehicleTypeServiceJPA vehicleTypeServiceJPA;
-
+    @Autowired
+    private RouteServiceJPA routeServiceJPA;
     @Autowired
     private RejectionServiceJPA rejectionServiceJPA;
 
@@ -179,9 +183,42 @@ public class RideController {
     @PostMapping(value = "/create-example", consumes = "application/json")
     public ResponseEntity<RideDTOExample> createRideExample(@RequestBody RideDTOExample rideDTO) throws Exception {
 
-        System.out.println(rideDTO);
-        System.out.println("USAO");
+        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
+        if (driver == null) {
+            // TODO: Vrati gresku (KT2)
+        }
+
+        double totalCost = rideServiceJPA.calculateCost(rideDTO);
+        Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
+        Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
+        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(VehicleName.valueOf(rideDTO.getVehicleName()));
+
+        Ride newRide = new Ride(rideDTO);
+        newRide.setDriver(driver);
+        newRide.setTotalCost(totalCost);
+        newRide.setPassengers(passengers);
+        newRide.setRoutes(routes);
+        newRide.setVehicleType(vehicleType);
+
+        rideServiceJPA.save(newRide);
 
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping(value = "/passenger/{id}")
+    public ResponseEntity<Set<RideDTOResponse>> getPassengerRides(@PathVariable("id") Integer id) {
+        List<Ride> rides = rideServiceJPA.findByPassengerId(id);
+        Set<RideDTOResponse> ridesDTO = new HashSet<>();
+        for (Ride ride : rides) {
+            ridesDTO.add(new RideDTOResponse(ride));
+        }
+        return new ResponseEntity<>(ridesDTO, HttpStatus.OK);
+
+//        Ride ride = rideServiceJPA.findOne(id);
+//        if (ride == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+//        return new ResponseEntity<RideDTOResponse>(new RideDTOResponse(ride) , HttpStatus.OK);
+    }
+
 }

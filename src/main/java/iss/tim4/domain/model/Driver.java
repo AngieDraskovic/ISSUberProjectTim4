@@ -2,6 +2,8 @@ package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.ride.RideDTOExample;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -78,5 +80,27 @@ public class Driver extends User {
         this.email = driverDTOResponse.getEmail();
         this.address = driverDTOResponse.getAddress();
         this.password = driverDTOResponse.getPassword();
+    }
+
+    public boolean isAvailable(RideDTOExample newRide) {
+        for (Ride ride : this.rides) {
+            if (this.isBusy(ride, newRide))
+                return false;
+        }
+        return true;
+    }
+
+    private boolean isBusy(Ride ride, RideDTOExample newRide) {
+        return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes((long) newRide.getEstimatedTime()))
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
+    }
+
+
+    public boolean compatibileVehicle(RideDTOExample rideDTO) {
+        if (!rideDTO.getVehicleName().equals(this.vehicle.getVehicleName().toString()))
+            return false;
+        if (rideDTO.isPetTransport() && !this.vehicle.getPetsAllowed())
+            return false;
+        return !rideDTO.isBabyTransport() || this.vehicle.getBabyProof();
     }
 }

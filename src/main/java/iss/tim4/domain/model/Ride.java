@@ -2,8 +2,12 @@ package iss.tim4.domain.model;
 
 import iss.tim4.domain.RideStatus;
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.service.PassengerServiceJPA;
 import lombok.*;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -24,7 +28,7 @@ public class Ride {
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time")      // Ako voznja nije zavrsena, endTime je null
     private LocalDateTime endTime;
 
     @Column(name = "total_cost", nullable = false)
@@ -70,6 +74,16 @@ public class Ride {
     @JoinColumn(name = "vehicle_type", referencedColumnName = "id")
     private VehicleType vehicleType;
 
+    public Ride(RideDTOExample rideDTO) {
+        this.startTime = rideDTO.getStartTime();
+        this.endTime = null;
+        this.estimatedTimeInMinutes = rideDTO.getEstimatedTime();
+        this.status = RideStatus.ACCEPTED;
+        this.panic = false;
+        this.babyTransport = rideDTO.isBabyTransport();
+        this.petTransport = rideDTO.isPetTransport();
+    }
+
 
     public void addPassenger(Passenger passenger) {
         passengers.add(passenger);
@@ -81,10 +95,16 @@ public class Ride {
         review.setRide(this);
     }
 
-//    public void addRoute(Route route){
-//        routes.add(route);
-//        route.setRide(this);
-//    }
+    public void addRoute(Route route){
+        routes.add(route);
+        route.setRide(this);
+    }
+
+    public void setRoutes(Set<Route> routes) {
+        this.routes = routes;
+        for (Route route : routes)
+            route.setRide(this);
+    }
 
     public boolean equals(Object o) {
         if (this == o) return true;

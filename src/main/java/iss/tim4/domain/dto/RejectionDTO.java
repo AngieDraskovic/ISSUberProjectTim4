@@ -16,6 +16,8 @@ public class RejectionDTO {
     private LocalDateTime timeOfRejection;
 
     public RejectionDTO(Rejection rejection) {
+        if (rejection == null)
+            return;
         this.reason = rejection.getReason();
         this.timeOfRejection = rejection.getTime();
     }

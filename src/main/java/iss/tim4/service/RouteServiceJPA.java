@@ -1,11 +1,15 @@
 package iss.tim4.service;
 
+import iss.tim4.domain.dto.RouteDTO;
+import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.model.Route;
 import iss.tim4.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RouteServiceJPA {
@@ -20,4 +24,12 @@ public class RouteServiceJPA {
         return routeRepositoryJPA.save(route);
     }
 
+    public Set<Route> getRoutes(RideDTOExample rideDTO) {
+        Set<Route> routes = new HashSet<>();
+        for (RouteDTO routeDTO : rideDTO.getRoutes()) {
+            Route route = new Route(routeDTO, rideDTO.getKilometers());
+            routes.add(route);
+        }
+        return routes;
+    }
 }

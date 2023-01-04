@@ -1,6 +1,8 @@
 package iss.tim4.domain.model;
 
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.RouteDTO;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -29,12 +31,16 @@ public class Route {
     @Column(name = "kilometers", nullable = false)
     private Double kilometers;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ride_id")
     private Ride ride;
 
-//    @OneToOne(mappedBy = "route")
-//    private Ride ride;
+    public Route(RouteDTO routeDTO, double kilometers) {
+        this.startLocation = new Location(routeDTO.getDeparture());
+        this.endLocation = new Location(routeDTO.getDestination());
+        this.kilometers = kilometers;
+    }
+
 
 
     @Override
