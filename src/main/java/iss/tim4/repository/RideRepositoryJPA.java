@@ -11,11 +11,6 @@ public interface RideRepositoryJPA extends JpaRepository<Ride,Integer> {
   @Query(value = "select ride.id,ride.driver_id, route.start_location_id, route.end_location_id from ride inner join route on route.id=ride.id;", nativeQuery = true)
   public List<Object[]> getRidesFromRoutes();
 
-   // select sta
-   // imam vozilo i njegov id,
-   // ako je vozilo slobodno odmah dobavi njegove koordinate
-   // select * from ride where vehicle.id = ride.vehicle.id and ride.status=available;
 
-   // ja za ride da dobavim rutu (s.l i e.l)
 
 }

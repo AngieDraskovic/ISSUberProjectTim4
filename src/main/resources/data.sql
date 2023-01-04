@@ -47,9 +47,10 @@ INSERT INTO USERS
 VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', '1.png', 'Stankovic', '+8 977 977 27 20', 1),
        ('DRIVER', true, 'NS, 21000 2', false, 'b@t.ru', 'Blex', 'kekekekekek', '2.png', 'Petrovicс', '+8 977 977 27 21', 2),
        ('DRIVER', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
-       ('DRIVER', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4);
-       
--- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS 
+       ('DRIVER', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4),
+       ('DRIVER', true, 'NS, 21000 5', false, 'fr@t.ru', 'Elex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 5', 5);
+
+-- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
 --
 --INSERT INTO USERS
 --(ID, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
@@ -82,16 +83,16 @@ VALUES ('Headache', '2022-11-11 10:32:01', 1);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PANIC, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE)
-VALUES  (true, '2022-12-29 10:20:20', 10.2, false, false, '2022-12-28 10:11:01', 0, 500, 6, 1, 2),
-        (false, '2022-12-29 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 0, 600, 7, null, 2),
-        (true, '2022-12-29 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 0, 700, 6, null, 2),
+VALUES  (true, '2022-12-23 10:20:20', 10.2, false, false, '2022-12-28 10:11:01', 0, 500, 6, 1, 2),
+        (false, '2022-12-25 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 0, 600, 7, null, 2),
+        (true, '2022-12-30 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 0, 700, 10, null, 2),
         (true, '2022-12-29 15:21:20', 12.2, false, true, '2022-12-29 08:11:01', 0, 550, 8, null, 2),
         (true, '2022-12-29 15:21:20', 15.2, false, false, '2022-12-29 08:06:01', 0, 600, 9, null, 2);
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
 values  (2.5, 1, 2, 1),
         (2.5, 1, 3, 2),
-        (2.5, 1, 4, 3),
+        (2.5, 2, 4, 3),
         (2.5, 1, 5, 4),
         (2.5, 2, 1, 5);
 
@@ -140,5 +141,5 @@ VALUES  ('Danger!', '2022-10-10 10:21:20', 1, 1),
         ('Danger2!', '2022-10-10 10:21:20', 2, 6);
 
 INSERT INTO REMARK (MESSAGE, USER_ID)
-VALUES ('BAD TIMING', 7);
+VALUES ('BAD TIMING',7);
 

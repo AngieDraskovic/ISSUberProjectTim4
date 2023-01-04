@@ -50,6 +50,7 @@ public class VehicleController {
         location.update(locationDTO);
         locationServiceJPA.save(location);
         return new ResponseEntity<String>("Coordinates successfully updated", HttpStatus.NO_CONTENT);
+        // 400 -> bad request, 404 -> not found, 403 -> forbidden
     }
 
 
