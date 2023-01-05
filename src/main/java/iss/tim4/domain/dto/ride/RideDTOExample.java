@@ -13,10 +13,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 public class RideDTOExample {
-    private PassengerDTOResult[] passengers;
-    private RouteDTO[] routes;
     private boolean babyTransport;
     private boolean petTransport;
+    private PassengerDTOResult[] passengers;
+    private RouteDTO[] locations;
+
     private String vehicleName;
     private LocalDateTime startTime;
     private double estimatedTime;

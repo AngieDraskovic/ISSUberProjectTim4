@@ -4,6 +4,7 @@ import iss.tim4.domain.RideStatus;
 import javax.persistence.*;
 
 import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.service.PassengerServiceJPA;
 import lombok.*;
 import org.hibernate.Hibernate;
@@ -74,14 +75,14 @@ public class Ride {
     @JoinColumn(name = "vehicle_type", referencedColumnName = "id")
     private VehicleType vehicleType;
 
-    public Ride(RideDTOExample rideDTO) {
+    public Ride(RideDTORequest rideDTO) {
         this.startTime = rideDTO.getStartTime();
         this.endTime = null;
         this.estimatedTimeInMinutes = rideDTO.getEstimatedTime();
         this.status = RideStatus.ACCEPTED;
         this.panic = false;
-        this.babyTransport = rideDTO.isBabyTransport();
-        this.petTransport = rideDTO.isPetTransport();
+        this.babyTransport = rideDTO.getBabyTransport();
+        this.petTransport = rideDTO.getPetTransport();
     }
 
 

@@ -1,6 +1,7 @@
 package iss.tim4.service;
 
 import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.repository.DriverRepositoryJPA;
@@ -39,7 +40,7 @@ public class DriverServiceJPA {
         driverRepositoryJPA.deleteById(id);
     }
 
-    public Driver findAvailableDriver(RideDTOExample rideDTO) {
+    public Driver findAvailableDriver(RideDTORequest rideDTO) {
         List<Driver> allDrivers = findAll();
         for (Driver driver : allDrivers) {
             if (!driver.compatibileVehicle(rideDTO))

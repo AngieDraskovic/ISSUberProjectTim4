@@ -3,6 +3,7 @@ package iss.tim4.service;
 
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.repository.RideRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +50,8 @@ public class RideServiceJPA {
         return rideRepositoryJPA.getRidesFromRoutes();
     }
 
-    public double calculateCost(RideDTOExample rideDTO) {
-        double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(VehicleName.valueOf(rideDTO.getVehicleName()));
+    public double calculateCost(RideDTORequest rideDTO) {
+        double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(rideDTO.getVehicleType());
         return pricePerType * rideDTO.getKilometers() * 120;
     }
 }

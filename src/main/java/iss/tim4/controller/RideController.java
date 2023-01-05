@@ -57,52 +57,52 @@ public class RideController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<RideDTOResponse> createRide(@RequestBody RideDTORequest rideDTO) throws Exception {
         Ride ride = new Ride();
-        VehicleType v = vehicleTypeServiceJPA.findOne(1);
-        v.setVehicleName(rideDTO.getVehicleType()); // jako zbunjujuca linija koda ali stvarno nisam ja kriva
-        ride.setVehicleType(v);
-
-        ride.setBabyTransport(rideDTO.getBabyTransport());
-        ride.setPetTransport(rideDTO.getPetTransport());
-        PassengerRideDTO[] passengerRideDTOS = rideDTO.getPassengers();
-
-        // setujem passengere
-        Set<Passenger> passengerSet = new HashSet<Passenger>();
-        for(int i = 0; i < passengerRideDTOS.length; i++){
-            passengerSet.add(passengerServiceJPA.findOne(passengerRideDTOS[0].getId()));
-
-        }
-        ride.setPassengers(passengerSet);
-
-        ride.setDriver(driverServiceJPA.findOne(1));
-
-        // setujem rute
-        RouteDTO[] routesDTO = rideDTO.getLocations();
-        Set<Route> routeSet = new HashSet<Route>();
-        for(int i = 0; i < routesDTO.length; i++){
-            Route r = new Route();
-            Location l1 = new Location();
-            Location l2 = new Location();
-            l1.setGeoLength(routesDTO[i].getDeparture().getLatitude());
-            l1.setGeoWidth(routesDTO[i].getDeparture().getLongitude());
-            l1.setAddress(routesDTO[i].getDeparture().getAddress());
-            l2.setGeoLength(routesDTO[i].getDestination().getLatitude());
-            l2.setGeoWidth(routesDTO[i].getDestination().getLongitude());
-            l2.setAddress(routesDTO[i].getDestination().getAddress());
-            r.setStartLocation(l1);
-            r.setEndLocation(l2);
-            r.setKilometers(2.9);
-            routeSet.add(r);
-        }
-
-        ride.setRoutes(routeSet);
-        ride.setRejection(rejectionServiceJPA.findOne(1));
-        ride.setTotalCost(400.2);
-        ride.setEstimatedTimeInMinutes(10.0);
-        ride.setStatus(RideStatus.PENDING);
-        ride.setEndTime(LocalDateTime.parse("2022-10-10T10:30:30"));
-        ride.setStartTime(LocalDateTime.parse("2022-11-11T11:31:31"));
-        ride.setPanic(false);
-        ride = rideServiceJPA.save(ride);
+//        VehicleType v = vehicleTypeServiceJPA.findOne(1);
+//        v.setVehicleName(rideDTO.getVehicleType()); // jako zbunjujuca linija koda ali stvarno nisam ja kriva
+//        ride.setVehicleType(v);
+//
+//        ride.setBabyTransport(rideDTO.getBabyTransport());
+//        ride.setPetTransport(rideDTO.getPetTransport());
+//        PassengerRideDTO[] passengerRideDTOS = rideDTO.getPassengers();
+//
+//        // setujem passengere
+//        Set<Passenger> passengerSet = new HashSet<Passenger>();
+//        for(int i = 0; i < passengerRideDTOS.length; i++){
+//            passengerSet.add(passengerServiceJPA.findOne(passengerRideDTOS[0].getId()));
+//
+//        }
+//        ride.setPassengers(passengerSet);
+//
+//        ride.setDriver(driverServiceJPA.findOne(1));
+//
+//        // setujem rute
+//        RouteDTO[] routesDTO = rideDTO.getLocations();
+//        Set<Route> routeSet = new HashSet<Route>();
+//        for(int i = 0; i < routesDTO.length; i++){
+//            Route r = new Route();
+//            Location l1 = new Location();
+//            Location l2 = new Location();
+//            l1.setGeoLength(routesDTO[i].getDeparture().getLatitude());
+//            l1.setGeoWidth(routesDTO[i].getDeparture().getLongitude());
+//            l1.setAddress(routesDTO[i].getDeparture().getAddress());
+//            l2.setGeoLength(routesDTO[i].getDestination().getLatitude());
+//            l2.setGeoWidth(routesDTO[i].getDestination().getLongitude());
+//            l2.setAddress(routesDTO[i].getDestination().getAddress());
+//            r.setStartLocation(l1);
+//            r.setEndLocation(l2);
+//            r.setKilometers(2.9);
+//            routeSet.add(r);
+//        }
+//
+//        ride.setRoutes(routeSet);
+//        ride.setRejection(rejectionServiceJPA.findOne(1));
+//        ride.setTotalCost(400.2);
+//        ride.setEstimatedTimeInMinutes(10.0);
+//        ride.setStatus(RideStatus.PENDING);
+//        ride.setEndTime(LocalDateTime.parse("2022-10-10T10:30:30"));
+//        ride.setStartTime(LocalDateTime.parse("2022-11-11T11:31:31"));
+//        ride.setPanic(false);
+//        ride = rideServiceJPA.save(ride);
         return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.OK);   // trebalo bi ovdje created
     }
 
@@ -181,7 +181,7 @@ public class RideController {
     }
 
     @PostMapping(value = "/create-example", consumes = "application/json")
-    public ResponseEntity<RideDTOExample> createRideExample(@RequestBody RideDTOExample rideDTO) throws Exception {
+    public ResponseEntity<RideDTORequest> createRideExample(@RequestBody RideDTORequest rideDTO) throws Exception {
 
         Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
         if (driver == null) {
@@ -191,7 +191,7 @@ public class RideController {
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
-        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(VehicleName.valueOf(rideDTO.getVehicleName()));
+        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
 
         Ride newRide = new Ride(rideDTO);
         newRide.setDriver(driver);

@@ -2,6 +2,7 @@ package iss.tim4.service;
 
 import iss.tim4.domain.dto.RouteDTO;
 import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.model.Route;
 import iss.tim4.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,9 +25,9 @@ public class RouteServiceJPA {
         return routeRepositoryJPA.save(route);
     }
 
-    public Set<Route> getRoutes(RideDTOExample rideDTO) {
+    public Set<Route> getRoutes(RideDTORequest rideDTO) {
         Set<Route> routes = new HashSet<>();
-        for (RouteDTO routeDTO : rideDTO.getRoutes()) {
+        for (RouteDTO routeDTO : rideDTO.getLocations()) {
             Route route = new Route(routeDTO, rideDTO.getKilometers());
             routes.add(route);
         }

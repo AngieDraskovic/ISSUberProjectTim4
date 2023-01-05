@@ -4,6 +4,7 @@ import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import javax.persistence.*;
 
 import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -82,25 +83,26 @@ public class Driver extends User {
         this.password = driverDTOResponse.getPassword();
     }
 
-    public boolean isAvailable(RideDTOExample newRide) {
+    public boolean isAvailable(RideDTORequest newRide) {
         for (Ride ride : this.rides) {
             if (this.isBusy(ride, newRide))
                 return false;
+            // TODO: Check if driver is active
         }
         return true;
     }
 
-    private boolean isBusy(Ride ride, RideDTOExample newRide) {
+    private boolean isBusy(Ride ride, RideDTORequest newRide) {
         return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes((long) newRide.getEstimatedTime()))
                 && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
     }
 
 
-    public boolean compatibileVehicle(RideDTOExample rideDTO) {
-        if (!rideDTO.getVehicleName().equals(this.vehicle.getVehicleName().toString()))
+    public boolean compatibileVehicle(RideDTORequest rideDTO) {
+        if (!rideDTO.getVehicleType().equals(this.vehicle.getVehicleName()))
             return false;
-        if (rideDTO.isPetTransport() && !this.vehicle.getPetsAllowed())
+        if (rideDTO.getPetTransport() && !this.vehicle.getPetsAllowed())
             return false;
-        return !rideDTO.isBabyTransport() || this.vehicle.getBabyProof();
+        return !rideDTO.getBabyTransport() || this.vehicle.getBabyProof();
     }
 }
