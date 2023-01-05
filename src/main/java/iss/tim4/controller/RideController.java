@@ -154,7 +154,7 @@ public class RideController {
         p.setId(563);
         p.setReason(reasonDTO.getReason());
         p.setTime(LocalDateTime.parse("2022-10-10T10:32:32"));
-        p.setUser(userServiceJPA.findOne(1));
+        p.setUser(userServiceJPA.getUserById(id));
         p.setRide(ride);
         PanicDTO result = new PanicDTO(p);
         return new ResponseEntity<>(result, HttpStatus.OK);

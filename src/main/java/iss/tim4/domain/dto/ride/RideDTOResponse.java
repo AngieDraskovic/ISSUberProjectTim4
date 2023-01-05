@@ -59,7 +59,7 @@ public class RideDTOResponse {
         this.babyTransport = ride.getBabyTransport();
         this.petTransport = ride.getPetTransport();
         this.status = ride.getStatus();
-        if(this.rejection != null) {
+        if (ride.getRejection() != null) {
             this.rejection = new RejectionDTO(ride.getRejection());
         }
         Set<Route> routes = ride.getRoutes();
