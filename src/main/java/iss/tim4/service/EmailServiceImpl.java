@@ -13,13 +13,10 @@ public class EmailServiceImpl {
     @Autowired
     private JavaMailSender emailSender;
 
-    @Value( "${spring.mail.username}" )
-    private String email;
-
     public void sendSimpleMessage(
             String to, String subject, String text) {
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom(email);
+        message.setFrom("noreply@uber.tim8.com");
         message.setTo(to);
         message.setSubject(subject);
         message.setText(text);
