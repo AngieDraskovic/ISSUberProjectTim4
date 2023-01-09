@@ -1,5 +1,7 @@
 package iss.tim4.events;
 
+import iss.tim4.service.EmailServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
 import iss.tim4.domain.model.User;
 import iss.tim4.repository.UserRepositoryJPA;
 import iss.tim4.security.PasswordEncodingConfiguration;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class CreateDefaultUserOnStartup {
+    @Autowired
+    private EmailServiceImpl emailService;
     @Autowired
     UserRepositoryJPA userRepositoryJPA;
     @Autowired
@@ -26,5 +30,7 @@ public class CreateDefaultUserOnStartup {
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             userRepositoryJPA.save(user);
         }
+
+//        emailService.sendSimpleMessage("alex.type59@gmail.com", "Registration", "Code: 1111111");
     }
 }

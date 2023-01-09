@@ -11,6 +11,7 @@ import iss.tim4.domain.dto.user.*;
 import iss.tim4.domain.model.DriverRequest;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
+import iss.tim4.errors.UberException;
 import iss.tim4.service.DriverRequestServiceJPA;
 import iss.tim4.service.PassengerServiceJPA;
 import iss.tim4.service.UserService;
@@ -65,10 +66,10 @@ public class UserController {
             Principal user,
             Pageable pageable,
             @PathVariable("id") Integer id
-    ) {
+    ) throws UberException {
         var actualUser = userService.getUser(user.getName());
         if (actualUser.getRole() != Role.ADMIN && !Objects.equals(actualUser.getId(), id)) {
-            return new ResponseEntity<>(null, HttpStatus.FORBIDDEN);
+            throw new UberException(HttpStatus.FORBIDDEN, "Wrong ID!");
         }
         return new ResponseEntity<>(userService.getRidesOfUser(pageable, id), HttpStatus.OK);
     }

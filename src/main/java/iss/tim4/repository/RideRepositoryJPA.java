@@ -23,6 +23,5 @@ public interface RideRepositoryJPA extends JpaRepository<Ride,Integer> {
    // ako je vozilo slobodno odmah dobavi njegove koordinate
    // select * from ride where vehicle.id = ride.vehicle.id and ride.status=available;
 
-   // ja za ride da dobavim rutu (s.l git i e.l)
 
 }
