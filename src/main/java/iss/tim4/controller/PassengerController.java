@@ -48,18 +48,6 @@ public class PassengerController {
     }
 
 
-    @GetMapping("/all")
-    public ResponseEntity getAllPassengers() {
-        List<Passenger> passengers = passengerServiceJPA.findAll();
-        List<PassengerDTOResult> passengerDTOResults = new ArrayList<>();
-        for(Passenger p : passengers) {
-            PassengerDTOResult result = new PassengerDTOResult(p);
-            passengerDTOResults.add(result);
-        }
-        return new ResponseEntity<>(passengerDTOResults, HttpStatus.OK);
-
-    }
-
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
     public ResponseEntity<PassengerDTOResult> getPassenger(@PathVariable("id") Integer id) {

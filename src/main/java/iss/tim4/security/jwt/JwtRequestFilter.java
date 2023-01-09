@@ -22,7 +22,7 @@ import java.io.IOException;
 
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
-    @Qualifier("userServiceImpl")
+    @Qualifier("userServiceJPA")
     @Autowired
     private UserService userDetails;
     @Autowired
