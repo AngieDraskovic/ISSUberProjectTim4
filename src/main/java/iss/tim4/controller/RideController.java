@@ -2,6 +2,7 @@ package iss.tim4.controller;
 
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
@@ -14,7 +15,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @RestController
@@ -99,13 +102,25 @@ public class RideController {
         return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.OK);   // trebalo bi ovdje created
     }
 
+    @GetMapping(value="/passenger/{passengerId}/rideHistory")
+    public ResponseEntity getPassengerRideHistory(@PathVariable("passengerId") Integer passengerId){
+        Passenger passenger = passengerServiceJPA.findOne(passengerId);
+        Set<Ride> rides = passenger.getRides();
+        List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
+        for(Ride r : rides) {
+            RideDTOResponse response = new RideDTOResponse(r);
+            rideDTOResponses.add(response);
+        }
+        //?
+        return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/passenger/{passengerId}/active")
     public ResponseEntity<RideDTOResponse> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         Set<Ride> rides = passenger.getRides();
         Ride activeRide = rides.iterator().next();      // ovdje samo zelim da uzmem prvi element liste da vrati, jer sad necu implementirati logiku za aktinu voznju
-        activeRide.setStatus(RideStatus.ACTIVE);
+        activeRide.setStatus(RideStatus.ACTIVE);            // ovdje ovo nije potrebno, samo za kontrolnu tacku sam ovako uradila
         RideDTOResponse result = new RideDTOResponse(activeRide);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }

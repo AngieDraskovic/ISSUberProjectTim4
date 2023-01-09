@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ReviewDTO {
 
-    private Long id;
+    private Number id;
     private Integer rating;
     private String comment;
     private PassengerDTOResponse passenger;
