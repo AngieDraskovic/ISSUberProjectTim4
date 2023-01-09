@@ -1,6 +1,9 @@
 package iss.tim4.service;
 
 
+import iss.tim4.domain.dto.OneRideOfPassengerDTO;
+import iss.tim4.domain.dto.UberPageDTO;
+import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.repository.RideRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,5 +41,8 @@ public class RideServiceJPA {
 
     public List<Object[]> getRideWithLocation(){
         return rideRepositoryJPA.getRidesFromRoutes();
+    }
+    public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
+        return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
     }
 }

@@ -5,7 +5,6 @@ import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.user.*;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
-import iss.tim4.repository.PassengerRepositoryJPA;
 import iss.tim4.repository.RideRepositoryJPA;
 import iss.tim4.repository.UserRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,4 +56,7 @@ public class UserServiceJPA implements UserService {
     public User getUserById(Integer id) {
         return userRepositoryJPA.getReferenceById(id);
     }
+
+    @Override
+    public User getUserByTelephoneNumber(String telephoneNumber){return userRepositoryJPA.findOnByTelephoneNumber(telephoneNumber);}
 }
