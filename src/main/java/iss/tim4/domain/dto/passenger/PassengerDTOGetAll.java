@@ -1,8 +1,10 @@
 package iss.tim4.domain.dto.passenger;
 
+import iss.tim4.domain.dto.UberPageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Page;
 
 @Data
 @NoArgsConstructor
@@ -10,9 +12,9 @@ import lombok.NoArgsConstructor;
 public class PassengerDTOGetAll {
 
     private int totalCount;
-    private PassengerDTOResult[] results;
+    private Page<PassengerDTOResult> results;
 
-    public PassengerDTOGetAll(PassengerDTOResult[] results, int totalCount){
+    public PassengerDTOGetAll( Page<PassengerDTOResult> results, int totalCount){
         this.totalCount = totalCount;
         this.results = results;
     }

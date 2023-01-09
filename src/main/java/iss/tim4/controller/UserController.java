@@ -67,6 +67,7 @@ public class UserController {
             Pageable pageable,
             @PathVariable("id") Integer id
     ) throws UberException {
+
         var actualUser = userService.getUser(user.getName());
         if (actualUser.getRole() != Role.ADMIN && !Objects.equals(actualUser.getId(), id)) {
             throw new UberException(HttpStatus.FORBIDDEN, "Wrong ID!");

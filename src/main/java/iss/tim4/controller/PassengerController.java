@@ -8,17 +8,19 @@ import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.PassengerActivation;
 import iss.tim4.domain.model.Ride;
+import iss.tim4.errors.UberException;
 import iss.tim4.service.PassengerActivationService;
 import iss.tim4.service.PassengerServiceJPA;
+import iss.tim4.service.UserServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+
 import org.springframework.web.bind.annotation.CrossOrigin;
 
 @RestController
@@ -31,22 +33,14 @@ public class PassengerController {
     private PassengerServiceJPA passengerServiceJPA;
     @Autowired
     private PassengerActivationService passengerActivationService;
+    @Autowired
+    private UserServiceJPA userService;
 
     // get all - /api/passenger
     @GetMapping
-    public ResponseEntity<PassengerDTOGetAll> getPassengers() {
-        List<Passenger> passengers = passengerServiceJPA.findAll();
-        int totalCount = passengers.size();
-
-        PassengerDTOResult[] results = new PassengerDTOResult[totalCount];
-        for(int i = 0; i < passengers.size(); i++) {
-            results[i] = new PassengerDTOResult(passengers.get(i));
-        }
-        PassengerDTOGetAll passengerDTORequest = new PassengerDTOGetAll(results, totalCount);
-        return new ResponseEntity<>(passengerDTORequest, HttpStatus.OK);
-
+    public ResponseEntity<UberPageDTO<PassengerDTOResult>> getPassengers(Pageable pageable) {
+        return new ResponseEntity<>(passengerServiceJPA.getAllPassengers(pageable), HttpStatus.OK);
     }
-
 
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
@@ -64,6 +58,13 @@ public class PassengerController {
     @PostMapping(consumes = "application/json")
     public ResponseEntity<PassengerDTOResult> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
         Passenger passenger = new Passenger();
+
+        if(userService.getUser(passengerDTO.getEmail())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
+        }
+        if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
+        }
         passenger.setName(passengerDTO.getName());
         passenger.setSurname(passengerDTO.getSurname());
         passenger.setEmail(passengerDTO.getEmail());
@@ -83,7 +84,7 @@ public class PassengerController {
             throws Exception {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());
@@ -118,34 +119,31 @@ public class PassengerController {
 
 
     @GetMapping(value="/activate/{activationId}")
-    public ResponseEntity<Void> activatePassenger(@PathVariable("activationId") Integer activationId){
+    public ResponseEntity<MsgDTO> activatePassenger(@PathVariable("activationId") Integer activationId) throws UberException {
         PassengerActivation passengerForActivation = passengerActivationService.findOne(activationId);
-
         if (passengerForActivation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new UberException(HttpStatus.NOT_FOUND, "Activation with entered id does not exist! ");
+        }
+        if(passengerActivationService.hasActivationExpired(activationId)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Activation expired. Register again!");
         }
         Passenger p = passengerForActivation.getPassenger();
         p.setActive(true);
-        return new ResponseEntity<>(HttpStatus.OK);
+        MsgDTO msgDTO = new MsgDTO("Successful account activation!");
+        return new ResponseEntity<MsgDTO>(msgDTO, HttpStatus.OK);
     }
 
 
     //get passengers rides -> /api/passenger/1/ride
     @GetMapping(value = "/{id}/ride")
-    public ResponseEntity<RidesOfPassengerDTO> getPassengerRides(@PathVariable("id") Integer id) {
+    public ResponseEntity<UberPageDTO<OneRideOfPassengerDTO>> getPassengerRides(@PathVariable("id") Integer id, Pageable pageable) {
         Passenger passenger = passengerServiceJPA.findOne(id);
-        Set<Ride> rides = passenger.getRides();
-        int totalCount = rides.size();
-
-        OneRideOfPassengerDTO[] results = new OneRideOfPassengerDTO[totalCount];
-        int iter = 0;
-        for(Ride ride : rides){
-            results[iter] = new OneRideOfPassengerDTO(ride);
-            iter++;
+        if (passenger == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        RidesOfPassengerDTO ridesOfPassengerDTO = new RidesOfPassengerDTO(results, totalCount);
-        return new ResponseEntity<>(ridesOfPassengerDTO, HttpStatus.OK);
+        return new ResponseEntity<>(passengerServiceJPA.getRidesOfPassenger(pageable, id), HttpStatus.OK);
     }
+
 
 
 

@@ -7,16 +7,23 @@ import iss.tim4.repository.RouteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+
 @Service
 public class PassengerActivationService {
     @Autowired
     private PassengerActivationRepository passengerActivationRepository;
 
     public PassengerActivation findOne(Integer id) {
-        return passengerActivationRepository.findById(id).orElseGet(null);
+        return passengerActivationRepository.findById(id).orElse(null);
     }
-
     public PassengerActivation save(PassengerActivation passengerActivation) {
         return passengerActivationRepository.save(passengerActivation);
+    }
+
+    public boolean hasActivationExpired(Integer id){
+        PassengerActivation p = findOne(id);
+        LocalDateTime today = LocalDateTime.now();
+        return today.isBefore(p.getCreationDate().plusDays(3));         // TODO opet razmisli jesi dobro ovo postavila
     }
 }

@@ -6,6 +6,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Objects;
 
@@ -25,7 +26,7 @@ public class PassengerActivation {
     private Passenger passenger;
 
     @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
     @Column(name = "life_length", nullable = false)
     private double lifeLength;
