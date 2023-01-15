@@ -19,6 +19,7 @@ public class Rejection {
     private Long id;
 
     @OneToOne(mappedBy = "rejection")
+    @ToString.Exclude
     private Ride ride;
 
     @Column(name = "reason", nullable = false)

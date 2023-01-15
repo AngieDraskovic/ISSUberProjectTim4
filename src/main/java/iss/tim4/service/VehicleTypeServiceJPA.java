@@ -1,5 +1,6 @@
 package iss.tim4.service;
 
+import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.model.Vehicle;
 import iss.tim4.domain.model.VehicleType;
 import iss.tim4.repository.VehicleTypeRepositoryJPA;
@@ -17,5 +18,13 @@ public class VehicleTypeServiceJPA {
 
     public VehicleType save(VehicleType vehicleType) {
         return vehicleTypeRepositoryJPA.save(vehicleType);
+    }
+
+    public Double getPriceForVehicleType(VehicleName vehicleName) {
+        return vehicleTypeRepositoryJPA.findPriceByVehicleName(vehicleName);
+    }
+
+    public VehicleType findByVehicleName(VehicleName vehicleName) {
+        return vehicleTypeRepositoryJPA.findByVehicleName(vehicleName);
     }
 }

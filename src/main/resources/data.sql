@@ -28,12 +28,12 @@ VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
 INSERT INTO VEHICLE_TYPE
     (PRICE, VEHICLE_NAME)
 VALUES (200.00, 0),
-       (299.99, 0),
-       (399.99, 0);
+       (300.00, 1),
+       (400.00, 2);
 
 INSERT INTO VEHICLE
 (BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID, AVAILABLE)
-VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
+VALUES (true, 'Tesla', 4, true, '1FK-3DS', 0, 1, true),
        (false, 'Audi', 4, true, '2FK-3DS', 2, 2,  true),
        (true, 'Reno', 4, true, '3FK-3DS', 2, 3, true),
        (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 1, 4, true),
@@ -51,6 +51,7 @@ VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan12
        ('DRIVER', true, 'NS, 21000 5', false, 'fr@t.ru', 'Elex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 5', 5);
 
 -- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
+
 --
 --INSERT INTO USERS
 --(ID, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
@@ -83,11 +84,11 @@ VALUES ('Headache', '2022-11-11 10:32:01', 1);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PANIC, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE)
-VALUES  (true, '2022-12-23 10:20:20', 10.2, false, false, '2022-12-28 10:11:01', 0, 500, 6, 1, 2),
-        (false, '2022-12-25 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 0, 600, 7, null, 2),
-        (true, '2022-12-30 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 0, 700, 10, null, 2),
-        (true, '2022-12-29 15:21:20', 12.2, false, true, '2022-12-29 08:11:01', 0, 550, 8, null, 2),
-        (true, '2022-12-29 15:21:20', 15.2, false, false, '2022-12-29 08:06:01', 0, 600, 9, null, 2);
+VALUES  (true, '2023-01-04 04:33:20', 10.2, false, false, '2023-01-04 04:33:20', 4, 500, 6, 1, 2),
+        (false, '2022-12-29 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 4, 600, 7, null, 2),
+        (true, '2022-12-29 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 4, 700, 10, null, 2),
+        (true, '2022-12-29 15:21:20', 12.2, false, true, '2022-12-29 08:11:01', 1, 550, 8, null, 2),
+        (true, '2022-12-29 15:21:20', 15.2, false, false, '2022-12-29 08:06:01', 4, 600, 9, null, 2);
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
 values  (2.5, 1, 2, 1),
