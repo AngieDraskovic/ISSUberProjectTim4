@@ -126,7 +126,7 @@ public class UserServiceJPA implements UserService {
         if (activationRepositoryJPA.existsById(email)) {
             activationRepositoryJPA.deleteById(email);
         }
-        Activation activation = new Activation(email, rand.nextInt(), LocalDateTime.now());
+        Activation activation = new Activation(email, rand.nextInt(Integer.MAX_VALUE), LocalDateTime.now());
         activationRepositoryJPA.save(activation);
 
         String message = "Dear, " + user.getName() +

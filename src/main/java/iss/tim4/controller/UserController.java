@@ -14,6 +14,7 @@ import iss.tim4.domain.model.DriverRequest;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
 import iss.tim4.errors.UberException;
+import iss.tim4.security.jwt.JwtTokenUtil;
 import iss.tim4.service.DriverRequestServiceJPA;
 import iss.tim4.service.PassengerServiceJPA;
 import iss.tim4.service.UserService;
@@ -25,6 +26,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContext;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -36,13 +41,17 @@ import java.util.Objects;
 @AllArgsConstructor
 public class UserController {
     @Autowired
-    UserService userService;
+    private UserService userService;
     @Autowired
-    DriverRequestServiceJPA driverService;
+    private DriverRequestServiceJPA driverService;
     @Autowired
-    PassengerServiceJPA passengerService;
+    private PassengerServiceJPA passengerService;
     @Autowired
-    PasswordEncoder passwordEncoder;
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private AuthenticationManager authenticationManager;
+    @Autowired
+    private JwtTokenUtil jwtTokenUtil;
 
     @GetMapping(value = "/me")
     public ResponseEntity<UserMoreDTO> userDTOResponseEntity(Principal principal) {
@@ -118,5 +127,25 @@ public class UserController {
         }
         userService.resetPassword(user.getName(), newPassword);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(value = "/login")
+    public TokenDTO login(@RequestBody EmailPasswordDTO passwordDTO) throws UberException {
+        UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(
+                passwordDTO.getEmail(),
+                passwordDTO.getPassword()
+        );
+        Authentication auth = authenticationManager.authenticate(authReq);
+
+        SecurityContext sc = SecurityContextHolder.getContext();
+        sc.setAuthentication(auth);
+
+        User user = userService.getUser(passwordDTO.getEmail());
+        if (!user.getActive()) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "User not activated (check email)!");
+        }
+
+        String token = jwtTokenUtil.generateToken(passwordDTO.getEmail(), user.getRole(), user.getId());
+        return new TokenDTO(token, null);
     }
 }
