@@ -49,8 +49,9 @@ VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan12
        ('DRIVER', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
        ('DRIVER', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4),
        ('DRIVER', true, 'NS, 21000 5', false, 'fr@t.ru', 'Elex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 5', 5);
-       
--- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS 
+
+-- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
+
 --
 --INSERT INTO USERS
 --(ID, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
@@ -92,7 +93,7 @@ VALUES  (true, '2023-01-04 04:33:20', 10.2, false, false, '2023-01-04 04:33:20',
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
 values  (2.5, 1, 2, 1),
         (2.5, 1, 3, 2),
-        (2.5, 1, 4, 3),
+        (2.5, 2, 4, 3),
         (2.5, 1, 5, 4),
         (2.5, 2, 1, 5);
 
@@ -141,5 +142,5 @@ VALUES  ('Danger!', '2022-10-10 10:21:20', 1, 1),
         ('Danger2!', '2022-10-10 10:21:20', 2, 6);
 
 INSERT INTO REMARK (MESSAGE, USER_ID)
-VALUES ('BAD TIMING', 7);
+VALUES ('BAD TIMING',7);
 

@@ -5,6 +5,7 @@ import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
+import iss.tim4.domain.model.User;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -12,19 +13,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface UserService extends UserDetailsService {
-    UberPageDTO<RideDTOResponse> getRidesOfUser(Pageable pageable, Long userId);
+    UberPageDTO<RideDTOResponse> getRidesOfUser(Pageable pageable, Integer userId);
 
     UberPageDTO<UserDTO> getAllUsers(Pageable pageable);
 
-    TokenDTO login(EmailPasswordDTO userInput);
-
-    UberPageDTO<SentUserMessageDTO> getUserMessages(Pageable pageable, Long userId);
-
-    SentUserMessageDTO createUserMessage(CreateUserMessageDTO createUserMessageDTO, Long userId);
-
-    UberPageDTO<UserNoteDTO> getUserNote(Pageable pageable, Long userId);
-
-    UserNoteDTO createUserNote(CreateUserNoteDTO createUserNoteDTO, Long userId);
-
     UserDetails loadUserByUsername(String username);
+
+    User getUser(String username);
+
+    User getUserById(Integer id);
 }

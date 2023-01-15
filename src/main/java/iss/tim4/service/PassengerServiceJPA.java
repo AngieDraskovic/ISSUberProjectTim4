@@ -17,7 +17,7 @@ public class PassengerServiceJPA {
     private PassengerRepositoryJPA passengerRepositoryJPA;
 
     public Passenger findOne(Integer id) {
-        return passengerRepositoryJPA.findById(id).orElseGet(null);
+        return passengerRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<Passenger> findAll() {

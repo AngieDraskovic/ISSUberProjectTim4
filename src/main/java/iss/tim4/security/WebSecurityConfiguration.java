@@ -15,6 +15,7 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -28,8 +29,10 @@ public class WebSecurityConfiguration {
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
-	@Qualifier("userServiceImpl")
 	private UserService userService;
+
+	@Autowired
+	AuthenticationEntryPoint authEntryPoint;
 	
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -42,10 +45,13 @@ public class WebSecurityConfiguration {
 				.antMatchers("/h2-console/**").permitAll()
 				.antMatchers("/api/vehicle/all").permitAll()			//TODO: check with Alex
 				.antMatchers("/api/ride/**").permitAll()
+				.antMatchers("api/driver/**").permitAll()
 				.antMatchers("/**").authenticated()
 				.and()
 				.headers().frameOptions().disable().and()
-				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+				.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
+				.exceptionHandling()
+				.authenticationEntryPoint(authEntryPoint);;
 		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
 		return http.build();
