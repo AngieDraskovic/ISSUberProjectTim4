@@ -4,6 +4,7 @@ import iss.tim4.domain.dto.*;
 import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
+import iss.tim4.domain.dto.passenger.PassengerDTOUpdate;
 import iss.tim4.domain.model.Activation;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.PassengerActivation;
@@ -109,16 +110,16 @@ public class PassengerController {
 
     // update   --> /api/passenger/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOResponse passengerDTO, @PathVariable Integer id)
+    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id)
             throws Exception {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(userService.getUser(passengerForUpdate.getEmail())!=null){
+        if(userService.getUser(passengerDTO.getEmail())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
         }
-        if(userService.getUserByTelephoneNumber(passengerForUpdate.getTelephoneNumber())!=null){
+        if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
         if(passengerDTO.getName() != null){

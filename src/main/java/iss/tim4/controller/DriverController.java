@@ -6,6 +6,7 @@ import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResponse;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResult;
+import iss.tim4.domain.dto.driver.request.DriverDTOUpdate;
 import iss.tim4.domain.dto.driver.request.DriverRequestDTORequest;
 import iss.tim4.domain.dto.driver.request.DriverRequestDTOResult;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
@@ -53,7 +54,6 @@ public class DriverController {
 
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
-
     public ResponseEntity<DriverDTOResult> createDriver(@Valid @RequestBody DriverDTOResponse driverDTOResponse) throws Exception {
         if(userService.getUser(driverDTOResponse.getEmail())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
@@ -89,7 +89,7 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOResponse driverDTOResponse, @PathVariable Integer id) throws UberException {
+    public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -100,7 +100,7 @@ public class DriverController {
         if(userService.getUserByTelephoneNumber(driverDTOResponse.getTelephoneNumber())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
-        driver.updateDriver(driverDTOResponse);
+        //driver.updateDriver(driverDTOResponse);
         driverServiceJPA.save(driver);
         DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);

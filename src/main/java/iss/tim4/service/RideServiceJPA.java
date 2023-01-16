@@ -24,7 +24,7 @@ public class RideServiceJPA {
     VehicleTypeServiceJPA vehicleTypeServiceJPA;
 
     public Ride findOne(Integer id) {
-        return rideRepositoryJPA.findById(id).orElseGet(null);
+        return rideRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<Ride> findAll() {

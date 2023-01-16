@@ -9,6 +9,7 @@ import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.model.*;
+import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,54 +57,28 @@ public class RideController {
 
     @PostMapping(consumes = "application/json")
     public ResponseEntity<RideDTOResponse> createRide(@RequestBody RideDTORequest rideDTO) throws Exception {
-        Ride ride = new Ride();
-//        VehicleType v = vehicleTypeServiceJPA.findOne(1);
-//        v.setVehicleName(rideDTO.getVehicleType()); // jako zbunjujuca linija koda ali stvarno nisam ja kriva
-//        ride.setVehicleType(v);
-//
-//        ride.setBabyTransport(rideDTO.getBabyTransport());
-//        ride.setPetTransport(rideDTO.getPetTransport());
-//        PassengerRideDTO[] passengerRideDTOS = rideDTO.getPassengers();
-//
-//        // setujem passengere
-//        Set<Passenger> passengerSet = new HashSet<Passenger>();
-//        for(int i = 0; i < passengerRideDTOS.length; i++){
-//            passengerSet.add(passengerServiceJPA.findOne(passengerRideDTOS[0].getId()));
-//
-//        }
-//        ride.setPassengers(passengerSet);
-//
-//        ride.setDriver(driverServiceJPA.findOne(1));
-//
-//        // setujem rute
-//        RouteDTO[] routesDTO = rideDTO.getLocations();
-//        Set<Route> routeSet = new HashSet<Route>();
-//        for(int i = 0; i < routesDTO.length; i++){
-//            Route r = new Route();
-//            Location l1 = new Location();
-//            Location l2 = new Location();
-//            l1.setGeoLength(routesDTO[i].getDeparture().getLatitude());
-//            l1.setGeoWidth(routesDTO[i].getDeparture().getLongitude());
-//            l1.setAddress(routesDTO[i].getDeparture().getAddress());
-//            l2.setGeoLength(routesDTO[i].getDestination().getLatitude());
-//            l2.setGeoWidth(routesDTO[i].getDestination().getLongitude());
-//            l2.setAddress(routesDTO[i].getDestination().getAddress());
-//            r.setStartLocation(l1);
-//            r.setEndLocation(l2);
-//            r.setKilometers(2.9);
-//            routeSet.add(r);
-//        }
-//
-//        ride.setRoutes(routeSet);
-//        ride.setRejection(rejectionServiceJPA.findOne(1));
-//        ride.setTotalCost(400.2);
-//        ride.setEstimatedTimeInMinutes(10.0);
-//        ride.setStatus(RideStatus.PENDING);
-//        ride.setEndTime(LocalDateTime.parse("2022-10-10T10:30:30"));
-//        ride.setStartTime(LocalDateTime.parse("2022-11-11T11:31:31"));
-//        ride.setPanic(false);
-//        ride = rideServiceJPA.save(ride);
-        return new ResponseEntity<>(new RideDTOResponse(ride), HttpStatus.OK);   // trebalo bi ovdje created
+        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
+        if (driver == null) {
+            // TODO: Vrati gresku (KT2)
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        double totalCost = rideServiceJPA.calculateCost(rideDTO);
+        Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
+        Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
+        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
+
+        Ride newRide = new Ride(rideDTO);
+        newRide.setDriver(driver);
+        newRide.setTotalCost(totalCost);
+        newRide.setPassengers(passengers);
+        newRide.setRoutes(routes);
+        newRide.setVehicleType(vehicleType);
+
+        rideServiceJPA.save(newRide);
+
+
+        return new ResponseEntity<>(new RideDTOResponse(newRide), HttpStatus.OK);   // trebalo bi ovdje created
     }
 
     @GetMapping(value="/passenger/{passengerId}/rideHistory")
@@ -142,8 +117,14 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/withdraw")
-    public ResponseEntity<RideDTOResponse> cancelRide(@PathVariable Integer id){
+    public ResponseEntity<RideDTOResponse> cancelRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.STARTED)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
+        }
         ride.getRejection().setReason("Ride is cancelled by passenger");
         ride.setStatus(RideStatus.CANCELED);
         RideDTOResponse result = new RideDTOResponse(ride);
@@ -154,8 +135,11 @@ public class RideController {
     @PutMapping(value = "/{id}/panic")
     public ResponseEntity<PanicDTO> panicRide(@RequestBody  ReasonDTO reasonDTO, @PathVariable Integer id){
         Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Panic p = new Panic();
-        p.setId(563);
+        //p.setId(563);
         p.setReason(reasonDTO.getReason());
         p.setTime(LocalDateTime.parse("2022-10-10T10:32:32"));
         p.setUser(userServiceJPA.getUserById(id));
@@ -166,17 +150,43 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/accept")
-    public ResponseEntity<RideDTOResponse> acceptRide(@PathVariable Integer id){
+    public ResponseEntity<RideDTOResponse> acceptRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!ride.getStatus().equals(RideStatus.PENDING)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot accept a ride that is not in status PENDING! ");
+        }
         ride.setStatus(RideStatus.ACCEPTED);
+        RideDTOResponse result = new RideDTOResponse(ride);
+        return new ResponseEntity<>(result, HttpStatus.OK);
+
+    }
+    @PutMapping(value = "/{id}/start")
+    public ResponseEntity<RideDTOResponse> startRide(@PathVariable Integer id) throws UberException {
+        Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!ride.getStatus().equals(RideStatus.ACCEPTED)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot start a ride that is not in status ACCEPTED! ");
+        }
+        ride.setStatus(RideStatus.STARTED);
         RideDTOResponse result = new RideDTOResponse(ride);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 
     @PutMapping(value = "/{id}/end")
-    public ResponseEntity<RideDTOResponse> finishRide(@PathVariable Integer id){
+    public ResponseEntity<RideDTOResponse> finishRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!ride.getStatus().equals(RideStatus.STARTED)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot end a ride that is not in status STARTED! ");
+        }
         ride.setStatus(RideStatus.FINISHED);
         RideDTOResponse result = new RideDTOResponse(ride);
         return new ResponseEntity<>(result, HttpStatus.OK);
@@ -184,38 +194,36 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/cancel")
-    public ResponseEntity<RideDTOResponse> rejectRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id){
+    public ResponseEntity<RideDTOResponse> rejectRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        ride.setStatus(RideStatus.REJECTED);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.ACCEPTED)){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or ACCEPTED! ");
+        }
+        ride.setStatus(RideStatus.CANCELED);
         ride.getRejection().setReason(reasonDTO.getReason());
         RideDTOResponse result = new RideDTOResponse(ride);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/create-example", consumes = "application/json")
-    public ResponseEntity<RideDTORequest> createRideExample(@RequestBody RideDTORequest rideDTO) throws Exception {
 
-        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
-        if (driver == null) {
-            // TODO: Vrati gresku (KT2)
-        }
-
-        double totalCost = rideServiceJPA.calculateCost(rideDTO);
-        Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
-        Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
-        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
-
-        Ride newRide = new Ride(rideDTO);
-        newRide.setDriver(driver);
-        newRide.setTotalCost(totalCost);
-        newRide.setPassengers(passengers);
-        newRide.setRoutes(routes);
-        newRide.setVehicleType(vehicleType);
-
-        rideServiceJPA.save(newRide);
-
+    @PostMapping(value = "/favorites", consumes = "application/json")
+    public ResponseEntity<Void> createFavouriteLocation(){
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+    @GetMapping(value="/favorites")
+    public ResponseEntity<Void> getFavouriteLocations(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    @DeleteMapping(value="/favorites/{id}")
+    public ResponseEntity<Void> deleteFavouriteLocations(){
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
 
     @GetMapping(value = "/passenger/{id}")
     public ResponseEntity<Set<RideDTOResponse>> getPassengerRides(@PathVariable("id") Integer id) {
