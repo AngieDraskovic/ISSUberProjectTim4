@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,7 +19,9 @@ public class RideDTOExample {
     private PassengerDTOResult[] passengers;
     private RouteDTO[] locations;
 
+    @NotNull (message = "Field vehicleName is required!")
     private String vehicleName;
+    @NotNull (message = "Field startTime is required!")
     private LocalDateTime startTime;
     private double estimatedTime;
     private double kilometers;

@@ -13,21 +13,21 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.List;
 
-@RestControllerAdvice
-public class ValidationHandler {
-
-    @ExceptionHandler({MethodArgumentNotValidException.class})
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    protected ResponseEntity<ErrorDTO> handleConstraintViolationException(MethodArgumentNotValidException e) throws UberException {
-        List<ObjectError> errorList = e.getBindingResult().getAllErrors();
-        StringBuilder sb = new StringBuilder("Request finished with validation errors: \n");
-
-        for (ObjectError error : errorList ) {
-            FieldError fe = (FieldError) error;
-            sb.append(error.getDefaultMessage()+ "\n\n");
-        }
-        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.BAD_REQUEST, sb.toString());
-
-        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
-    }
-}
+//@RestControllerAdvice
+//public class ValidationHandler {
+//
+//    @ExceptionHandler({MethodArgumentNotValidException.class})
+//    @ResponseStatus(HttpStatus.BAD_REQUEST)
+//    protected ResponseEntity<ErrorDTO> handleConstraintViolationException(MethodArgumentNotValidException e) throws UberException {
+//        List<ObjectError> errorList = e.getBindingResult().getAllErrors();
+//        StringBuilder sb = new StringBuilder("Request finished with validation errors: \n");
+//
+//        for (ObjectError error : errorList ) {
+//            FieldError fe = (FieldError) error;
+//            sb.append(error.getDefaultMessage()+ "\n\n");
+//        }
+//        ErrorDTO errorDTO = new ErrorDTO(HttpStatus.BAD_REQUEST, sb.toString());
+//
+//        return new ResponseEntity<>(errorDTO, HttpStatus.BAD_REQUEST);
+//    }
+//}

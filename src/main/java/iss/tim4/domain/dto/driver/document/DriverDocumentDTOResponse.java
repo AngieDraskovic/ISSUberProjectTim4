@@ -5,12 +5,16 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DriverDocumentDTOResponse {
 
+    @NotEmpty (message = "Field name is required!")
     private String name;
+    @NotEmpty (message = "Field documentImage is required!")
     private String documentImage;
 
 

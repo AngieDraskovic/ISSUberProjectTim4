@@ -4,12 +4,18 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserMessageDTO {
+    @NotNull (message = "Field receiverId is required!")
     private Long receiverId;
+    @NotNull (message = "Field message is required!")
     private String message;
+    @NotNull (message = "Field type is required!")
     private String type;
-    private Long rideId;
+    private Long rideId;    // Ne mora biti poruka u vezi voznje
 }
