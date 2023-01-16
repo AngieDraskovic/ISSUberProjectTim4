@@ -2,7 +2,6 @@ package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
 import iss.tim4.domain.dto.passenger.PassengerDTO;
-import iss.tim4.domain.dto.passenger.PassengerDTOGetAll;
 import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Passenger;
@@ -85,6 +84,12 @@ public class PassengerController {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(userService.getUser(passengerForUpdate.getEmail())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
+        }
+        if(userService.getUserByTelephoneNumber(passengerForUpdate.getTelephoneNumber())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());

@@ -44,6 +44,7 @@ public class PassengerServiceJPA {
     public void remove(Integer id) {
         passengerRepositoryJPA.deleteById(id);
     }
+
     public UberPageDTO<PassengerDTOResult> getAllPassengers(Pageable pageable) {
         return new UberPageDTO<>(passengerRepositoryJPA.findAll(pageable).map(PassengerDTOResult::new));
     }

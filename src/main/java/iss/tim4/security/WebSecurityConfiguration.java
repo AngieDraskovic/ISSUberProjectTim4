@@ -43,7 +43,8 @@ public class WebSecurityConfiguration {
 				.antMatchers("/api/driver/**").permitAll()
 				.antMatchers("api/login").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
-				.antMatchers("/api/vehicle/all").permitAll()			//TODO: check with Alex
+				.antMatchers("/api/passenger/**").permitAll()
+				.antMatchers("/api/vehicle/all").permitAll()
 				.antMatchers("/api/ride/**").permitAll()
 				.antMatchers("api/driver/**").permitAll()
 				.antMatchers("/**").authenticated()
