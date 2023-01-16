@@ -7,7 +7,9 @@ import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.NonNull;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,9 +20,17 @@ public class RideDTORequest {
     private Boolean petTransport;
     private PassengerDTOResult[] passengers;
     private RouteDTO[] locations;
+
+    @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
+
+    @NotNull (message = "Field startTime is required!")
     private LocalDateTime startTime;
-    private double estimatedTime;
+
+    @NotNull (message = "Field estimatedTime is required!")
+    private Double estimatedTime;
+
+    @NotNull (message = "Field kilometers is required!")
     private double kilometers;
 
 }

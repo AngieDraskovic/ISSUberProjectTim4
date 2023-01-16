@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import java.util.Set;
 @AllArgsConstructor
 public class OneRideOfPassengerDTO {
     private Integer id;
+    @NotNull(message = "Field startTime is required!")
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double totalCost;

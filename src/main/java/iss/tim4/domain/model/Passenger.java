@@ -1,6 +1,8 @@
 package iss.tim4.domain.model;
 
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -23,6 +25,12 @@ public class Passenger extends User {
     @ToString.Exclude
     private Set<Ride> rides = new HashSet<Ride>();
 
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinTable(name = "favourite_route_passenger", joinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "favourite_route_id", referencedColumnName = "id"))
+    @ToString.Exclude
+    private Set<FavouriteRoute> favouriteRoutes = new HashSet<FavouriteRoute>();
+
+
     /* Unidirekciona veza putnika i njegovih omiljenih ruta. U tabeli FavouriteRoute se cuva id putnika.    TODO:promjeniti da bude klasa FavouriteRoute
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "passenger_id")
@@ -36,6 +44,7 @@ public class Passenger extends User {
         rides.add(ride);
         ride.getPassengers().add(this);
     }
+
 
 
 

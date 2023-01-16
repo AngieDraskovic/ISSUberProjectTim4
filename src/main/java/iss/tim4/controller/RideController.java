@@ -3,6 +3,8 @@ package iss.tim4.controller;
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.*;
+import iss.tim4.domain.dto.favourite.route.FavouriteRouteDTORequest;
+import iss.tim4.domain.dto.favourite.route.FavouriteRouteDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import iss.tim4.domain.dto.ride.RideDTO;
@@ -41,6 +43,8 @@ public class RideController {
     private RouteServiceJPA routeServiceJPA;
     @Autowired
     private RejectionServiceJPA rejectionServiceJPA;
+    @Autowired
+    private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
 
     @Autowired
     private UserServiceJPA userServiceJPA;
@@ -232,6 +236,40 @@ public class RideController {
 //            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
 //        }
 //        return new ResponseEntity<RideDTOResponse>(new RideDTOResponse(ride) , HttpStatus.OK);
+    }
+
+    @PostMapping(value = "/favourites", consumes = "application/json")
+    public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoute(@RequestBody FavouriteRouteDTORequest rideDTO) throws Exception {
+
+//        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
+//        if (driver == null) {
+//            // TODO: Vrati gresku (KT2)
+//        }
+//
+//        double totalCost = rideServiceJPA.calculateCost(rideDTO);
+//        Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
+//        Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
+//        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
+//
+//        Ride newRide = new Ride(rideDTO);
+//        newRide.setDriver(driver);
+//        newRide.setTotalCost(totalCost);
+//        newRide.setPassengers(passengers);
+//        newRide.setRoutes(routes);
+//        newRide.setVehicleType(vehicleType);
+//
+//        rideServiceJPA.save(newRide);
+
+        FavouriteRoute favouriteRoute = new FavouriteRoute(rideDTO);
+
+        for (PassengerRideDTO passengerRideDTO : rideDTO.getPassengers()) {
+
+        }
+
+        favouriteRouteServiceJPA.save(favouriteRoute);
+        FavouriteRouteDTOResult favouriteRouteDTOResult = new FavouriteRouteDTOResult(favouriteRoute);
+
+        return new ResponseEntity<>(favouriteRouteDTOResult, HttpStatus.OK);
     }
 
 }

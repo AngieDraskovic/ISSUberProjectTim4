@@ -4,6 +4,11 @@ import iss.tim4.domain.model.DriverRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
 @Data
 @NoArgsConstructor
 public class DriverRequestDTORequest {
@@ -11,22 +16,33 @@ public class DriverRequestDTORequest {
 
     // ABOUT DRIVER
     private Integer driverId;
+    @NotEmpty (message = "Field newName is required!")
     private String newName;
+    @NotEmpty (message = "Field newSurname is required!")
     private String newSurname;
     private String newProfilePicture;
+    @Size(min = 6, max = 30, message = "Field newTelephoneNumber format is not valid!")
     private String newTelephoneNumber;
+    @Email(regexp = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$", message = "Field newEmail format is not valid!")
     private String newEmail;
+    @NotEmpty(message = "Field newAddress is required!")
     private String newAddress;
 
 
 
     // ABOUT VEHICLE
     private Integer vehicleId;
+    @NotEmpty (message = "Field newModel is required!")
     private String newModel;
+    @NotEmpty (message = "Field newVehicleName is required!")
     private String newVehicleName;
+    @NotEmpty (message = "Field newRegPlates is required!")
     private String newRegPlates;
+    @Size(min = 2, max = 10, message = "Field newNumSeats format is not valid!")
     private Integer newNumSeats;
+    @NotNull (message = "Field newBabyProof is required!")
     private Boolean newBabyProof;
+    @NotNull (message = "Field newPetsAllowed is required!")
     private Boolean newPetsAllowed;
 
 

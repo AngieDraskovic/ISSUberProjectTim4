@@ -15,6 +15,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -24,19 +26,29 @@ import java.util.Set;
 public class RideDTOResponse {
 
     private Integer id;
+    @NotNull(message = "Field startTime is required!")
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @NotNull (message = "Field totalCost is required!")
     private Double totalCost;
+    @NotNull (message = "Field driver is required!")
     private DriverRideDTO driver;
+    @NotNull (message = "Field estimatedTimeInMinutes is required!")
     private Double estimatedTimeInMinutes;
+    @NotNull (message = "Field status is required!")
     private RideStatus status;
     private RejectionDTO rejection;
     private Boolean babyTransport;
     private Boolean petTransport;
+    @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
+    @NotNull (message = "Field passengers is required!")
     private PassengerRideDTO[] passengers;
+    @NotNull (message = "Field locations is required!")
     private RouteDTO[] locations;
+    @NotEmpty (message = "Field departure is required!")
     private String departure;
+    @NotNull (message = "Field destination is required!")
     private String destination;
     private ReviewDTO[] reviews;
 

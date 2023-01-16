@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -17,11 +19,16 @@ import java.time.LocalDateTime;
 public class RideDTO {
 
     private Integer id;
+
+    @NotNull (message = "Field startTime is required!")
     private LocalDateTime startTime;
     private LocalDateTime endTime;
+    @NotNull (message = "Field price is required!")
     private Double price;
     private DriverDTOResult driver;
+    @NotNull (message = "Field estimatedTime is required!")
     private Double estimatedTime;
+    @NotNull (message = "Field rideStatus is required!")
     private RideStatus rideStatus;
     private RejectionDTO rejectionDTO;
     private Boolean panic;

@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateReviewDTO {
+    /* Ne bih nista dirao jer passenger kad ocjenjuje moze unijeti ili jedno ili drugo ili oboje*/
     private Integer rating;
     private String comment;
 }
