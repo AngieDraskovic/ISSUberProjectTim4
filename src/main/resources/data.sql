@@ -8,13 +8,6 @@ VALUES  ('PASSENGER', true, 'NS, 21000', false, 'a@a.ru', 'Alex', 'kekekekekek',
 INSERT INTO USERS(id, role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
 VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'b@b.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 21');
 
-INSERT INTO PASSENGER_ACTIVATION (CREATION_DATE, LIFE_LENGTH, PASSENGER_ID)
-VALUES  ('2022-10-10 10:21:20', 1, 1),
-        ('2022-10-10 10:21:21', 1, 2),
-        ('2022-10-10 10:21:22', 1, 3),
-        ('2022-10-10 10:21:23', 1, 4),
-        ('2022-10-10 10:21:24', 1, 5);
-
 INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
 VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
        ('Narodnog Fronta 12, Novi Sad', 54.2, 64.3),

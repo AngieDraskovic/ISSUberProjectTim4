@@ -5,19 +5,27 @@ import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOGetAll;
 import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
+import iss.tim4.domain.model.Activation;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.PassengerActivation;
 import iss.tim4.domain.model.Ride;
+import iss.tim4.errors.UberException;
+import iss.tim4.repository.ActivationRepositoryJPA;
+import iss.tim4.repository.PassengerActivationRepository;
+import iss.tim4.service.EmailServiceImpl;
 import iss.tim4.service.PassengerActivationService;
 import iss.tim4.service.PassengerServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.Set;
 import org.springframework.web.bind.annotation.CrossOrigin;
 
@@ -31,6 +39,13 @@ public class PassengerController {
     private PassengerServiceJPA passengerServiceJPA;
     @Autowired
     private PassengerActivationService passengerActivationService;
+    @Autowired
+    private EmailServiceImpl emailService;
+    @Autowired
+    private PassengerActivationRepository passengerActivationRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    private final Random rand = new Random();
 
     // get all - /api/passenger
     @GetMapping
@@ -79,13 +94,26 @@ public class PassengerController {
         passenger.setName(passengerDTO.getName());
         passenger.setSurname(passengerDTO.getSurname());
         passenger.setEmail(passengerDTO.getEmail());
-        passenger.setPassword(passengerDTO.getPassword());
+        passenger.setPassword(passwordEncoder.encode(passengerDTO.getPassword()));
         passenger.setTelephoneNumber(passengerDTO.getTelephoneNumber());
         passenger.setAddress(passengerDTO.getAddress());
         passenger.setProfilePicture(passengerDTO.getProfilePicture());
         passenger.setActive(false);
         passenger.setBlocked(false);
         passenger = passengerServiceJPA.save(passenger);
+
+        if (passengerActivationRepository.existsByPassenger(passenger)) {
+            passengerActivationRepository.deleteByPassenger(passenger);
+        }
+        PassengerActivation activation = new PassengerActivation(rand.nextInt(Integer.MAX_VALUE),
+                passenger, LocalDateTime.now());
+        passengerActivationRepository.save(activation);
+
+        emailService.sendSimpleMessage(passenger.getEmail(), "Confirm your email",
+                "Dear, " + passenger.getName() + "!\n\nTo finish your registration, please, " +
+                        "enter this activation code:\n" + activation.getActivationId() + "\n\n" +
+                        "If you did not perform registration - contact our support:\n" +
+                        "support@easy.go\n\nBest regards,\nEasyGo team!");
         return new ResponseEntity<>(new PassengerDTOResult(passenger), HttpStatus.OK);  // it should be created......
     }
 
@@ -109,9 +137,6 @@ public class PassengerController {
         if(passengerDTO.getTelephoneNumber() != null){
             passengerForUpdate.setTelephoneNumber(passengerDTO.getTelephoneNumber());
         }
-        if(passengerDTO.getPassword() != null){
-            passengerForUpdate.setPassword(passengerDTO.getPassword());
-        }
         if(passengerDTO.getAddress() != null){
             passengerForUpdate.setAddress(passengerDTO.getAddress());
         }
@@ -130,14 +155,8 @@ public class PassengerController {
 
 
     @GetMapping(value="/activate/{activationId}")
-    public ResponseEntity<Void> activatePassenger(@PathVariable("activationId") Integer activationId){
-        PassengerActivation passengerForActivation = passengerActivationService.findOne(activationId);
-
-        if (passengerForActivation == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Passenger p = passengerForActivation.getPassenger();
-        p.setActive(true);
+    public ResponseEntity<Void> activatePassenger(@PathVariable("activationId") Integer activationId) throws UberException {
+        passengerActivationService.activate(activationId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
