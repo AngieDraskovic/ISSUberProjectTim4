@@ -16,7 +16,7 @@ public class DriverDocumentServiceJPA {
     private DriverDocumentRepositoryJPA driverDocumentRepositoryJPA;
 
     public DriverDocument findOne(Integer id) {
-        return driverDocumentRepositoryJPA.findById(id).orElseGet(null);
+        return driverDocumentRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<DriverDocument> findAll() {

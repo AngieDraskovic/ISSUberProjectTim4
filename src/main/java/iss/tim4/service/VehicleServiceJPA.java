@@ -22,7 +22,7 @@ public class VehicleServiceJPA {
     @Autowired
     private RideServiceJPA rideServiceJPA;
     public Vehicle findOne(Integer id) {
-        return vehicleRepositoryJPA.findById(id).orElseGet(null);
+        return vehicleRepositoryJPA.findById(id).orElse(null);
     }
 
 

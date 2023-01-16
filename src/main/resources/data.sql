@@ -1,5 +1,5 @@
 INSERT INTO USERS(role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES  ('PASSENGER', true, 'NS, 21000', false, 'a@a.ru', 'Alex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 20'),
+VALUES  ('PASSENGER', true, 'NS, 21000', false, 'a@a.ru', 'Alex', '1', '1.png', 'Petrovic', '+7 977 977 27 20'),
         ('PASSENGER', true, 'NS, 21000', false, 'b@a.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 22'),
         ('PASSENGER', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', '1.png', 'Ivanic', '+7 977 977 27 23'),
         ('PASSENGER', true, 'NS, 21000', false, 'g@a.ru', 'Dlex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 24'),

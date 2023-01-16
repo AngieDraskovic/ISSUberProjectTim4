@@ -1,8 +1,9 @@
 package iss.tim4.service;
 
 
-import iss.tim4.domain.VehicleName;
-import iss.tim4.domain.dto.ride.RideDTOExample;
+
+import iss.tim4.domain.dto.OneRideOfPassengerDTO;
+import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.repository.RideRepositoryJPA;
@@ -23,7 +24,7 @@ public class RideServiceJPA {
     VehicleTypeServiceJPA vehicleTypeServiceJPA;
 
     public Ride findOne(Integer id) {
-        return rideRepositoryJPA.findById(id).orElseGet(null);
+        return rideRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<Ride> findAll() {
@@ -50,8 +51,13 @@ public class RideServiceJPA {
         return rideRepositoryJPA.getRidesFromRoutes();
     }
 
+    public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
+        return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
+    }
+
     public double calculateCost(RideDTORequest rideDTO) {
         double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(rideDTO.getVehicleType());
         return pricePerType * rideDTO.getKilometers() * 120;
+
     }
 }

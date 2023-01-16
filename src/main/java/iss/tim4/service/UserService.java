@@ -26,9 +26,13 @@ public interface UserService extends UserDetailsService {
 
     User getUserById(Integer id);
 
+
+    User getUserByTelephoneNumber(String telephoneNumber);
+
     void changePassword(Integer id, ChangePasswordDTO passwords) throws UberException;
 
     void resetPassword(String email, ResetPasswordDTO resetPasswordDTO) throws UberException;
 
     void resetPassword(String email) throws UberException;
+
 }

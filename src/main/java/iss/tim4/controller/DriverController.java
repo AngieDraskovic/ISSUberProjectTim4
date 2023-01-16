@@ -6,15 +6,18 @@ import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResponse;
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResult;
+import iss.tim4.domain.dto.driver.request.DriverDTOUpdate;
 import iss.tim4.domain.dto.driver.request.DriverRequestDTORequest;
 import iss.tim4.domain.dto.driver.request.DriverRequestDTOResult;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResult;
 import iss.tim4.domain.model.*;
+import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
 @RestController
@@ -45,10 +49,18 @@ public class DriverController {
     @Autowired
     private DriverRequestServiceJPA driverRequestServiceJPA;
 
+    @Autowired
+    private UserServiceJPA userService;
 
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
     public ResponseEntity<DriverDTOResult> createDriver(@Valid @RequestBody DriverDTOResponse driverDTOResponse) throws Exception {
+        if(userService.getUser(driverDTOResponse.getEmail())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
+        }
+        if(userService.getUserByTelephoneNumber(driverDTOResponse.getTelephoneNumber())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
+        }
         Driver driver = new Driver(driverDTOResponse);
         Driver savedDriver = driverServiceJPA.save(driver);
         DriverDTOResult driverDTOResult = new DriverDTOResult(savedDriver);
@@ -58,15 +70,8 @@ public class DriverController {
 
     // #2 get all drivers - GET api/driver
     @GetMapping
-    public ResponseEntity<DriverDTORequest> getDrivers() {
-        List<Driver> drivers = driverServiceJPA.findAll();
-        DriverDTOResult[] driverDTOS = new DriverDTOResult[drivers.size()];
-        for (int i = 0; i < drivers.size(); i++) {
-            driverDTOS[i] = new DriverDTOResult(drivers.get(i));
-        }
-        DriverDTORequest driverDTORequest = new DriverDTORequest(driverDTOS.length, driverDTOS);
-        return new ResponseEntity<>(driverDTORequest, HttpStatus.OK);
-
+    public ResponseEntity<UberPageDTO<DriverDTOResult>> getDrivers(Pageable pageable) {
+        return new ResponseEntity<>(driverServiceJPA.getAllDrivers(pageable), HttpStatus.OK);
     }
 
 
@@ -74,6 +79,9 @@ public class DriverController {
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DriverDTOResult> getDriver(@PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
     }
@@ -81,9 +89,18 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOResponse driverDTOResponse, @PathVariable Integer id) {
+    public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
-        driver.updateDriver(driverDTOResponse);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(userService.getUser(driverDTOResponse.getEmail())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
+        }
+        if(userService.getUserByTelephoneNumber(driverDTOResponse.getTelephoneNumber())!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
+        }
+        //driver.updateDriver(driverDTOResponse);
         driverServiceJPA.save(driver);
         DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
@@ -94,6 +111,9 @@ public class DriverController {
     @GetMapping(value = "/{id}/documents", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<DriverDocumentDTOResult>> getDriverDocuments(@PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Set<DriverDocument> documents = driver.getDocuments();
         List<DriverDocumentDTOResult> documentDTOS = new ArrayList<>();
         for (DriverDocument d : documents) {
@@ -104,10 +124,19 @@ public class DriverController {
 
 
     // #6 delete driver documents - DELETE api/driver/1/documents
-    @DeleteMapping(value = "/document/{id}")
+    @DeleteMapping(value = "/document/{id}") // TODO edit this method as it should delete onlu specific document
     public ResponseEntity<Void> deleteDriverDocuments(@PathVariable Integer id) {
-        Driver driver = driverServiceJPA.findOne(id);
-        driverDocumentServiceJPA.removeByDriverId(driver.getId());
+        DriverDocument document = driverDocumentServiceJPA.findOne(id);
+        if(document == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+        for(DriverDocument d : document.getDriver().getDocuments()){
+            if(Objects.equals(d.getId(), document.getId())){
+                document.getDriver().getDocuments().remove(d);
+            }
+        }
+        driverDocumentServiceJPA.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
@@ -116,6 +145,9 @@ public class DriverController {
     @PostMapping(value = "/{id}/documents", consumes = "application/json")
     public ResponseEntity<DriverDocumentDTOResult> createDriverDocument(@RequestBody DriverDocumentDTOResponse driverDocumentDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         DriverDocument driverDocument = new DriverDocument(driverDocumentDTOResponse, driver);
         driverDocumentServiceJPA.save(driverDocument);
         DriverDocumentDTOResult driverDocumentDTOResult = new DriverDocumentDTOResult(driverDocument);
@@ -125,8 +157,14 @@ public class DriverController {
 
     // #8 get driver vehicle - GET api/driver/1/vehicle
     @GetMapping(value = "/{id}/vehicle", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<VehicleDTOResult> getDriverVehicle(@PathVariable("id") Integer id) {
+    public ResponseEntity<VehicleDTOResult> getDriverVehicle(@PathVariable("id") Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        if(driver.getVehicle()==null){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Vehicle is not assigned!");
+        }
         VehicleDTOResult vehicleDTO = new VehicleDTOResult(driver.getVehicle());
         return new ResponseEntity<>(vehicleDTO, HttpStatus.OK);
     }
@@ -136,6 +174,9 @@ public class DriverController {
     @PostMapping(value = "/{id}/vehicle", consumes = "application/json")
     public ResponseEntity<VehicleDTOResult> createDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Vehicle vehicle = new Vehicle(driver, vehicleDTOResponse);
         vehicleServiceJPA.save(vehicle);
         driver.setVehicle(vehicle);
@@ -149,6 +190,9 @@ public class DriverController {
     @PutMapping(value = "/{id}/vehicle", consumes = "application/json")
     public ResponseEntity<VehicleDTOResult> updateDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Vehicle vehicle = new Vehicle(driver, vehicleDTOResponse);
         vehicleServiceJPA.save(vehicle);
         VehicleDTOResult vehicleDTOResult = new VehicleDTOResult(vehicle);
@@ -156,8 +200,12 @@ public class DriverController {
     }
 
     // #11 get driver working hours - GET api/driver/1/working-hours
-    @GetMapping(value = "/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)                      //TODO Mora biti pageable
     public ResponseEntity<WorkingHoursDTORequest> getDriverWorkingHours(@PathVariable("id") Integer id) {
+        Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(Long.valueOf(id));
 
         WorkingHoursDTOResult[] workingHoursDTOResults = new WorkingHoursDTOResult[workingHoursList.size()];
@@ -174,6 +222,9 @@ public class DriverController {
     @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
     public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         WorkingHours workingHours = new WorkingHours(driver, workingHoursDTOResponse);
         workingHoursServiceJPA.save(workingHours);
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
@@ -183,19 +234,12 @@ public class DriverController {
 
     // #13 get driver rides - GET api/driver/1/ride
     @GetMapping(value = "/{id}/ride")
-    public ResponseEntity<RidesOfPassengerDTO> getPassengerRides(@PathVariable("id") Integer id) {
+    public ResponseEntity<UberPageDTO<OneRideOfPassengerDTO>> getPassengerRides(@PathVariable("id") Integer id, Pageable pageable) {
         Driver driver = driverServiceJPA.findOne(id);
-        Set<Ride> rides = driver.getRides();
-        int totalCount = rides.size();
-
-        OneRideOfPassengerDTO[] results = new OneRideOfPassengerDTO[totalCount];
-        int iter = 0;
-        for(Ride ride : rides){
-            results[iter] = new OneRideOfPassengerDTO(ride);
-            iter++;
+        if (driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        RidesOfPassengerDTO ridesOfPassengerDTO = new RidesOfPassengerDTO(results, totalCount);
-        return new ResponseEntity<>(ridesOfPassengerDTO, HttpStatus.OK);
+        return new ResponseEntity<>(driverServiceJPA.getRidesOfDriver(pageable, id), HttpStatus.OK);
     }
 
 
@@ -204,6 +248,9 @@ public class DriverController {
     @GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkingHoursDTOResult> getWorkingHour(@PathVariable("working-hour-id") Integer id) {
         WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        if(workingHours==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
         return new ResponseEntity<>(workingHoursDTOResult, HttpStatus.OK);
     }
@@ -213,6 +260,9 @@ public class DriverController {
     @PutMapping(value = "/working-hour/{working-hour-id}", consumes = "application/json")
     public ResponseEntity<WorkingHoursDTOResult> updateWorkingHour(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("working-hour-id") Integer id) {
         WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        if(workingHours==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         workingHours.update(workingHoursDTOResponse);
         workingHoursServiceJPA.save(workingHours);
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);

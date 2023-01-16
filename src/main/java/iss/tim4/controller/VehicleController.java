@@ -46,6 +46,9 @@ public class VehicleController {
     @PutMapping(value = "/{id}/location", consumes = "application/json")
     public ResponseEntity<String> updateWorkingHour(@RequestBody LocationDTO locationDTO, @PathVariable("id") Integer id) {
         Vehicle vehicle = vehicleServiceJPA.findOne(id);
+        if (vehicle == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         Location location = vehicle.getCurrLocation();
         location.update(locationDTO);
         locationServiceJPA.save(location);

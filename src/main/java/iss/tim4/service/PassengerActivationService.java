@@ -11,7 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+
 import java.time.ZoneOffset;
+
 
 @Service
 public class PassengerActivationService {
@@ -20,6 +22,10 @@ public class PassengerActivationService {
     @Autowired
     private PassengerServiceJPA passengerServiceJPA;
 
+
+    public PassengerActivation findOne(Integer id) {
+        return passengerActivationRepository.findById(id).orElse(null);
+    }
     public void activate(Integer id) throws UberException {
         PassengerActivation passengerActivation = passengerActivationRepository.findById(id)
                 .orElseThrow(
@@ -35,9 +41,11 @@ public class PassengerActivationService {
         passenger.setActive(Boolean.TRUE);
         passengerServiceJPA.save(passenger);
         passengerActivationRepository.delete(passengerActivation);
-    }
 
+    }
     public PassengerActivation save(PassengerActivation passengerActivation) {
         return passengerActivationRepository.save(passengerActivation);
     }
+
+
 }

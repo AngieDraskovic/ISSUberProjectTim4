@@ -2,10 +2,11 @@ package iss.tim4.domain.model;
 
 import javax.persistence.*;
 
+
 import lombok.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
+
 import java.util.Objects;
 
 @Getter
@@ -25,6 +26,8 @@ public class PassengerActivation {
 
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
+
+
 
     @Override
     public int hashCode() {

@@ -8,6 +8,7 @@ import iss.tim4.domain.dto.user.*;
 import iss.tim4.domain.model.Activation;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
+
 import iss.tim4.errors.UberException;
 import iss.tim4.repository.ActivationRepositoryJPA;
 import iss.tim4.repository.PassengerRepositoryJPA;
@@ -83,6 +84,8 @@ public class UserServiceJPA implements UserService {
     }
 
     @Override
+    public User getUserByTelephoneNumber(String telephoneNumber){return userRepositoryJPA.findOnByTelephoneNumber(telephoneNumber);}
+
     public void changePassword(Integer id, ChangePasswordDTO passwords) throws UberException {
         User user = getUserById(id);
         if (user == null) {
@@ -136,4 +139,5 @@ public class UserServiceJPA implements UserService {
 
         emailService.sendSimpleMessage(email, "Password reset", message);
     }
+
 }
