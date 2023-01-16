@@ -1,10 +1,12 @@
 package iss.tim4.service;
 
+
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.user.UserDTO;
+import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.domain.model.Role;
@@ -16,7 +18,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 
 @Service
 public class PassengerServiceJPA {
@@ -45,6 +47,7 @@ public class PassengerServiceJPA {
         passengerRepositoryJPA.deleteById(id);
     }
 
+
     public UberPageDTO<PassengerDTOResult> getAllPassengers(Pageable pageable) {
         return new UberPageDTO<>(passengerRepositoryJPA.findAll(pageable).map(PassengerDTOResult::new));
     }
@@ -53,4 +56,15 @@ public class PassengerServiceJPA {
         return new UberPageDTO<>(rideRepositoryJPA.findByPassengersId(pageable, userId).map(OneRideOfPassengerDTO::new));
 
     }
+
+    public Set<Passenger> getPassengers(PassengerDTOResult[] passengers) {
+        Set<Passenger> passengerSet = new HashSet<>();
+        for (PassengerDTOResult passengerDTOResult : passengers){
+            Passenger passenger = findOne(passengerDTOResult.getId());
+            passengerSet.add(passenger);
+        }
+        return passengerSet;
+    }
+
+
 }

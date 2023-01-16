@@ -1,9 +1,10 @@
 package iss.tim4.service;
 
 
+
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
-import iss.tim4.domain.dto.passenger.PassengerDTOResult;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.repository.RideRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,6 +20,9 @@ public class RideServiceJPA {
     @Autowired
     private RideRepositoryJPA rideRepositoryJPA;
 
+    @Autowired
+    VehicleTypeServiceJPA vehicleTypeServiceJPA;
+
     public Ride findOne(Integer id) {
         return rideRepositoryJPA.findById(id).orElseGet(null);
     }
@@ -29,6 +33,10 @@ public class RideServiceJPA {
 
     public Page<Ride> findAll(Pageable page) {
         return rideRepositoryJPA.findAll(page);
+    }
+
+    public List<Ride> findByPassengerId(Integer passengerId) {
+        return rideRepositoryJPA.findByPassengerId(passengerId);
     }
 
     public Ride save(Ride ride) {
@@ -42,7 +50,14 @@ public class RideServiceJPA {
     public List<Object[]> getRideWithLocation(){
         return rideRepositoryJPA.getRidesFromRoutes();
     }
+
     public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
         return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
+    }
+
+    public double calculateCost(RideDTORequest rideDTO) {
+        double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(rideDTO.getVehicleType());
+        return pricePerType * rideDTO.getKilometers() * 120;
+
     }
 }

@@ -22,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -52,7 +53,8 @@ public class DriverController {
 
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<DriverDTOResult> createDriver(@RequestBody DriverDTOResponse driverDTOResponse) throws Exception {
+
+    public ResponseEntity<DriverDTOResult> createDriver(@Valid @RequestBody DriverDTOResponse driverDTOResponse) throws Exception {
         if(userService.getUser(driverDTOResponse.getEmail())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
         }

@@ -50,6 +50,8 @@ public class VehicleServiceJPA {
             Object[] vehicleObject = vehicleRepositoryJPA.getDriversVehicle(ride.getDriver().getId());
             Vehicle v = findOne(Integer.parseInt(vehicleObject[0].toString()));
             if(ride.getStartTime().isBefore(LocalDateTime.now()) &&  ride.getEndTime().isAfter(LocalDateTime.now())) {
+                System.out.println("Start time:" + ride.getStartTime());
+                System.out.println("End time: " + ride.getEndTime());
                 v.setAvailable(false);
             }
         }

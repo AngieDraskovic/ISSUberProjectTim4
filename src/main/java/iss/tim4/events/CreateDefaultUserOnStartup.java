@@ -26,8 +26,10 @@ public class CreateDefaultUserOnStartup {
         System.out.println("That's why we need to encode passwords of all predefined users");
 
         for (User user : userRepositoryJPA.findAll()) {
-            System.out.printf("Encode user's %s (%s) password %s%n", user.getEmail(), user.getRole(), user.getPassword());
-            user.setPassword(passwordEncoder.encode(user.getPassword()));
+            String after = passwordEncoder.encode(user.getPassword());
+            System.out.printf("Encode user's %s (%s) password %s -> %s%n", user.getEmail(),
+                    user.getRole(), user.getPassword(), after);
+            user.setPassword(after);
             userRepositoryJPA.save(user);
         }
 
