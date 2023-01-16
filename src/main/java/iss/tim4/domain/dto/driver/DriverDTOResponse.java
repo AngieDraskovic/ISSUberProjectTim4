@@ -14,11 +14,11 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class DriverDTOResponse {
 
-    @NotNull
+    @NotEmpty (message = "Name cannot be empty")
     private String name;
-    @Size(min = 1, max = 20)
+    @NotEmpty
     private String surname;
-    private String profilePicture;
+    private String profilePicture;  // Slika nije obavezna
     @Size(min = 6, max = 30)
     private String telephoneNumber;
     private String email;
