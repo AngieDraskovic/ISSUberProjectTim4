@@ -39,6 +39,12 @@ public class CustomRestExceptionHandler {
                     HttpStatus.BAD_REQUEST, "Wrong username or password!"),
                     new HttpHeaders(), HttpStatus.BAD_REQUEST);
         }
+        if(Objects.equals(ex.getMessage(), "Access is denied")){
+            return new ResponseEntity<>(new ErrorDTO(
+                    HttpStatus.FORBIDDEN, "Access is denied!"),
+                    new HttpHeaders(), HttpStatus.FORBIDDEN);
+
+        }
         ErrorDTO apiError = new ErrorDTO(HttpStatus.INTERNAL_SERVER_ERROR, ex.getLocalizedMessage());
         return new ResponseEntity<>(
                 apiError, new HttpHeaders(), apiError.getStatus());

@@ -7,8 +7,8 @@ import org.springframework.data.repository.query.Param;
 
 import java.util.List;
 
-public interface WorkingHoursRepositoryJPA extends JpaRepository<WorkingHours, Long> {
+public interface WorkingHoursRepositoryJPA extends JpaRepository<WorkingHours, Integer> {
 
     @Query("Select wh From WorkingHours wh where wh.driver.id = :driverId")
-    public List<WorkingHours> findByDriverId(@Param("driverId") Long driverId);
+    public List<WorkingHours> findByDriverId(@Param("driverId") Integer driverId);
 }

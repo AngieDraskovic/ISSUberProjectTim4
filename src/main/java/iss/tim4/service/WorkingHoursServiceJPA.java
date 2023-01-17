@@ -15,7 +15,7 @@ public class WorkingHoursServiceJPA {
     @Autowired
     private WorkingHoursRepositoryJPA workingHoursRepositoryJPA;
 
-    public WorkingHours findOne(Long id) {
+    public WorkingHours findOne(Integer id) {
         return workingHoursRepositoryJPA.findById(id).orElseGet(null);
     }
 
@@ -31,10 +31,10 @@ public class WorkingHoursServiceJPA {
         return workingHoursRepositoryJPA.save(workingHours);
     }
 
-    public void remove(Long id) {
+    public void remove(Integer id) {
         workingHoursRepositoryJPA.deleteById(id);
     }
 
-    public List<WorkingHours> findByDriverId(Long id) { return workingHoursRepositoryJPA.findByDriverId(id); }
+    public List<WorkingHours> findByDriverId(Integer id) { return workingHoursRepositoryJPA.findByDriverId(id); }
 
 }

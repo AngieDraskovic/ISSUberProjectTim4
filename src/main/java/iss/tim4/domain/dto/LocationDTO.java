@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 
 @Data
@@ -13,9 +14,12 @@ import javax.validation.constraints.NotEmpty;
 public class LocationDTO {
     @NotEmpty (message = "Field address is required!")
     private String address;
-    @NotEmpty (message = "Field latitude is required!")
+ //   @NotEmpty (message = "Field latitude is required!")
+    @Min(value=0)
     private Double latitude;
-    @NotEmpty (message = "Field longitude is required!")
+
+   // @NotEmpty (message = "Field longitude is required!")
+    @Min(value=0)
     private Double longitude;
 
     public LocationDTO(Location location) {

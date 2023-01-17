@@ -16,11 +16,14 @@ import iss.tim4.domain.model.*;
 import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
+import org.hibernate.annotations.Any;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -42,7 +45,8 @@ public class DriverController {
 
     @Autowired
     private VehicleServiceJPA vehicleServiceJPA;
-
+    @Autowired
+    private PasswordEncoder passwordEncoder;
     @Autowired
     private WorkingHoursServiceJPA workingHoursServiceJPA;
 
@@ -54,6 +58,7 @@ public class DriverController {
 
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DriverDTOResult> createDriver(@Valid @RequestBody DriverDTOResponse driverDTOResponse) throws Exception {
         if(userService.getUser(driverDTOResponse.getEmail())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
@@ -62,14 +67,17 @@ public class DriverController {
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
         Driver driver = new Driver(driverDTOResponse);
-        Driver savedDriver = driverServiceJPA.save(driver);
-        DriverDTOResult driverDTOResult = new DriverDTOResult(savedDriver);
+        driver.setPassword(passwordEncoder.encode(driverDTOResponse.getPassword()));
+
+        driverServiceJPA.save(driver);
+        DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
     }
 
 
     // #2 get all drivers - GET api/driver
     @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UberPageDTO<DriverDTOResult>> getDrivers(Pageable pageable) {
         return new ResponseEntity<>(driverServiceJPA.getAllDrivers(pageable), HttpStatus.OK);
     }
@@ -77,10 +85,11 @@ public class DriverController {
 
     // #3 get driver by id - GET api/driver/1
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<DriverDTOResult> getDriver(@PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            //return new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
         }
         DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
@@ -89,6 +98,7 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
+    @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<DriverDTOResult> updateDriver(@RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -124,7 +134,7 @@ public class DriverController {
 
 
     // #6 delete driver documents - DELETE api/driver/1/documents
-    @DeleteMapping(value = "/document/{id}") // TODO edit this method as it should delete onlu specific document
+    @DeleteMapping(value = "/document/{id}")
     public ResponseEntity<Void> deleteDriverDocuments(@PathVariable Integer id) {
         DriverDocument document = driverDocumentServiceJPA.findOne(id);
         if(document == null){
@@ -172,7 +182,7 @@ public class DriverController {
 
     // #9 create driver vehicle - POST api/driver/1/vehicle
     @PostMapping(value = "/{id}/vehicle", consumes = "application/json")
-    public ResponseEntity<VehicleDTOResult> createDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable Integer id) {
+    public ResponseEntity<VehicleDTOResult> createDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -188,7 +198,7 @@ public class DriverController {
 
     // #10 update driver vehicle - PUT api/driver/1/vehicle
     @PutMapping(value = "/{id}/vehicle", consumes = "application/json")
-    public ResponseEntity<VehicleDTOResult> updateDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable Integer id) {
+    public ResponseEntity<VehicleDTOResult> updateDriverVehicle(@RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -201,12 +211,12 @@ public class DriverController {
 
     // #11 get driver working hours - GET api/driver/1/working-hours
     @GetMapping(value = "/{id}/working-hour", produces = MediaType.APPLICATION_JSON_VALUE)                      //TODO Mora biti pageable
-    public ResponseEntity<WorkingHoursDTORequest> getDriverWorkingHours(@PathVariable("id") Integer id) {
+    public ResponseEntity<WorkingHoursDTORequest> getDriverWorkingHours(@PathVariable("id")  Integer id, Pageable pageable ) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(Long.valueOf(id));
+        List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(id);
 
         WorkingHoursDTOResult[] workingHoursDTOResults = new WorkingHoursDTOResult[workingHoursList.size()];
         for (int i = 0; i < workingHoursDTOResults.length; i++){
@@ -220,7 +230,7 @@ public class DriverController {
 
     // #12 create driver working-hours - POST api/driver/1/working-hours
     @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
-    public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable Integer id) {
+    public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -244,10 +254,10 @@ public class DriverController {
 
 
 
-    // #14 get driver vehicle - GET api/driver/working-hour/1
+    // #14 get - GET api/driver/working-hour/1
     @GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkingHoursDTOResult> getWorkingHour(@PathVariable("working-hour-id") Integer id) {
-        WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        WorkingHours workingHours = workingHoursServiceJPA.findOne(id);
         if(workingHours==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -259,7 +269,7 @@ public class DriverController {
     // #15 update driver vehicle - PUT api/driver/working-hour/1
     @PutMapping(value = "/working-hour/{working-hour-id}", consumes = "application/json")
     public ResponseEntity<WorkingHoursDTOResult> updateWorkingHour(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("working-hour-id") Integer id) {
-        WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        WorkingHours workingHours = workingHoursServiceJPA.findOne(id);
         if(workingHours==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
