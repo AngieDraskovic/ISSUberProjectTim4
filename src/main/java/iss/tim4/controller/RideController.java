@@ -214,20 +214,20 @@ public class RideController {
     }
 
 
-    @PostMapping(value = "/favorites", consumes = "application/json")
-    public ResponseEntity<Void> createFavouriteLocation(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping(value="/favorites")
-    public ResponseEntity<Void> getFavouriteLocations(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping(value="/favorites/{id}")
-    public ResponseEntity<Void> deleteFavouriteLocations(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+//    @PostMapping(value = "/favorites", consumes = "application/json")
+//    public ResponseEntity<Void> createFavouriteLocation(){
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+//
+//    @GetMapping(value="/favorites")
+//    public ResponseEntity<Void> getFavouriteLocations(){
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
+//
+//    @DeleteMapping(value="/favorites/{id}")
+//    public ResponseEntity<Void> deleteFavouriteLocations(){
+//        return new ResponseEntity<>(HttpStatus.OK);
+//    }
 
 
     @GetMapping(value = "/passenger/{id}")
@@ -241,15 +241,15 @@ public class RideController {
     }
 
     @PostMapping(value = "/favorites", consumes = "application/json")
-    public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoute(@RequestBody FavouriteRouteDTORequest rideDTO) throws Exception {
+    public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoutes(@RequestBody FavouriteRouteDTORequest favouriteRouteDTORequest) throws Exception {
 
-        FavouriteRoute favouriteRoute = new FavouriteRoute(rideDTO);
+        FavouriteRoute favouriteRoute = new FavouriteRoute(favouriteRouteDTORequest);
 
         Set<Passenger> passengers = new HashSet<Passenger>();
-        for (PassengerRideDTO passengerRideDTO : rideDTO.getPassengers()) {
+        for (PassengerRideDTO passengerRideDTO : favouriteRouteDTORequest.getPassengers()) {
             passengers.add(passengerServiceJPA.findOne(passengerRideDTO.getId()));
         }
-        Set<Route> locations = new HashSet<Route>();
+        Set<Route> locations = routeServiceJPA.getRoutes2(favouriteRouteDTORequest.getLocations());
 
         favouriteRoute.setPassengers(passengers);
         favouriteRoute.setLocations(locations);
@@ -273,7 +273,7 @@ public class RideController {
     }
 
     @DeleteMapping(value = "/favorites/{id}")
-    public ResponseEntity<Void> deleteFavoriteRoute(@PathVariable Integer id) {
+    public ResponseEntity<Void> deleteFavoriteRoute(@PathVariable("id") Integer id) {
         favouriteRouteServiceJPA.remove(id);
         return new ResponseEntity<>(HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
