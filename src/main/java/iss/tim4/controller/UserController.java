@@ -1,8 +1,6 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.UberPageDTO;
-import iss.tim4.domain.dto.driver.DriverDTOResult;
-import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.security.ChangePasswordDTO;
@@ -10,7 +8,6 @@ import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.ResetPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
-import iss.tim4.domain.model.DriverRequest;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
 import iss.tim4.errors.UberException;
@@ -20,7 +17,6 @@ import iss.tim4.service.PassengerServiceJPA;
 import iss.tim4.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -149,4 +145,5 @@ public class UserController {
         String token = jwtTokenUtil.generateToken(passwordDTO.getEmail(), user.getRole(), user.getId());
         return new TokenDTO(token, null);
     }
+
 }

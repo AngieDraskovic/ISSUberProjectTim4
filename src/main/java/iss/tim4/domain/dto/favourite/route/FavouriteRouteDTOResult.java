@@ -10,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 import java.util.Set;
 
@@ -19,17 +21,22 @@ import java.util.Set;
 public class FavouriteRouteDTOResult {
 
     private Integer id;
-    private String favouriteName;
+    @NotEmpty(message = "Field favoriteName is required!")
+    private String favoriteName;
+    @NotNull (message = "Field scheduledTime is required!")
     private LocalDateTime scheduledTime;
+    @NotNull(message = "Field locations is required!")
     private RouteDTO[] locations;
+    @NotNull (message = "Field passengers is required!")
     private PassengerRideDTO[] passengers;
+    @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;
 
     public FavouriteRouteDTOResult(FavouriteRoute favouriteRoute) {
         this.id = favouriteRoute.getId();
-        this.favouriteName = favouriteRoute.getFavouriteName();
+        this.favoriteName = favouriteRoute.getFavouriteName();
         this.scheduledTime = favouriteRoute.getScheduledTime();
         setLocationsFromList(favouriteRoute.getLocations());
         setPassengersFromList(favouriteRoute.getPassengers());

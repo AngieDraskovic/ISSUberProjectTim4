@@ -21,8 +21,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -206,7 +208,7 @@ public class DriverController {
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(Long.valueOf(id));
+        List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(id);
 
         WorkingHoursDTOResult[] workingHoursDTOResults = new WorkingHoursDTOResult[workingHoursList.size()];
         for (int i = 0; i < workingHoursDTOResults.length; i++){
@@ -247,7 +249,7 @@ public class DriverController {
     // #14 get driver vehicle - GET api/driver/working-hour/1
     @GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<WorkingHoursDTOResult> getWorkingHour(@PathVariable("working-hour-id") Integer id) {
-        WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        WorkingHours workingHours = workingHoursServiceJPA.findOne(id);
         if(workingHours==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -259,7 +261,7 @@ public class DriverController {
     // #15 update driver vehicle - PUT api/driver/working-hour/1
     @PutMapping(value = "/working-hour/{working-hour-id}", consumes = "application/json")
     public ResponseEntity<WorkingHoursDTOResult> updateWorkingHour(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("working-hour-id") Integer id) {
-        WorkingHours workingHours = workingHoursServiceJPA.findOne(Long.valueOf(id));
+        WorkingHours workingHours = workingHoursServiceJPA.findOne(id);
         if(workingHours==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
@@ -294,4 +296,12 @@ public class DriverController {
     }
 
 
+    //    @Scheduled(cron = "0 13 21 * * *")
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")    // Izvrsava se svake ponoci
+    public void scheduledMethod() {
+        workingHoursServiceJPA.deleteAllWorkingHours();
+        List<WorkingHours> ll = workingHoursServiceJPA.findAll();
+        System.out.println(ll.size());
+    }
 }

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WorkingHoursDTOResponse {
 
+    @NotNull (message = "Field start is required!")
     private LocalDateTime start;
     private LocalDateTime end;
 
