@@ -19,7 +19,7 @@ import java.util.Set;
 public class FavouriteRouteDTOResult {
 
     private Integer id;
-    private String favouriteName;
+    private String favoriteName;
     private LocalDateTime scheduledTime;
     private RouteDTO[] locations;
     private PassengerRideDTO[] passengers;
@@ -29,7 +29,7 @@ public class FavouriteRouteDTOResult {
 
     public FavouriteRouteDTOResult(FavouriteRoute favouriteRoute) {
         this.id = favouriteRoute.getId();
-        this.favouriteName = favouriteRoute.getFavouriteName();
+        this.favoriteName = favouriteRoute.getFavouriteName();
         this.scheduledTime = favouriteRoute.getScheduledTime();
         setLocationsFromList(favouriteRoute.getLocations());
         setPassengersFromList(favouriteRoute.getPassengers());

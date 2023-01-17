@@ -18,7 +18,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class FavouriteRouteDTORequest {
 
-    private String favouriteName;
+    private String favoriteName;
     private RouteDTO[] locations;
     private PassengerRideDTO[] passengers;
     private VehicleName vehicleType;
@@ -26,7 +26,7 @@ public class FavouriteRouteDTORequest {
     private boolean petTransport;
 
     public FavouriteRouteDTORequest(FavouriteRoute favouriteRoute) {
-        this.favouriteName = favouriteRoute.getFavouriteName();
+        this.favoriteName = favouriteRoute.getFavouriteName();
 
         setLocationsFromList(favouriteRoute.getLocations());
         setPassengersFromList(favouriteRoute.getPassengers());

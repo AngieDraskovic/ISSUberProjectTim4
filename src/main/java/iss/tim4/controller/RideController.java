@@ -230,46 +230,44 @@ public class RideController {
             ridesDTO.add(new RideDTOResponse(ride));
         }
         return new ResponseEntity<>(ridesDTO, HttpStatus.OK);
-
-//        Ride ride = rideServiceJPA.findOne(id);
-//        if (ride == null) {
-//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-//        }
-//        return new ResponseEntity<RideDTOResponse>(new RideDTOResponse(ride) , HttpStatus.OK);
     }
 
-    @PostMapping(value = "/favourites", consumes = "application/json")
+    @PostMapping(value = "/favorites", consumes = "application/json")
     public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoute(@RequestBody FavouriteRouteDTORequest rideDTO) throws Exception {
-
-//        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
-//        if (driver == null) {
-//            // TODO: Vrati gresku (KT2)
-//        }
-//
-//        double totalCost = rideServiceJPA.calculateCost(rideDTO);
-//        Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
-//        Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
-//        VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
-//
-//        Ride newRide = new Ride(rideDTO);
-//        newRide.setDriver(driver);
-//        newRide.setTotalCost(totalCost);
-//        newRide.setPassengers(passengers);
-//        newRide.setRoutes(routes);
-//        newRide.setVehicleType(vehicleType);
-//
-//        rideServiceJPA.save(newRide);
 
         FavouriteRoute favouriteRoute = new FavouriteRoute(rideDTO);
 
+        Set<Passenger> passengers = new HashSet<Passenger>();
         for (PassengerRideDTO passengerRideDTO : rideDTO.getPassengers()) {
-
+            passengers.add(passengerServiceJPA.findOne(passengerRideDTO.getId()));
         }
+        Set<Route> locations = new HashSet<Route>();
+
+        favouriteRoute.setPassengers(passengers);
+        favouriteRoute.setLocations(locations);
 
         favouriteRouteServiceJPA.save(favouriteRoute);
         FavouriteRouteDTOResult favouriteRouteDTOResult = new FavouriteRouteDTOResult(favouriteRoute);
 
         return new ResponseEntity<>(favouriteRouteDTOResult, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/favorites/")
+    public ResponseEntity<Set<FavouriteRouteDTOResult>> getFavoriteLocations() {
+
+        Set<FavouriteRouteDTOResult> favouriteRouteDTOResults = new HashSet<FavouriteRouteDTOResult>();
+        List<FavouriteRoute> favouriteRoutes = favouriteRouteServiceJPA.findAll();
+        for (FavouriteRoute favouriteRoute : favouriteRoutes) {
+            favouriteRouteDTOResults.add(new FavouriteRouteDTOResult(favouriteRoute));
+        }
+
+        return new ResponseEntity<>(favouriteRouteDTOResults, HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/favorites/{id}")
+    public ResponseEntity<Void> deleteFavoriteRoute(@PathVariable Integer id) {
+        favouriteRouteServiceJPA.remove(id);
+        return new ResponseEntity<>(HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
 
 }

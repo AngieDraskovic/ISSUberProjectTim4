@@ -51,24 +51,13 @@ public class FavouriteRoute {
     private Set<Passenger> passengers = new HashSet<Passenger>();
 
     public FavouriteRoute(FavouriteRouteDTORequest favouriteRouteDTORequest) {
-        this.favouriteName = favouriteRouteDTORequest.getFavouriteName();
+        this.favouriteName = favouriteRouteDTORequest.getFavoriteName();
         this.scheduledTime = LocalDateTime.now();
         this.vehicleType = favouriteRouteDTORequest.getVehicleType();
-        setLocationsFrom(favouriteRouteDTORequest.getLocations());
-        setPassengersFrom(favouriteRouteDTORequest.getPassengers());
+        this.babyTransport = favouriteRouteDTORequest.isBabyTransport();
+        this.petTransport = favouriteRouteDTORequest.isPetTransport();
     }
 
-    private void setLocationsFrom(RouteDTO[] locations) {
-        for (RouteDTO routeDTO : locations) {
-            this.locations.add(new Route(routeDTO, 0.0));
-        }
-    }
-
-    private void setPassengersFrom(PassengerRideDTO[] passengers) {
-        for (PassengerRideDTO passengerRideDTO : passengers) {
-//            this.passengers.add(new Passenger(passengerRideDTO));
-        }
-    }
 
 
 }
