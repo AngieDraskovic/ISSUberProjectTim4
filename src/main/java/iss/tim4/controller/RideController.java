@@ -214,22 +214,6 @@ public class RideController {
     }
 
 
-//    @PostMapping(value = "/favorites", consumes = "application/json")
-//    public ResponseEntity<Void> createFavouriteLocation(){
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @GetMapping(value="/favorites")
-//    public ResponseEntity<Void> getFavouriteLocations(){
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-//
-//    @DeleteMapping(value="/favorites/{id}")
-//    public ResponseEntity<Void> deleteFavouriteLocations(){
-//        return new ResponseEntity<>(HttpStatus.OK);
-//    }
-
-
     @GetMapping(value = "/passenger/{id}")
     public ResponseEntity<Set<RideDTOResponse>> getPassengerRides(@PathVariable("id") Integer id) {
         List<Ride> rides = rideServiceJPA.findByPassengerId(id);

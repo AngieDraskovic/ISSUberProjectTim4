@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -18,9 +20,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class FavouriteRouteDTORequest {
 
+    @NotEmpty (message = "Field favoriteName is required!")
     private String favoriteName;
+    @NotNull (message = "Field locations is required!")
     private RouteDTO[] locations;
+    @NotNull (message = "Field passengers is required!")
     private PassengerRideDTO[] passengers;
+    @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;

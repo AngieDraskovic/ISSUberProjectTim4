@@ -9,6 +9,7 @@ import org.aspectj.bridge.IMessage;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 @Data
@@ -22,6 +23,7 @@ public class ReviewDTO {
     private Integer rating;
     @Size(max = 300, message = "Field comment cannot be longer than 300 characters!")
     private String comment;
+    @NotNull (message = "Field passenger is required!")
     private PassengerDTOResponse passenger;
 
     public ReviewDTO(Review review) {
