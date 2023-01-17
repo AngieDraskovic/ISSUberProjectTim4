@@ -42,6 +42,7 @@ public class WebSecurityConfiguration {
 				//.antMatchers("/api/passenger/**").permitAll()
 			//	.antMatchers("/api/driver/**").permitAll()
 				.antMatchers("/api/user/login").permitAll()
+				.antMatchers("/api/user/*/resetPassword").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
 			    .antMatchers("/api/passenger/**").permitAll()
 			//	.antMatchers("/api/vehicle/all").permitAll()

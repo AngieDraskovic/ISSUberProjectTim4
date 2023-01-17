@@ -19,9 +19,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @OneToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User sender;
 
+    @OneToOne
     @JoinColumn(name = "receiver_id", referencedColumnName = "id")
     private User receiver;
 
