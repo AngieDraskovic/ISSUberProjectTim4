@@ -19,7 +19,6 @@ import java.util.Set;
 @AllArgsConstructor
 public class OneRideOfPassengerDTO {
     private Integer id;
-    @NotNull(message = "Field startTime is required!")
     private LocalDateTime startTime;
     private LocalDateTime endTime;
     private Double totalCost;

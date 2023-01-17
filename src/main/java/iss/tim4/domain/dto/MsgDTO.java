@@ -11,7 +11,6 @@ import javax.validation.constraints.NotEmpty;
 
 public class MsgDTO {
 
-    @NotEmpty (message = "Field message is required!")
     private String message;
 
     public MsgDTO(String message){
