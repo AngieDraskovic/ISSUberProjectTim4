@@ -27,13 +27,13 @@ VALUES (200.00, 0),
 INSERT INTO VEHICLE
 (BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID, AVAILABLE)
 VALUES (true, 'Tesla', 4, true, '1FK-3DS', 0, 1, true),
-       (false, 'Audi', 4, true, '2FK-3DS', 2, 2,  true),
-       (true, 'Reno', 4, true, '3FK-3DS', 2, 3, true),
-       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 1, 4, true),
-       (false, 'Belarus', 1, true, '5FK-3DS',2, 5, true),
-       (false, 'Citroen C4', 1, true, '5FK-3DS',2, 6, true),
-       (false, 'BMW X1', 1, true, '5FK-3DS',2, 7, true),
-       (false, 'BMW X2', 1, true, '5FK-3DS',2, 8, true);
+       (false, 'Audi', 4, true, '2FK-3DS', 0, 2,  true),
+       (true, 'Reno', 4, true, '3FK-3DS', 0, 3, true),
+       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, true),
+       (false, 'Belarus', 1, true, '5FK-3DS',0, 5, true),
+       (false, 'Citroen C4', 1, true, '5FK-3DS',0, 6, true),
+       (false, 'BMW X1', 1, true, '5FK-3DS',0, 7, true),
+       (false, 'BMW X2', 1, true, '5FK-3DS',0, 8, true);
 
 INSERT INTO USERS
 (ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)

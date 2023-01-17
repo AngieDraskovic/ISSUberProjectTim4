@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class WorkingHoursDTOResult {
 
-    private Long id;
+    private Integer id;
     private LocalDateTime start;
     private LocalDateTime end;
 

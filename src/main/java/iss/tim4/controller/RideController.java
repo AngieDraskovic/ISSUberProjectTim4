@@ -20,6 +20,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -61,13 +62,12 @@ public class RideController {
     }
 
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<RideDTOResponse> createRide(@RequestBody RideDTORequest rideDTO) throws Exception {
-        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
-        if (driver == null) {
-            // TODO: Vrati gresku (KT2)
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-
+    public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
+//        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
+  //      if (driver == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        }
+        Driver driver = driverServiceJPA.findOne(6);
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
@@ -211,22 +211,6 @@ public class RideController {
         ride.getRejection().setReason(reasonDTO.getReason());
         RideDTOResponse result = new RideDTOResponse(ride);
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-
-    @PostMapping(value = "/favorites", consumes = "application/json")
-    public ResponseEntity<Void> createFavouriteLocation(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping(value="/favorites")
-    public ResponseEntity<Void> getFavouriteLocations(){
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @DeleteMapping(value="/favorites/{id}")
-    public ResponseEntity<Void> deleteFavouriteLocations(){
-        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 
