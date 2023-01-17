@@ -18,6 +18,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 public class FavouriteRideRequestDTO {
+
+
     private String favoriteName;
     private RouteDTO[] locations;
     private PassengerDTOResult[] passengers;            // passengers who have it as a favourite location

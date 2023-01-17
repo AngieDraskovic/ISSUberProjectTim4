@@ -24,8 +24,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -304,4 +306,12 @@ public class DriverController {
     }
 
 
+    //    @Scheduled(cron = "0 13 21 * * *")
+    @Transactional
+    @Scheduled(cron = "0 0 0 * * *")    // Izvrsava se svake ponoci
+    public void scheduledMethod() {
+        workingHoursServiceJPA.deleteAllWorkingHours();
+        List<WorkingHours> ll = workingHoursServiceJPA.findAll();
+        System.out.println(ll.size());
+    }
 }

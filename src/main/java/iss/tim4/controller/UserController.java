@@ -1,16 +1,14 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.UberPageDTO;
-import iss.tim4.domain.dto.driver.DriverDTOResult;
-import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.security.ChangePasswordDTO;
 import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.ResetPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
-import iss.tim4.domain.dto.user.*;
-import iss.tim4.domain.model.DriverRequest;
+import iss.tim4.domain.dto.user.UserDTO;
+import iss.tim4.domain.dto.user.UserMoreDTO;
 import iss.tim4.domain.model.Remark;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
@@ -23,7 +21,6 @@ import iss.tim4.service.PassengerServiceJPA;
 import iss.tim4.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -216,6 +213,5 @@ public class UserController {
         Page<Remark> pages = remarkRepositoryJPA.findByUserId(id, pageable);
         return new ResponseEntity<>(new UberPageDTO<>(pages), HttpStatus.OK);
     }
-
 
 }
