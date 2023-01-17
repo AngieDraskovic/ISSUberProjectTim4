@@ -44,6 +44,7 @@ public class LoginController {
 
 		User user = userService.getUser(passwordDTO.getEmail());
 		String token = jwtTokenUtil.generateToken(passwordDTO.getEmail(), user.getRole(), user.getId());
+
 		return new TokenDTO(token, null);
 	}
 

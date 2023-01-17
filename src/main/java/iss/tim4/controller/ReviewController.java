@@ -2,6 +2,7 @@ package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
 import iss.tim4.domain.dto.review.ReviewDTO;
+import iss.tim4.domain.model.Review;
 import iss.tim4.service.ReviewService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;

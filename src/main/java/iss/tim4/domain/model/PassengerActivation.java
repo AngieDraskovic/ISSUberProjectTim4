@@ -1,12 +1,12 @@
 package iss.tim4.domain.model;
 
 import javax.persistence.*;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
 
-import java.util.Date;
+
+import lombok.*;
+
+import java.time.LocalDateTime;
+
 import java.util.Objects;
 
 @Getter
@@ -14,31 +14,23 @@ import java.util.Objects;
 @ToString
 @RequiredArgsConstructor
 @Entity
+@AllArgsConstructor
 public class PassengerActivation {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "activation_id", nullable = false)
     private Integer activationId;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "passenger_id", referencedColumnName = "id")
     private Passenger passenger;
 
     @Column(name = "creation_date", nullable = false)
-    private Date creationDate;
+    private LocalDateTime creationDate;
 
-    @Column(name = "life_length", nullable = false)
-    private double lifeLength;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof PassengerActivation that)) return false;
-        return Double.compare(that.getLifeLength(), getLifeLength()) == 0 && Objects.equals(getActivationId(), that.getActivationId()) && Objects.equals(getPassenger(), that.getPassenger()) && Objects.equals(getCreationDate(), that.getCreationDate());
-    }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getActivationId(), getPassenger(), getCreationDate(), getLifeLength());
+        return Objects.hash(getActivationId(), getPassenger(), getCreationDate());
     }
 }
