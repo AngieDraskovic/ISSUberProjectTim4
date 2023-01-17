@@ -11,9 +11,12 @@ import iss.tim4.domain.dto.security.ResetPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
 import iss.tim4.domain.model.DriverRequest;
+import iss.tim4.domain.model.Remark;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
 import iss.tim4.errors.UberException;
+import iss.tim4.repository.RemarkRepositoryJPA;
+import iss.tim4.repository.UserRepositoryJPA;
 import iss.tim4.security.jwt.JwtTokenUtil;
 import iss.tim4.service.DriverRequestServiceJPA;
 import iss.tim4.service.PassengerServiceJPA;
@@ -21,6 +24,7 @@ import iss.tim4.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -43,6 +47,8 @@ public class UserController {
     @Autowired
     private UserService userService;
     @Autowired
+    private UserRepositoryJPA userRepositoryJPA;
+    @Autowired
     private DriverRequestServiceJPA driverService;
     @Autowired
     private PassengerServiceJPA passengerService;
@@ -52,6 +58,8 @@ public class UserController {
     private AuthenticationManager authenticationManager;
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
+    @Autowired
+    private RemarkRepositoryJPA remarkRepositoryJPA;
 
     @GetMapping(value = "/me")
     public ResponseEntity<UserMoreDTO> userDTOResponseEntity(Principal principal) {
@@ -149,4 +157,65 @@ public class UserController {
         String token = jwtTokenUtil.generateToken(passwordDTO.getEmail(), user.getRole(), user.getId());
         return new TokenDTO(token, null);
     }
+
+    @PutMapping(value = "/{id}/block")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> block(
+            @PathVariable("id") Integer id) throws UberException {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
+        }
+        if (user.getBlocked()) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "User already blocked!");
+        }
+        user.setBlocked(Boolean.TRUE);
+        userRepositoryJPA.save(user);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PutMapping(value = "/{id}/unblock")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Void> unblock(
+            @PathVariable("id") Integer id) throws UberException {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
+        }
+        if (!user.getBlocked()) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "User is not blocked!");
+        }
+        user.setBlocked(Boolean.FALSE);
+        userRepositoryJPA.save(user);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @PostMapping(value = "/{id}/note")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<Remark> remarkPost(
+            @PathVariable("id") Integer id,
+            @RequestBody Remark remark) throws UberException {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
+        }
+        remark.setUser(user);
+        remarkRepositoryJPA.save(remark);
+        return new ResponseEntity<>(remark, HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/{id}/note")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<UberPageDTO<Remark>> getRemark(
+            @PathVariable("id") Integer id,
+            Pageable pageable) throws UberException {
+        User user = userService.getUserById(id);
+        if (user == null) {
+            throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
+        }
+        Page<Remark> pages = remarkRepositoryJPA.findByUserId(id, pageable);
+        return new ResponseEntity<>(new UberPageDTO<>(pages), HttpStatus.OK);
+    }
+
+
 }

@@ -13,7 +13,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class DriverDocumentDTOResult {
 
-    private Long id;
+    private Integer id;
     @NotEmpty (message = "Field name is required!")
     private String name;
     @NotEmpty (message = "Field documentImage is required!")
