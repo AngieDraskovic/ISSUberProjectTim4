@@ -33,4 +33,13 @@ public class RouteServiceJPA {
         }
         return routes;
     }
+
+    public Set<Route> getRoutes2(RouteDTO[] routeDTOArray) {
+        Set<Route> routes = new HashSet<>();
+        for (RouteDTO routeDTO : routeDTOArray) {
+            Route route = new Route(routeDTO, 0.0);
+            routes.add(route);
+        }
+        return routes;
+    }
 }

@@ -37,4 +37,5 @@ public class WorkingHoursServiceJPA {
 
     public List<WorkingHours> findByDriverId(Integer id) { return workingHoursRepositoryJPA.findByDriverId(id); }
 
+    public void deleteAllWorkingHours() { workingHoursRepositoryJPA.deleteAllWorkingHours(); }
 }

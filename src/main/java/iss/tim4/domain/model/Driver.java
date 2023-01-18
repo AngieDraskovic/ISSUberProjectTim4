@@ -96,10 +96,11 @@ public class Driver extends User {
     }
 
     public boolean isAvailable(RideDTORequest newRide) {
+        if (!this.active || this.blocked)
+            return false;
         for (Ride ride : this.rides) {
             if (this.isBusy(ride, newRide))
                 return false;
-            // TODO: Check if driver is active
         }
         return true;
     }
