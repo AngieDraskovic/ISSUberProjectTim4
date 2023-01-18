@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.Email;
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
@@ -14,6 +15,8 @@ import javax.validation.constraints.Size;
 @AllArgsConstructor
 public class PassengerDTOResult {
 
+
+    @Min(value=1)
     private Integer id;
     @NotEmpty(message = "Field name is required!")
     private String name;

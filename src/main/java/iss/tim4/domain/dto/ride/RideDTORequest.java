@@ -16,13 +16,14 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RideDTORequest {
+
+    @NotNull (message = "Field vehicleType is required!")
+    private VehicleName vehicleType;
+
     private Boolean babyTransport;
     private Boolean petTransport;
     private PassengerDTOResult[] passengers;
     private RouteDTO[] locations;
-
-    @NotNull (message = "Field vehicleType is required!")
-    private VehicleName vehicleType;
 
     @NotNull (message = "Field startTime is required!")
     private LocalDateTime startTime;

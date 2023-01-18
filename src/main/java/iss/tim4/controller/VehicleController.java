@@ -6,14 +6,17 @@ import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.model.Location;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Vehicle;
+import iss.tim4.errors.UberException;
 import iss.tim4.service.LocationServiceJPA;
 import iss.tim4.service.VehicleServiceJPA;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,11 +46,12 @@ public class VehicleController {
 
     }
     // #2 update vehicle location - PUT api/vehicle/1/location
+    @PreAuthorize("hasRole('DRIVER')")
     @PutMapping(value = "/{id}/location", consumes = "application/json")
-    public ResponseEntity<String> updateWorkingHour(@RequestBody LocationDTO locationDTO, @PathVariable("id") Integer id) {
+    public ResponseEntity<String> updateWorkingHour(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") Integer id) throws UberException {
         Vehicle vehicle = vehicleServiceJPA.findOne(id);
         if (vehicle == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            return new ResponseEntity<String>("Vehicle does not exist!", HttpStatus.NOT_FOUND);
         }
         Location location = vehicle.getCurrLocation();
         location.update(locationDTO);

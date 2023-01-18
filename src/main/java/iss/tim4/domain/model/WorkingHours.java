@@ -17,7 +17,7 @@ public class WorkingHours {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "start_time")
     private LocalDateTime start;
