@@ -40,6 +40,7 @@ public class WebSecurityConfiguration {
 				.antMatchers("/api/login/*").permitAll()
 				.antMatchers("/api/unregisteredUser/**").permitAll()
 				.antMatchers("/api/user/login").permitAll()
+				.antMatchers("/api/user/*/resetPassword").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
 			    .antMatchers("/api/passenger/**").permitAll()
 				.antMatchers("/**").authenticated()

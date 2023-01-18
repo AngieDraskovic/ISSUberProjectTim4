@@ -11,11 +11,9 @@ import javax.validation.constraints.NotNull;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreateUserMessageDTO {
-    @NotNull (message = "Field receiverId is required!")
-    private Long receiverId;
     @NotNull (message = "Field message is required!")
     private String message;
     @NotNull (message = "Field type is required!")
     private String type;
-    private Long rideId;    // Ne mora biti poruka u vezi voznje
+    private Integer rideId;    // Ne mora biti poruka u vezi voznje
 }

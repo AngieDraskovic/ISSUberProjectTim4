@@ -19,11 +19,11 @@ public class Message {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
     private User sender;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "receiver_id", referencedColumnName = "id")
     private User receiver;
 
@@ -37,10 +37,7 @@ public class Message {
     private MessageType type;
 
     @Column(name = "ride_id")
-    private Long rideId;
-
-
-
+    private Integer rideId;
 
     @Override
     public boolean equals(Object o) {

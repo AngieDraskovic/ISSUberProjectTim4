@@ -80,7 +80,7 @@ public class UserServiceJPA implements UserService {
 
     @Override
     public User getUserById(Integer id) {
-        return userRepositoryJPA.getReferenceById(id);
+        return userRepositoryJPA.findById(id).orElse(null);
     }
 
     @Override

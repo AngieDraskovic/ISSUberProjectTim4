@@ -16,5 +16,4 @@ public interface WorkingHoursRepositoryJPA extends JpaRepository<WorkingHours, I
     @Modifying
     @Query(value = "DELETE FROM WorkingHours")
     public void deleteAllWorkingHours();
-
 }
