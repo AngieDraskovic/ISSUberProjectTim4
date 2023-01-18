@@ -253,6 +253,7 @@ public class RideController {
     }
 
     @PostMapping(value = "/favorites", consumes = "application/json")
+    @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoutes(@RequestBody FavouriteRouteDTORequest favouriteRouteDTORequest) throws Exception {
 
         FavouriteRoute favouriteRoute = new FavouriteRoute(favouriteRouteDTORequest);
@@ -272,7 +273,8 @@ public class RideController {
         return new ResponseEntity<>(favouriteRouteDTOResult, HttpStatus.OK);
     }
 
-    @GetMapping(value = "/favorites/")
+    @GetMapping(value = "/favorites")
+    @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<Set<FavouriteRouteDTOResult>> getFavoriteLocations() {
 
         Set<FavouriteRouteDTOResult> favouriteRouteDTOResults = new HashSet<FavouriteRouteDTOResult>();
@@ -285,9 +287,13 @@ public class RideController {
     }
 
     @DeleteMapping(value = "/favorites/{id}")
-    public ResponseEntity<Void> deleteFavoriteRoute(@PathVariable("id") Integer id) {
+    @PreAuthorize("hasRole('PASSENGER')")
+    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id) {
+        if(favouriteRouteServiceJPA.findOne(id) == null){
+            return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
+        }
         favouriteRouteServiceJPA.remove(id);
-        return new ResponseEntity<>(HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
 
 }
