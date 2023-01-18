@@ -13,6 +13,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -45,6 +46,7 @@ public class VehicleController {
 
     }
     // #2 update vehicle location - PUT api/vehicle/1/location
+    @PreAuthorize("hasRole('DRIVER')")
     @PutMapping(value = "/{id}/location", consumes = "application/json")
     public ResponseEntity<String> updateWorkingHour(@Valid @RequestBody LocationDTO locationDTO, @PathVariable("id") Integer id) throws UberException {
         Vehicle vehicle = vehicleServiceJPA.findOne(id);

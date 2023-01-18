@@ -5,27 +5,34 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class VehicleDTOResponse {
-
-    @NotNull (message = "Field vehicleType is required!")
+    @Size(min = 3, max = 30, message = "Field vehicle type format is not valid!")
     private String vehicleType;
-    @NotEmpty (message = "Field model is required!")
+    @Size(min = 1, max = 30, message = "Field model format is not valid!")
     private String model;
-    @NotEmpty (message = "Field licenseNumber is required!")    // Postoji li neki sablon po kome se registracija vozila
-    private String licenseNumber;                               // pravi, treba li regex za to ili reg moze biti razlicitih formata
-    private LocationDTO currentLocation;        // Ako kreiramo vozilo tek, nema trenutnu lokaciju
-    @Min(value = 2, message = "Field passengerSeats is grater than 2!")
+    @NotNull (message = "Field license number is required!")
+    private String licenseNumber;
+    @NotNull (message = "Field current location is required!")
+    private LocationDTO currentLocation;
+    @NotNull (message = "Field current location is required!")
+    @Min(value = 1, message = "Field passengerSeats is grater than 1!")
     @Max(value = 8, message = "Field passengerSeats is less than 8!")
     private Integer passengerSeats;
+    @NotNull (message = "Field current location is required!")
     private Boolean babyTransport;
+    @NotNull (message = "Field current location is required!")
     private Boolean petTransport;
     private Boolean available;
 

@@ -3,6 +3,7 @@ package iss.tim4.domain.model;
 import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import javax.persistence.*;
 
+import iss.tim4.domain.dto.driver.request.DriverDTOUpdate;
 import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import lombok.*;
@@ -32,6 +33,7 @@ public class Driver extends User {
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     @ToString.Exclude
     private Vehicle vehicle;
+
 
     public Driver(DriverDTOResponse driverDTOResponse) {
         this.name = driverDTOResponse.getName();
@@ -81,6 +83,16 @@ public class Driver extends User {
         this.email = driverDTOResponse.getEmail();
         this.address = driverDTOResponse.getAddress();
         this.password = driverDTOResponse.getPassword();
+    }
+
+    public void updateDriver(DriverDTOUpdate driverDTOResponse) {
+        this.name = driverDTOResponse.getName();
+        this.surname = driverDTOResponse.getSurname();
+        this.profilePicture = driverDTOResponse.getProfilePicture();
+        this.telephoneNumber = driverDTOResponse.getTelephoneNumber();
+        this.email = driverDTOResponse.getEmail();
+        this.address = driverDTOResponse.getAddress();
+       // this.password = driverDTOResponse.getPassword();
     }
 
     public boolean isAvailable(RideDTORequest newRide) {

@@ -9,14 +9,14 @@ import org.springframework.data.domain.Pageable;
 import java.util.Collection;
 
 public interface ReviewService {
-    Collection<RideReviewsDTO> findReviewByRideId(Long id);
+    Collection<RideReviewsDTO> findReviewByRideId(Integer id);
 
-    Collection<ReviewDTO> findReviewByVehicleId(Long vehicleId);
-    UberPageDTO<ReviewDTO> findReviewByVehicleId(Long vehicleId, Pageable pageable);
+    Collection<ReviewDTO> findReviewByVehicleId(Integer vehicleId);
+    UberPageDTO<ReviewDTO> findReviewByVehicleId(Integer vehicleId, Pageable pageable);
 
-    Collection<ReviewDTO> findReviewByDriverId(Long driverId);
-    UberPageDTO<ReviewDTO> findReviewByDriverId(Long driverId, Pageable pageable);
+    Collection<ReviewDTO> findReviewByDriverId(Integer driverId);
+    UberPageDTO<ReviewDTO> findReviewByDriverId(Integer driverId, Pageable pageable);
 
-    ReviewDTO createForVehicle(CreateReviewDTO review, Long rideId, Long vehicleId);
-    ReviewDTO createForDriver(CreateReviewDTO review, Long rideId, Long driverId);
+    ReviewDTO createForVehicle(CreateReviewDTO review, Integer rideId, Integer vehicleId);
+    ReviewDTO createForDriver(CreateReviewDTO review, Integer rideId, Integer driverId);
 }
