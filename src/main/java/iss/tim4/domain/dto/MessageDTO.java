@@ -27,7 +27,7 @@ public class MessageDTO {
     private LocalDateTime time;
     @NotNull (message = "Field type is required!")
     private MessageType type;
-    private Long rideId;    // Ne mora za voznju biti poruka
+    private Integer rideId;    // Ne mora za voznju biti poruka
 
     public MessageDTO(Message message) {
         this.id = message.getId();

@@ -37,7 +37,7 @@ public class Message {
     private MessageType type;
 
     @Column(name = "ride_id")
-    private Long rideId;
+    private Integer rideId;
 
     @Override
     public boolean equals(Object o) {
