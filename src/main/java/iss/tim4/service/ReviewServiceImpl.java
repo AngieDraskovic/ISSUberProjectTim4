@@ -24,37 +24,37 @@ public class ReviewServiceImpl implements ReviewService {
     }
 
     @Override
-    public Collection<RideReviewsDTO> findReviewByRideId(Long id) {
+    public Collection<RideReviewsDTO> findReviewByRideId(Integer id) {
         return List.of(new RideReviewsDTO(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
-    public Collection<ReviewDTO> findReviewByVehicleId(Long vehicleId) {
+    public Collection<ReviewDTO> findReviewByVehicleId(Integer vehicleId) {
         return List.of(mockReviewDTO(), mockReviewDTO());
     }
 
     @Override
-    public UberPageDTO<ReviewDTO> findReviewByVehicleId(Long vehicleId, Pageable pageable) {
+    public UberPageDTO<ReviewDTO> findReviewByVehicleId(Integer vehicleId, Pageable pageable) {
         return new UberPageDTO<ReviewDTO>(2L, List.of(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
-    public Collection<ReviewDTO> findReviewByDriverId(Long driverId) {
+    public Collection<ReviewDTO> findReviewByDriverId(Integer driverId) {
         return List.of(mockReviewDTO(), mockReviewDTO());
     }
 
     @Override
-    public UberPageDTO<ReviewDTO> findReviewByDriverId(Long driverId, Pageable pageable) {
+    public UberPageDTO<ReviewDTO> findReviewByDriverId(Integer driverId, Pageable pageable) {
         return new UberPageDTO<>(2L, List.of(mockReviewDTO(), mockReviewDTO()));
     }
 
     @Override
-    public ReviewDTO createForVehicle(CreateReviewDTO review, Long rideId, Long vehicleId) {
+    public ReviewDTO createForVehicle(CreateReviewDTO review, Integer rideId, Integer vehicleId) {
         return mockReviewDTO();
     }
 
     @Override
-    public ReviewDTO createForDriver(CreateReviewDTO review, Long rideId, Long driverId) {
+    public ReviewDTO createForDriver(CreateReviewDTO review, Integer rideId, Integer driverId) {
         return mockReviewDTO();
     }
 }

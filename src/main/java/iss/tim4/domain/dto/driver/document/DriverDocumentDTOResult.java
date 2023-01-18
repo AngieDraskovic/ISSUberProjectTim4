@@ -22,7 +22,7 @@ public class DriverDocumentDTOResult {
     private Integer driverId;
 
     public DriverDocumentDTOResult(DriverDocument driverDocument) {
-        this.id = Long.valueOf(driverDocument.getId());
+        this.id = driverDocument.getId();
         this.name = driverDocument.getName();
         this.documentImage = driverDocument.getDocumentImage();
         this.driverId = driverDocument.getDriver().getId();
