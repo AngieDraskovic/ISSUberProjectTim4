@@ -86,7 +86,7 @@ public class DriverController {
 
     // #3 get driver by id - GET api/driver/1
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public <T> ResponseEntity<T> getDriver(@PathVariable("id") Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
