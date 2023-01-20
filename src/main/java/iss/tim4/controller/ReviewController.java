@@ -18,6 +18,7 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/api/review")
 @AllArgsConstructor
+@CrossOrigin(origins = "http://localhost:4200")
 public class ReviewController {
     @Autowired
     ReviewService reviewService;
