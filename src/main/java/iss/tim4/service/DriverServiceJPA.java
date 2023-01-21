@@ -5,9 +5,7 @@ import iss.tim4.domain.dto.LocationDTO;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
-import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 
-import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 
 import iss.tim4.domain.model.Driver;
@@ -29,6 +27,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DriverServiceJPA {
@@ -69,7 +68,6 @@ public class DriverServiceJPA {
     public UberPageDTO<OneRideOfPassengerDTO> getRidesOfDriver(Pageable pageable, Integer userId) {
         Driver driver = findOne(userId);
         return new UberPageDTO<>(rideRepositoryJPA.findByPassengersId(pageable, userId).map(OneRideOfPassengerDTO::new));
-
     }
 
     public Driver findAvailableDriver(RideDTORequest rideDTO) {
@@ -91,28 +89,55 @@ public class DriverServiceJPA {
         }
 
 
-        if (availableDrivers.size() > 0)
+        if (availableDrivers.size() > 0) {
+//            return availableDrivers.get(0);
             return findNearestDriver(rideDTO.getLocations()[0].getDeparture(), availableDrivers);
+        }
 
-        if (busyDrivers.size() > 0)
+        if (busyDrivers.size() > 0) {
             possibleBusyDrivers = checkForPossibleBusyDrivers(busyDrivers, rideDTO);
-        // TODO: Od zauzetih nadji onog koji ce najprije zavrsiti trenutnu voznju
+            return findFastestDriver(possibleBusyDrivers);
+        }
 
         return null;
     }
 
+    /* Nadji mi one vozace koji su samo sad zauzeti, a posle ove voznje nemaju drugu zakazanu */
     private HashMap<Driver, Ride> checkForPossibleBusyDrivers(List<Driver> busyDrivers, RideDTORequest newRide) {
+        HashMap<Driver, Ride> possibleBusyDrivers = new HashMap<Driver, Ride>();
         for (Driver driver : busyDrivers) {
+            Ride activeRide = new Ride();
+            boolean rideFound = false, driverFound = true;
             for (Ride ride : driver.getRides()) {
-                if (driver.isBusy(ride, newRide))
-                    return null;
+                if (!rideFound && driver.isBusy(ride, newRide)){
+                    activeRide = ride;
+                    rideFound = true;
+                    continue;
+                }
+                if (rideFound && driver.isBusy2(activeRide, ride))
+                    driverFound = false;
+            }
+            if (driverFound)
+                possibleBusyDrivers.put(driver, activeRide);
+        }
+        return possibleBusyDrivers;
+    }
+
+    private Driver findFastestDriver(HashMap<Driver, Ride> possibleBusyDrivers) {
+        Driver fastestDriver = null;
+        LocalDateTime earliestFinishTime = LocalDateTime.MAX;
+        for (Map.Entry<Driver, Ride> entry : possibleBusyDrivers.entrySet()) {
+            Driver driver = entry.getKey();
+            Ride currentRide = entry.getValue();
+            if(currentRide !=null){
+                LocalDateTime finishTime = currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes().longValue());
+                if (finishTime.isBefore(earliestFinishTime)) {
+                    earliestFinishTime = finishTime;
+                    fastestDriver = driver;
+                }
             }
         }
-        return null;
-    }
-
-    private Driver findFastestDriver(List<Driver> busyDrivers, RideDTORequest rideDTO) {
-        return null;
+        return fastestDriver;
     }
 
     public Driver findNearestDriver(LocationDTO location, List<Driver> avaliableDrivers) {
