@@ -1,12 +1,12 @@
 INSERT INTO USERS(role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES  ('PASSENGER', true, 'NS, 21000', false, 'a@a.ru', 'Alex', '1', '1.png', 'Petrovic', '+7 977 977 27 20'),
-        ('PASSENGER', true, 'NS, 21000', false, 'b@a.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 22'),
-        ('PASSENGER', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', '1.png', 'Ivanic', '+7 977 977 27 23'),
-        ('PASSENGER', true, 'NS, 21000', false, 'g@a.ru', 'Dlex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 24'),
-        ('PASSENGER', true, 'NS, 21000', false, 'd@a.ru', 'Elex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 25');
+VALUES  ('PASSENGER', true, 'NS, 21000', false, 'alex@gmail.com', 'Alex', 'alex123', 'alex.png', 'Mishutkin', '+7 977 977 27 20'),
+        ('PASSENGER', true, 'NS, 21000', false, 'ana@gmail.com', 'Ana', 'ana123', 'ana.png', 'Draskovic', '+7 977 977 27 22'),
+        ('PASSENGER', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', 'mirko.png', 'Ivanic', '+7 977 977 27 23'),
+        ('PASSENGER', true, 'NS, 21000', false, 'nemanja@gmail.com', 'Nemanja', 'nemanja123', 'nemanja.png', 'Stojcevic', '+7 977 977 27 24'),
+        ('PASSENGER', true, 'NS, 21000', false, 'sale@gmail.com', 'Sale', 'sale123', 'sale.png', 'Katai', '+7 977 977 27 25');
 
 INSERT INTO USERS(id, role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'b@b.ru', 'Blex', 'kekekekekek', '1.png', 'Petrovic', '+7 977 977 27 21');
+VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'strahinja@gmail.com', 'Strahinja', 'strahinja123', 'strahinja.png', 'Erakovic', '+7 977 977 27 21');
 
 INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
 VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
@@ -37,11 +37,11 @@ VALUES (true, 'Tesla', 4, true, '1FK-3DS', 0, 1, true),
 
 INSERT INTO USERS
 (ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
-VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', '1.png', 'Stankovic', '+8 977 977 27 20', 1),
-       ('DRIVER', true, 'NS, 21000 2', false, 'b@t.ru', 'Blex', 'kekekekekek', '2.png', 'Petrovicс', '+8 977 977 27 21', 2),
-       ('DRIVER', true, 'NS, 21000 3', true, 'c@t.ru', 'Clex', 'kekekekekek', '3.png', 'Petrovicсс', '+8 977 977 27 22', 3),
-       ('DRIVER', true, 'NS, 21000 4', false, 'd@t.ru', 'Dlex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 23', 4),
-       ('DRIVER', true, 'NS, 21000 5', false, 'fr@t.ru', 'Elex', 'kekekekekek', '3.png', 'Petroviccсс', '+8 977 977 27 5', 5);
+VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', 'dejan.png', 'Stankovic', '+8 977 977 27 20', 1),
+       ('DRIVER', true, 'NS, 21000 2', false, 'vladan@gmail.com', 'Vladan', 'vladan123', 'vladan.png', 'Milojevic', '+8 977 977 27 21', 2),
+       ('DRIVER', true, 'NS, 21000 3', true, 'milos@gmail.com', 'Milos', 'milos123', 'milos.png', 'Milojevic', '+8 977 977 27 22', 3),
+       ('DRIVER', true, 'NS, 21000 4', false, 'aleksandar@gmail.com', 'Aleksandar', 'aleksandar123', 'aleksandar.png', 'Jakovljevic', '+8 977 977 27 23', 4),
+       ('DRIVER', true, 'NS, 21000 5', false, 'jelena@gmail.com', 'Jelena', 'jelena123', 'jelena.png', 'Filipovic', '+8 977 977 27 5', 5);
 
 -- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
 
@@ -124,8 +124,8 @@ VALUES  ('dobar', 3, 1, 1, 1),
 
 
 INSERT INTO USERS (ROLE, PROFILE_PICTURE, NAME, PASSWORD, SURNAME, EMAIL, ACTIVE, BLOCKED, telephone_number)
-VALUES  ('ADMIN', '1.jpg', 'Novak', 'novak123', 'Djokovic', 'nole', TRUE, FALSE, '+7 1'),
-        ('ADMIN', '2.jpg', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza', TRUE, FALSE, '+8 1');
+VALUES  ('ADMIN', 'novak.png', 'Novak', 'novak123', 'Djokovic', 'nole', TRUE, FALSE, '+7 1'),
+        ('ADMIN', 'terza.png', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza', TRUE, FALSE, '+8 1');
 
 INSERT INTO DRIVER_REQUEST(NEW_ADDRESS, NEW_BABY_PROOF, NEW_EMAIL, NEW_MODEL, NEW_NAME, NEW_NUM_SEATS, NEW_PETS_ALLOWED, NEW_PROFILE_PICTURE, NEW_REG_PLATES, NEW_SURNAME, NEW_TELEPHONE_NUMBER, NEW_VEHICLE_NAME, STATUS, DRIVER_ID, VEHICLE_ID)
 VALUES ('nova adresa', true, 'mejl@gmail.com', 'bmw', 'Marko', 4, true, 'slika.jpg', 'SFD-4S', 'Markovic', '034952398', 2, 1, 9, 4);
