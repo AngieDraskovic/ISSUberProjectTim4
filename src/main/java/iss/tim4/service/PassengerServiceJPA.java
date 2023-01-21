@@ -1,9 +1,11 @@
 package iss.tim4.service;
 
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.user.UserDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
@@ -67,4 +69,22 @@ public class PassengerServiceJPA {
     }
 
 
+    /* Prolazi kroz sve putnike koji ucestvuju u voznji i vraca false ako je neki od njih vec porucio voznju (PENDING) */
+    public boolean possibleOrder(RideDTORequest rideDTO) {
+        for (PassengerDTOResult passengerDTOResult : rideDTO.getPassengers()) {
+            Passenger passenger = findOne(passengerDTOResult.getId());
+            for (Ride ride : passenger.getRides()) {
+                if (ride.getStatus().equals(RideStatus.ACTIVE))
+                    return false;
+                if (ride.getStatus().equals(RideStatus.PENDING) || ride.getStatus().equals(RideStatus.ACCEPTED)){
+                    /* Ako je poruico voznju vec i ponovo porucuje, ali ovaj put za buducnost, vrsi se provjera
+                     * da li se ta buduca voznja preklapa sa tom koju je vec porucio. */
+                    if (!rideDTO.getStartTime().isAfter(ride.getStartTime().plusMinutes(ride.getEstimatedTimeInMinutes().longValue()))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
 }
