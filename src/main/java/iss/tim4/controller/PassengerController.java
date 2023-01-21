@@ -118,12 +118,6 @@ public class PassengerController {
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(userService.getUser(passengerDTO.getEmail())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
-        }
-        if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
-        }
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());
         }

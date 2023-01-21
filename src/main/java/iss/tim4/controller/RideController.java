@@ -65,11 +65,14 @@ public class RideController {
     @PostMapping(consumes = "application/json")
     @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
-      // Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
-       // if (driver == null) {
-       //     return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-       // }
-        Driver driver = driverServiceJPA.findOne(6);
+        if (!passengerServiceJPA.possibleOrder(rideDTO)) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
+        if (driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+//        Driver driver = driverServiceJPA.findOne(6);
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);

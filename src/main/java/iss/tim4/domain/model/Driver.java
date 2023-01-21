@@ -96,8 +96,6 @@ public class Driver extends User {
     }
 
     public boolean isAvailable(RideDTORequest newRide) {
-        if (!this.active || this.blocked)
-            return false;
         for (Ride ride : this.rides) {
             if (this.isBusy(ride, newRide))
                 return false;
@@ -105,8 +103,13 @@ public class Driver extends User {
         return true;
     }
 
-    private boolean isBusy(Ride ride, RideDTORequest newRide) {
+    public boolean isBusy(Ride ride, RideDTORequest newRide) {
         return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTime().longValue()))
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
+    }
+
+    public boolean isBusy2(Ride ride, Ride newRide) {
+        return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTimeInMinutes().longValue()))
                 && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
     }
 
