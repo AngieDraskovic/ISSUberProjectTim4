@@ -105,12 +105,12 @@ public class Driver extends User {
 
     public boolean isBusy(Ride ride, RideDTORequest newRide) {
         return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTime().longValue()))
-                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes(ride.getEstimatedTimeInMinutes().longValue()));
     }
 
     public boolean isBusy2(Ride ride, Ride newRide) {
         return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTimeInMinutes().longValue()))
-                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((long) ride.getEstimatedTimeInMinutes().doubleValue()));
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((ride.getEstimatedTimeInMinutes().longValue())));
     }
 
 

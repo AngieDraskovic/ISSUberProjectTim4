@@ -10,10 +10,10 @@ VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'strahinja@gmail.com', 'Stra
 
 INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
 VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
-       ('Narodnog Fronta 12, Novi Sad', 54.2, 64.3),
+       ('Narodnog Fronta 12, Novi Sad', 74.2, 84.3),
        ('Futoska 12, Novi Sad', 54.4, 64.7),
-       ('Strazilovska 24, Novi Sad', 54.4, 64.4),
-       ('Hadzi Ruvimova 22, Novi Sad', 54.8, 64.0),
+       ('Strazilovska 24, Novi Sad', 54.8, 64.0),
+       ('Hadzi Ruvimova 22, Novi Sad', 45.8, 20.0),
        ('Kisacka 56, Novi Sad', 54.8, 64.0),
        ('Aleksandra Tisme 8 22, Novi Sad', 54.8, 64.0),
        ('Patrijarha Rajacica 16a, Novi Sad', 42.3, 21.1);
@@ -77,11 +77,11 @@ VALUES ('Headache', '2022-11-11 10:32:01', 1);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PANIC, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE)
-VALUES  (true, '2023-01-04 04:33:20', 10.2, false, false, '2023-01-04 04:33:20', 0, 500, 6, 1, 2),
-        (false, '2022-12-29 11:21:20', 14.2, false, false, '2022-12-28 10:15:01', 0, 600, 7, null, 2),
-        (true, '2022-12-29 15:21:20', 20.2, false, false, '2022-12-29 08:01:01', 0, 700, 10, null, 2),
-        (true, '2022-12-29 15:21:20', 12.2, false, true, '2022-12-29 08:11:01', 0, 550, 8, null, 2),
-        (true, '2022-12-29 15:21:20', 15.2, false, false, '2022-12-29 08:06:01', 0, 600, 9, null, 2);
+VALUES  (true, '2023-01-04 04:33:20', 102.2, false, false, '2023-01-21 17:53:20', 0, 500, 6, 1, 2),
+        (false, '2022-12-29 11:21:20', 142.2, false, false, '2023-01-21 17:53:20', 0, 600, 7, null, 2),
+        (true, '2022-12-29 15:21:20', 32.2, false, false, '2023-01-21 17:53:20', 0, 700, 10, null, 2),
+        (true, '2022-12-29 15:21:20', 32.2, false, true, '2023-01-21 17:53:20', 0, 550, 8, null, 2),
+        (true, '2022-12-29 15:21:20', 168.2, false, false, '2023-01-21 17:53:20', 0, 600, 9, null, 2);
 
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
@@ -97,7 +97,7 @@ VALUES  (1, 1),
         (2, 2),
         (3, 3),
         (4, 4),
-        (5, 5),
+--        (5, 5),
         (3, 2),
         (4, 3);
 

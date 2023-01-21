@@ -68,7 +68,6 @@ public class DriverServiceJPA {
     public UberPageDTO<OneRideOfPassengerDTO> getRidesOfDriver(Pageable pageable, Integer userId) {
         Driver driver = findOne(userId);
         return new UberPageDTO<>(rideRepositoryJPA.findByPassengersId(pageable, userId).map(OneRideOfPassengerDTO::new));
-
     }
 
     public Driver findAvailableDriver(RideDTORequest rideDTO) {
@@ -90,8 +89,10 @@ public class DriverServiceJPA {
         }
 
 
-        if (availableDrivers.size() > 0)
+        if (availableDrivers.size() > 0) {
+//            return availableDrivers.get(0);
             return findNearestDriver(rideDTO.getLocations()[0].getDeparture(), availableDrivers);
+        }
 
         if (busyDrivers.size() > 0) {
             possibleBusyDrivers = checkForPossibleBusyDrivers(busyDrivers, rideDTO);
@@ -111,6 +112,7 @@ public class DriverServiceJPA {
                 if (!rideFound && driver.isBusy(ride, newRide)){
                     activeRide = ride;
                     rideFound = true;
+                    continue;
                 }
                 if (rideFound && driver.isBusy2(activeRide, ride))
                     driverFound = false;
