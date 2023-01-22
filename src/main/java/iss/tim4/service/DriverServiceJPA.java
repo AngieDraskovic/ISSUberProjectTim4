@@ -66,8 +66,11 @@ public class DriverServiceJPA {
     }
 
     public UberPageDTO<OneRideOfPassengerDTO> getRidesOfDriver(Pageable pageable, Integer userId) {
-        Driver driver = findOne(userId);
-        return new UberPageDTO<>(rideRepositoryJPA.findByPassengersId(pageable, userId).map(OneRideOfPassengerDTO::new));
+        return new UberPageDTO<>(rideRepositoryJPA.findByDriverId(pageable, userId).map(OneRideOfPassengerDTO::new));
+    }
+
+    public List<Ride> getAllRidesOfDriver (Integer driverId) {
+        return rideRepositoryJPA.findByDriverId(driverId);
     }
 
     public Driver findAvailableDriver(RideDTORequest rideDTO) {

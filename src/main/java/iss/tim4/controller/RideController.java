@@ -229,16 +229,22 @@ public class RideController {
 
     @PutMapping(value = "/{id}/cancel")
     @PreAuthorize("hasRole('DRIVER')")
-    public <T> ResponseEntity<T> rejectRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id) throws UberException {
+    public <T> ResponseEntity<T> rejectRide(@RequestBody RejectionDTO rejectionDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.ACCEPTED)){
+        if(!ride.getStatus().equals(RideStatus.PENDING) && !ride.getStatus().equals(RideStatus.ACCEPTED)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or ACCEPTED! ");
         }
         ride.setStatus(RideStatus.CANCELED);
-        ride.getRejection().setReason(reasonDTO.getReason());
+
+        Rejection rejection = new Rejection(rejectionDTO);
+        rejection.setRide(ride);
+        rejection.setUser(ride.getDriver());
+        ride.setRejection(rejection);
+        rideServiceJPA.save(ride);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
