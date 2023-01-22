@@ -247,9 +247,24 @@ public class DriverController {
     }
 
 
+    // #11.5 get active driver working hours - GET api/driver/1/active-working-hours
+    @GetMapping(value = "/{id}/active-working-hour", produces = MediaType.APPLICATION_JSON_VALUE)                      //TODO Mora biti pageable
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    public <T> ResponseEntity<T> getDriverActiveWorkingHour(@PathVariable("id")  Integer id) {
+        Driver driver = driverServiceJPA.findOne(id);
+        if(driver == null){
+            return new ResponseEntity<T>((T) "Driver does not exist!", HttpStatus.NOT_FOUND);
+        }
+        List<WorkingHours> workingHoursList = workingHoursServiceJPA.findByDriverId(id);
+        WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHoursList.get(workingHoursList.size()-1));
+
+        return new ResponseEntity<T>((T) workingHoursDTOResult, HttpStatus.OK);
+    }
+
+
     // #12 create driver working-hours - POST api/driver/1/working-hours
     @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@Valid @RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -296,7 +311,7 @@ public class DriverController {
         if(workingHours==null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Working hour does not exist!", HttpStatus.NOT_FOUND);
         }
-        workingHours.update(workingHoursDTOResponse);
+        workingHours.setEnd(workingHoursDTOResponse.getEnd());
         workingHoursServiceJPA.save(workingHours);
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
         return (ResponseEntity<T>) new ResponseEntity<WorkingHoursDTOResult>(workingHoursDTOResult, HttpStatus.OK);
@@ -306,6 +321,7 @@ public class DriverController {
 
     // #16 create new driver request - POST api/driver/driver-request/
     @PostMapping(value = "/driver-request", consumes = "application/json")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<DriverRequestDTOResult> createDriverRequest(@RequestBody DriverRequestDTORequest driverRequestDTORequest) {
         Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId().intValue());
         Vehicle vehicle = vehicleServiceJPA.findOne(driverRequestDTORequest.getVehicleId());

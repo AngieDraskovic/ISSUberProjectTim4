@@ -117,7 +117,6 @@ public class PassengerController {
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());
         }

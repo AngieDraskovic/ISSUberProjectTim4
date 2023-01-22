@@ -1,16 +1,16 @@
 package iss.tim4.service;
 
 
+import iss.tim4.domain.dto.LocationDTO;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
-import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 
-import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 
 import iss.tim4.domain.model.Driver;
 
+import iss.tim4.domain.model.Ride;
 import iss.tim4.domain.model.WorkingHours;
 import iss.tim4.repository.DriverRepositoryJPA;
 
@@ -24,7 +24,10 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class DriverServiceJPA {
@@ -65,20 +68,89 @@ public class DriverServiceJPA {
     public UberPageDTO<OneRideOfPassengerDTO> getRidesOfDriver(Pageable pageable, Integer userId) {
         Driver driver = findOne(userId);
         return new UberPageDTO<>(rideRepositoryJPA.findByPassengersId(pageable, userId).map(OneRideOfPassengerDTO::new));
-
     }
 
     public Driver findAvailableDriver(RideDTORequest rideDTO) {
         List<Driver> allDrivers = findAll();
+        List<Driver> availableDrivers = new ArrayList<Driver>();    // Sve slobodne ovde pa cemo posle od njih najblizeg da nadjemo
+        List<Driver> busyDrivers = new ArrayList<Driver>();     // Ako su svi zauzeti biramo onog koji je najblizi da zavrsi voznju
+        HashMap<Driver, Ride> possibleBusyDrivers;
         for (Driver driver : allDrivers) {
+            if (!driver.getActive() || driver.getBlocked())
+                continue;
             if (!driver.compatibileVehicle(rideDTO))
                 continue;
             if (outOfWorkingHours(driver))
                 continue;
             if (driver.isAvailable(rideDTO))
-                return driver;
+                availableDrivers.add(driver);
+            else
+                busyDrivers.add(driver);
         }
+
+
+        if (availableDrivers.size() > 0) {
+//            return availableDrivers.get(0);
+            return findNearestDriver(rideDTO.getLocations()[0].getDeparture(), availableDrivers);
+        }
+
+        if (busyDrivers.size() > 0) {
+            possibleBusyDrivers = checkForPossibleBusyDrivers(busyDrivers, rideDTO);
+            return findFastestDriver(possibleBusyDrivers);
+        }
+
         return null;
+    }
+
+    /* Nadji mi one vozace koji su samo sad zauzeti, a posle ove voznje nemaju drugu zakazanu */
+    private HashMap<Driver, Ride> checkForPossibleBusyDrivers(List<Driver> busyDrivers, RideDTORequest newRide) {
+        HashMap<Driver, Ride> possibleBusyDrivers = new HashMap<Driver, Ride>();
+        for (Driver driver : busyDrivers) {
+            Ride activeRide = new Ride();
+            boolean rideFound = false, driverFound = true;
+            for (Ride ride : driver.getRides()) {
+                if (!rideFound && driver.isBusy(ride, newRide)){
+                    activeRide = ride;
+                    rideFound = true;
+                    continue;
+                }
+                if (rideFound && driver.isBusy2(activeRide, ride))
+                    driverFound = false;
+            }
+            if (driverFound)
+                possibleBusyDrivers.put(driver, activeRide);
+        }
+        return possibleBusyDrivers;
+    }
+
+    private Driver findFastestDriver(HashMap<Driver, Ride> possibleBusyDrivers) {
+        Driver fastestDriver = null;
+        LocalDateTime earliestFinishTime = LocalDateTime.MAX;
+        for (Map.Entry<Driver, Ride> entry : possibleBusyDrivers.entrySet()) {
+            Driver driver = entry.getKey();
+            Ride currentRide = entry.getValue();
+            if(currentRide !=null){
+                LocalDateTime finishTime = currentRide.getStartTime().plusMinutes(currentRide.getEstimatedTimeInMinutes().longValue());
+                if (finishTime.isBefore(earliestFinishTime)) {
+                    earliestFinishTime = finishTime;
+                    fastestDriver = driver;
+                }
+            }
+        }
+        return fastestDriver;
+    }
+
+    public Driver findNearestDriver(LocationDTO location, List<Driver> avaliableDrivers) {
+        double minDistance = Double.MAX_VALUE;
+        Driver nearestDriver = null;
+        for (Driver driver : avaliableDrivers) {
+            double distance = driver.getVehicle().getCurrLocation().distanceTo(location);
+            if (distance < minDistance) {
+                minDistance = distance;
+                nearestDriver = driver;
+            }
+        }
+        return nearestDriver;
     }
 
     private boolean outOfWorkingHours(Driver driver) {
