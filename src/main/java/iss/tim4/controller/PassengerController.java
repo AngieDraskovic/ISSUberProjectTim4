@@ -112,18 +112,12 @@ public class PassengerController {
 
     // update   --> /api/passenger/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id)
-            throws Exception {
+    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id) {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(userService.getUser(passengerDTO.getEmail())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
-        }
-        if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
-        }
+
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());
         }

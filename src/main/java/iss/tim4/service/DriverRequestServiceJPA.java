@@ -1,5 +1,8 @@
 package iss.tim4.service;
 
+import iss.tim4.domain.dto.UberPageDTO;
+import iss.tim4.domain.dto.driver.DriverDTOResult;
+import iss.tim4.domain.dto.driver.request.DriverRequestDTOResult;
 import iss.tim4.domain.model.DriverRequest;
 import iss.tim4.repository.DriverRequestRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +35,10 @@ public class DriverRequestServiceJPA {
 
     public void remove(Integer id) {
         driverRequestRepositoryJPA.deleteById(id);
+    }
+
+    public UberPageDTO<DriverRequestDTOResult> getAllRequests(Pageable pageable) {
+        return new UberPageDTO<>(driverRequestRepositoryJPA.findAll(pageable).map(DriverRequestDTOResult::new));
     }
 
 }

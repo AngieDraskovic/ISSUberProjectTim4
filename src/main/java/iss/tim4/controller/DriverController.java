@@ -17,6 +17,7 @@ import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.hibernate.annotations.Any;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -105,12 +106,6 @@ public class DriverController {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if(userService.getUser(driverDTOResponse.getEmail())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
-        }
-        if(userService.getUserByTelephoneNumber(driverDTOResponse.getTelephoneNumber())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
         driver.updateDriver(driverDTOResponse);
         driverServiceJPA.save(driver);
@@ -214,12 +209,19 @@ public class DriverController {
     // #10 update driver vehicle - PUT api/driver/1/vehicle
     @PutMapping(value = "/{id}/vehicle", consumes = "application/json")
     @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
-    public <T> ResponseEntity<T> updateDriverVehicle(@Valid @RequestBody VehicleDTOResponse vehicleDTOResponse, @PathVariable("id") Integer id) {
+    public <T> ResponseEntity<T> updateDriverVehicle(@Valid @RequestBody VehicleDTOResponse vehicleDTO, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Driver does not exist!", HttpStatus.NOT_FOUND);
         }
-        Vehicle vehicle = new Vehicle(driver, vehicleDTOResponse);
+        Vehicle vehicle = driver.getVehicle();
+        vehicle.setVehicleName(vehicleDTO.getVehicleType());
+        vehicle.setModel(vehicleDTO.getModel());
+        vehicle.setBabyProof(vehicleDTO.getBabyTransport());
+        vehicle.setPetsAllowed(vehicleDTO.getPetTransport());
+        vehicle.setRegPlates(vehicleDTO.getLicenseNumber());
+        vehicle.setNumSeats(vehicleDTO.getPassengerSeats());
+
         vehicleServiceJPA.save(vehicle);
         VehicleDTOResult vehicleDTOResult = new VehicleDTOResult(vehicle);
         return (ResponseEntity<T>) new ResponseEntity<VehicleDTOResult>(vehicleDTOResult, HttpStatus.OK);
@@ -322,6 +324,23 @@ public class DriverController {
         DriverRequestDTOResult driverRequestDTOResult = new DriverRequestDTOResult(driverRequest);
         return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
     }
+
+    @GetMapping(value="/driver-request",produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<UberPageDTO<DriverRequestDTOResult>> getAllDriverRequests(Pageable pageable){
+        return new ResponseEntity<>(driverRequestServiceJPA.getAllRequests(pageable), HttpStatus.OK);
+    }
+
+    @DeleteMapping(value = "/driver-request/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> deleteDriverRequest(@PathVariable("id") Integer id){
+        if(driverRequestServiceJPA.findOne(id) == null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        }
+        driverRequestServiceJPA.remove(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
 
 
     //    @Scheduled(cron = "0 13 21 * * *")
