@@ -289,6 +289,21 @@ public class RideController {
         return new ResponseEntity<>(favouriteRouteDTOResults, HttpStatus.OK);
     }
 
+
+    @GetMapping(value = "/{id}/favorites")
+    @PreAuthorize("hasRole('PASSENGER')")
+    public ResponseEntity<List<FavouriteRouteDTOResult>> getFavoriteLocationsByPassenger(@PathVariable("id") Integer id) {
+        Passenger passenger = passengerServiceJPA.findOne(id);
+        List<FavouriteRouteDTOResult> favouriteRouteDTOResults = new ArrayList<FavouriteRouteDTOResult>();
+
+        for (FavouriteRoute favouriteRoute : passenger.getFavouriteRoutes()) {
+            favouriteRouteDTOResults.add(new FavouriteRouteDTOResult(favouriteRoute));
+        }
+
+        return new ResponseEntity<>(favouriteRouteDTOResults, HttpStatus.OK);
+    }
+
+
     @DeleteMapping(value = "/favorites/{id}")
     @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id) {
