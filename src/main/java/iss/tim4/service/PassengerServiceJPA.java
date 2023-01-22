@@ -4,6 +4,7 @@ package iss.tim4.service;
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
+import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
