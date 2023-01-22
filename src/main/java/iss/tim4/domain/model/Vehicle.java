@@ -58,7 +58,7 @@ public class Vehicle {
 
     public Vehicle(Driver driver, VehicleDTOResponse vehicleDTOResponse) {
         this.model = vehicleDTOResponse.getModel();
-        this.vehicleName = VehicleName.valueOf(vehicleDTOResponse.getVehicleType());
+        this.vehicleName = vehicleDTOResponse.getVehicleType();
         this.regPlates = vehicleDTOResponse.getLicenseNumber();
         this.numSeats = vehicleDTOResponse.getPassengerSeats();
         this.currLocation = new Location(vehicleDTOResponse.getCurrentLocation());

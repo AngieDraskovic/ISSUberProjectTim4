@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto;
 
+import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.model.Vehicle;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +13,7 @@ public class VehicleDTOResult {
 
     private Integer id;
     private Integer driverId;
-    private String vehicleType;
+    private VehicleName vehicleType;
     private String model;
     private String licenseNumber;
     private LocationDTO currentLocation;
@@ -24,7 +25,7 @@ public class VehicleDTOResult {
         this.id = vehicle.getId();
         this.driverId = vehicle.getDriver().getId();
         this.model = vehicle.getModel();
-        this.vehicleType = vehicle.getVehicleName().toString();
+        this.vehicleType = vehicle.getVehicleName();
         this.licenseNumber = vehicle.getRegPlates();
         this.passengerSeats = vehicle.getNumSeats();
         this.currentLocation = new LocationDTO(vehicle.getCurrLocation());
