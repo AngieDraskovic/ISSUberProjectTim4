@@ -75,7 +75,6 @@ public class DriverController {
         }
         Driver driver = new Driver(driverDTOResponse);
         driver.setPassword(passwordEncoder.encode(driverDTOResponse.getPassword()));
-
         driverServiceJPA.save(driver);
         DriverDTOResult driverDTOResult = new DriverDTOResult(driver);
         return new ResponseEntity<DriverDTOResult>(driverDTOResult, HttpStatus.OK);
