@@ -4,6 +4,7 @@ package iss.tim4.domain.model;
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import iss.tim4.domain.dto.RemarkDTORequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -19,7 +20,7 @@ public class Remark {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "message", nullable = false)
     private String message;
@@ -33,6 +34,10 @@ public class Remark {
     @JsonIgnore
     private User user;
 
+    public Remark(RemarkDTORequest remarkDTORequest) {
+        this.message = remarkDTORequest.getMessage();
+        this.date = remarkDTORequest.getDate();
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -1,5 +1,6 @@
 package iss.tim4.controller;
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.*;
 import iss.tim4.domain.dto.driver.DriverDTOResponse;
 import iss.tim4.domain.dto.driver.DriverDTOResult;
@@ -57,6 +58,10 @@ public class DriverController {
 
     @Autowired
     private UserServiceJPA userService;
+
+    @Autowired
+    private RemarkServiceJPA remarkServiceJPA;
+
 
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
@@ -280,7 +285,7 @@ public class DriverController {
     // #13 get driver rides - GET api/driver/1/ride
     @GetMapping(value = "/{id}/ride")
     @PreAuthorize("hasRole('DRIVER')")
-    public ResponseEntity<UberPageDTO<OneRideOfPassengerDTO>> getPassengerRides(@PathVariable("id") Integer id, Pageable pageable) {
+    public ResponseEntity<UberPageDTO<OneRideOfPassengerDTO>> getDriverRides(@PathVariable("id") Integer id, Pageable pageable) {
         Driver driver = driverServiceJPA.findOne(id);
         if (driver == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -288,7 +293,23 @@ public class DriverController {
         return new ResponseEntity<>(driverServiceJPA.getRidesOfDriver(pageable, id), HttpStatus.OK);
     }
 
+    // #13.5 get driver next rides - GET api/driver/1/ride
+    @GetMapping(value = "/{id}/next-rides")
+    @PreAuthorize("hasRole('DRIVER')")
+    public ResponseEntity<List<OneRideOfPassengerDTO>> getDriverNextRides(@PathVariable("id") Integer id, Pageable pageable) {
+        Driver driver = driverServiceJPA.findOne(id);
+        if (driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        List<OneRideOfPassengerDTO> driverNextRides = new ArrayList<OneRideOfPassengerDTO>();
+        List<Ride> driverRides = driverServiceJPA.getAllRidesOfDriver(id);
+        for (Ride ride : driverRides) {
+            if (ride.getStatus().equals(RideStatus.PENDING) || ride.getStatus().equals(RideStatus.ACCEPTED))
+                driverNextRides.add(new OneRideOfPassengerDTO(ride));
+        }
 
+        return new ResponseEntity<>(driverNextRides, HttpStatus.OK);
+    }
 
     // #14 get - GET api/driver/working-hour/1
     @GetMapping(value = "/working-hour/{working-hour-id}", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -356,6 +377,7 @@ public class DriverController {
         driverRequestServiceJPA.remove(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
 
 
 

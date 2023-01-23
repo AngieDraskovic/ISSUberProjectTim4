@@ -1,6 +1,8 @@
 package iss.tim4.domain.model;
 
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.RejectionDTO;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -32,6 +34,10 @@ public class Rejection {
     @Column(name = "rejection_time", nullable = false)
     private LocalDateTime time;
 
+    public Rejection(RejectionDTO rejectionDTO) {
+        this.reason = rejectionDTO.getReason();
+        this.time = rejectionDTO.getTimeOfRejection();
+    }
 
     @Override
     public boolean equals(Object o) {

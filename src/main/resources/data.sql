@@ -73,15 +73,19 @@ VALUES  ('2023-01-17 00:21:20','2023-01-17 01:24:20', 6),
 INSERT INTO REJECTION (REASON, REJECTION_TIME, USER_ID)
 VALUES ('Headache', '2022-11-11 10:32:01', 1);
 
+INSERT INTO PANIC (REASON, PANIC_TIME, USER_ID)
+VALUES  ('Danger!', '2022-10-10 10:21:20', 1),
+        ('Danger2!', '2022-10-10 10:21:20', 6);
+
 
 INSERT INTO RIDE
-(BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PANIC, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
- VEHICLE_TYPE)
-VALUES  (true, '2023-01-04 04:33:20', 102.2, false, false, '2023-01-21 17:53:20', 0, 500, 6, 1, 2),
-        (false, '2022-12-29 11:21:20', 142.2, false, false, '2023-01-21 17:53:20', 0, 600, 7, null, 2),
-        (true, '2022-12-29 15:21:20', 32.2, false, false, '2023-01-21 17:53:20', 0, 700, 10, null, 2),
-        (true, '2022-12-29 15:21:20', 32.2, false, true, '2023-01-21 17:53:20', 0, 550, 8, null, 2),
-        (true, '2022-12-29 15:21:20', 168.2, false, false, '2023-01-21 17:53:20', 0, 600, 9, null, 2);
+(BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
+ VEHICLE_TYPE, PANIC_ID)
+VALUES  (true, '2023-01-04 04:33:20', 102.2, false, '2023-01-21 17:53:20', 0, 500, 6, 1, 2, null),
+        (false, '2022-12-29 11:21:20', 142.2, false, '2023-01-21 17:53:20', 0, 600, 6, null, 2, null),
+        (true, '2022-12-29 15:21:20', 32.2, false, '2023-01-21 17:53:20', 4, 700, 6, null, 2, null),
+        (true, '2022-12-29 15:21:20', 32.2, true, '2023-01-21 17:53:20', 0, 550, 6, null, 2, null),
+        (true, '2022-12-29 15:21:20', 168.2, false, '2023-01-21 17:53:20', 0, 600, 6, null, 2, null);
 
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
@@ -142,10 +146,6 @@ VALUES  (1, 'Privet', '2022-10-10 10:21:20', 1, 1, 2),
         (4, 'Privet', '2022-10-10 10:21:20', 1, 9, 1),
         (4, 'Privet', '2022-10-10 10:21:20', 1, 3, 2),
         (4, 'Privet', '2022-10-10 10:21:20', 1, 1, 3);
-
-INSERT INTO PANIC (REASON, PANIC_TIME, RIDE_ID, USER_ID)
-VALUES  ('Danger!', '2022-10-10 10:21:20', 1, 1),
-        ('Danger2!', '2022-10-10 10:21:20', 2, 6);
 
 INSERT INTO REMARK (MESSAGE, USER_ID)
 VALUES ('BAD TIMING',7);

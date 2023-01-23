@@ -140,4 +140,9 @@ public class UserServiceJPA implements UserService {
         emailService.sendSimpleMessage(email, "Password reset", message);
     }
 
+    @Override
+    public void save(User user){
+        userRepositoryJPA.save(user);
+    }
+
 }

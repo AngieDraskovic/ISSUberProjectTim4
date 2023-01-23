@@ -6,18 +6,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class RemarkDTO {
+public class RemarkDTORequest {
 
-    private Long id;
     private String message;
-    private UserDTO user;
+    private LocalDateTime date;
 
-    public RemarkDTO(Remark remark) {
-        this.id = remark.getId();
+    private Integer userId;
+
+    public RemarkDTORequest(Remark remark) {
         this.message = remark.getMessage();
-        this.user = new UserDTO(remark.getUser());
+        this.date = remark.getDate();
+        this.userId = remark.getUser().getId();
     }
 }
