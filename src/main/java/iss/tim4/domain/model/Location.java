@@ -33,6 +33,12 @@ public class Location {
         this.geoLength = locationDTO.getLatitude();
     }
 
+    public Location(String s, double v, double v1) {
+        this.address = s;
+        this.geoWidth = v;
+        this.geoLength = v1;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
