@@ -202,10 +202,12 @@ public class RideController {
         if(ride==null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.ACCEPTED)){
+        if(!ride.getStatus().equals(RideStatus.ACCEPTED) && !ride.getStatus().equals(RideStatus.PENDING)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot start a ride that is not in status ACCEPTED! ");
         }
-        ride.setStatus(RideStatus.STARTED);
+        ride.setStatus(RideStatus.ACTIVE);
+        ride.setStartTime(LocalDateTime.now());
+        rideServiceJPA.save(ride);
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -218,10 +220,12 @@ public class RideController {
         if(ride==null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.STARTED)){
+        if(!ride.getStatus().equals(RideStatus.ACTIVE)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot end a ride that is not in status STARTED! ");
         }
         ride.setStatus(RideStatus.FINISHED);
+        ride.setEndTime(LocalDateTime.now());
+        rideServiceJPA.save(ride);
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -318,6 +322,27 @@ public class RideController {
         }
         favouriteRouteServiceJPA.remove(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
+    }
+
+    @PutMapping(value = "/{id}/panic-ride")
+    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
+    public ResponseEntity<PanicDTO> panicRide2(@RequestBody  PanicDTORequest panicDTORequest, @PathVariable Integer id){
+        Ride ride = rideServiceJPA.findOne(id);
+        if(ride==null){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        User user = userServiceJPA.getUserById(panicDTORequest.getUserId());
+
+        Panic p = new Panic(panicDTORequest);
+        p.setUser(user);
+        p.setRide(ride);
+
+        ride.setStatus(RideStatus.FINISHED);
+        ride.setPanic(p);
+        rideServiceJPA.save(ride);
+
+        PanicDTO result = new PanicDTO(p);
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
 }

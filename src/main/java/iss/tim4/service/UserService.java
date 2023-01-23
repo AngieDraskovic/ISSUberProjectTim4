@@ -7,6 +7,7 @@ import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.ResetPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.dto.user.*;
+import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.User;
 import iss.tim4.errors.UberException;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +35,7 @@ public interface UserService extends UserDetailsService {
     void resetPassword(String email, ResetPasswordDTO resetPasswordDTO) throws UberException;
 
     void resetPassword(String email) throws UberException;
+
+    void save(User user);
 
 }

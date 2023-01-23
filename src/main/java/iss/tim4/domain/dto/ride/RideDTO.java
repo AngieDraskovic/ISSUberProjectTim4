@@ -44,7 +44,7 @@ public class RideDTO {
         this.estimatedTime = ride.getEstimatedTimeInMinutes();
         this.rideStatus = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());
-        this.panic = ride.getPanic();
+        this.panic = ride.getPanic() != null;
         this.babyProof = ride.getBabyTransport();
         this.pets = ride.getPetTransport();
         this.vehicleType = new VehicleTypeDTO(ride.getVehicleType());

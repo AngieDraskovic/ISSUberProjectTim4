@@ -1,6 +1,7 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.MessageType;
+import iss.tim4.domain.dto.RemarkDTORequest;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
@@ -24,6 +25,7 @@ import iss.tim4.repository.UserRepositoryJPA;
 import iss.tim4.security.jwt.JwtTokenUtil;
 import iss.tim4.service.DriverRequestServiceJPA;
 import iss.tim4.service.PassengerServiceJPA;
+import iss.tim4.service.RemarkServiceJPA;
 import iss.tim4.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -198,16 +200,20 @@ public class UserController {
     }
 
     @PostMapping(value = "/{id}/note")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER', 'PASSENGER')")
     public ResponseEntity<Remark> remarkPost(
             @PathVariable("id") Integer id,
-            @RequestBody Remark remark) throws UberException {
+            @RequestBody RemarkDTORequest remarkDTORequest) throws UberException {
         User user = userService.getUserById(id);
         if (user == null) {
             throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
         }
+        Remark remark = new Remark(remarkDTORequest);
         remark.setUser(user);
-        remarkRepositoryJPA.save(remark);
+
+        user.getRemarks().add(remark);
+        userService.save(user);
+
         return new ResponseEntity<>(remark, HttpStatus.OK);
     }
 

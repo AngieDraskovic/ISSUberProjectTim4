@@ -58,6 +58,10 @@ public class DriverController {
     @Autowired
     private UserServiceJPA userService;
 
+    @Autowired
+    private RemarkServiceJPA remarkServiceJPA;
+
+
     // #1 create new driver - POST api/driver
     @PostMapping(consumes = "application/json")
     @PreAuthorize("hasRole('ADMIN')")
@@ -355,6 +359,7 @@ public class DriverController {
         DriverRequestDTOResult driverRequestDTOResult = new DriverRequestDTOResult(driverRequest);
         return new ResponseEntity<>(driverRequestDTOResult, HttpStatus.OK);
     }
+
 
 
     //    @Scheduled(cron = "0 13 21 * * *")
