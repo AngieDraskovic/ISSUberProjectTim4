@@ -40,6 +40,12 @@ public class FavouriteRoute {
     @Column(name = "pets", nullable = false)
     private Boolean petTransport;
 
+    @Column(name = "estimated_time_in_minutes", nullable = false)
+    private Double estimatedTimeInMinutes;
+
+    @Column(name = "kilometers", nullable = false)
+    private Double kilometers;
+
     @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
     @JoinTable(name = "favourite_route_route", joinColumns = @JoinColumn(name = "favourite_route_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "route_id", referencedColumnName = "id"))
     @ToString.Exclude
@@ -56,6 +62,8 @@ public class FavouriteRoute {
         this.vehicleType = favouriteRouteDTORequest.getVehicleType();
         this.babyTransport = favouriteRouteDTORequest.isBabyTransport();
         this.petTransport = favouriteRouteDTORequest.isPetTransport();
+        this.kilometers = favouriteRouteDTORequest.getKilometers();
+        this.estimatedTimeInMinutes = favouriteRouteDTORequest.getEstimatedTimeInMinutes();
     }
 
 

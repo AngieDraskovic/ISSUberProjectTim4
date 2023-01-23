@@ -29,6 +29,8 @@ import org.springframework.web.bind.annotation.*;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
@@ -54,12 +56,24 @@ public class PassengerController {
     private PasswordEncoder passwordEncoder;
     private final Random rand = new Random();
 
-
+/*
     // get all - /api/passenger
     @GetMapping
     public ResponseEntity<UberPageDTO<PassengerDTOResult>> getPassengers(Pageable pageable) {
         return new ResponseEntity<>(passengerServiceJPA.getAllPassengers(pageable), HttpStatus.OK);
     }
+*/
+    // get all - /api/passenger - SAMO DOBAVLJA PASSENGERE DA BI RADILO NA FRONTU, VJEROVATNO TREBA DA SE MIJENJA
+    @GetMapping
+    public ResponseEntity<List<PassengerDTOResult>> getPassengers2(Pageable pageable) {
+        List<PassengerDTOResult> passengerDTOResults = new ArrayList<PassengerDTOResult>();
+        List<Passenger> passengers = passengerServiceJPA.findAll();
+        for (Passenger passenger : passengers)
+            passengerDTOResults.add(new PassengerDTOResult(passenger));
+
+        return new ResponseEntity<>(passengerDTOResults, HttpStatus.OK);
+    }
+
 
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
