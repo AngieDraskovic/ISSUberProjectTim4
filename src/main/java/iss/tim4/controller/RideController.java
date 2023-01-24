@@ -131,8 +131,17 @@ public class RideController {
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
-
-
+    @GetMapping(value="/all")
+    public ResponseEntity getAllRides(){
+        List<Ride> rides = rideServiceJPA.findAll();
+        List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
+        for(Ride r : rides) {
+            RideDTOResponse response = new RideDTOResponse(r);
+            rideDTOResponses.add(response);
+        }
+        //?
+        return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
+    }
 
     @GetMapping(value = "/passenger/{passengerId}/active")
     @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
