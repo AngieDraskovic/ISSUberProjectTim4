@@ -81,11 +81,11 @@ VALUES  ('Danger!', '2022-10-10 10:21:20', 1),
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE, PANIC_ID)
-VALUES  (true, '2023-01-04 04:33:20', 102.2, false, '2023-01-21 17:53:20', 0, 500, 6, 1, 2, null),
-        (false, '2022-12-29 11:21:20', 142.2, false, '2023-01-21 17:53:20', 0, 600, 6, null, 2, null),
-        (true, '2022-12-29 15:21:20', 32.2, false, '2023-01-21 17:53:20', 4, 700, 6, null, 2, null),
-        (true, '2022-12-29 15:21:20', 32.2, true, '2023-01-21 17:53:20', 0, 550, 6, null, 2, null),
-        (true, '2022-12-29 15:21:20', 168.2, false, '2023-01-21 17:53:20', 0, 600, 6, null, 2, null);
+VALUES  (true, '2023-01-04 04:33:20', 102.2, false, '2023-01-21 16:53:20', 0, 500, 6, 1, 2, null),
+        (false, '2022-12-26 11:21:20', 142.2, false, '2023-01-21 12:53:20', 0, 600, 6, null, 2, null),
+        (true, '2022-12-31 15:21:20', 32.2, true, '2023-01-21 10:53:20', 0, 550, 6, null, 2, null),
+        (true, '2022-12-30 15:21:20', 32.2, false, '2023-01-21 11:53:20', 4, 700, 6, null, 2, null),
+        (true, '2022-12-27 15:21:20', 168.2, false, '2023-01-21 12:53:20', 0, 600, 6, null, 2, null);
 
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)

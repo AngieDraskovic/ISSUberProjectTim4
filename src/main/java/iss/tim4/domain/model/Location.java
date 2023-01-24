@@ -35,8 +35,8 @@ public class Location {
 
     public Location(String s, double v, double v1) {
         this.address = s;
-        this.geoWidth = v;
-        this.geoLength = v1;
+        this.latitude = v;
+        this.longitude = v1;
     }
 
     @Override
