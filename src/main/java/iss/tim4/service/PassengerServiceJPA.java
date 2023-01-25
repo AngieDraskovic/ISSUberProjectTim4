@@ -74,6 +74,8 @@ public class PassengerServiceJPA {
     public boolean possibleOrder(RideDTORequest newRide) {
         for (PassengerDTOResult passengerDTOResult : newRide.getPassengers()) {
             Passenger passenger = findOne(passengerDTOResult.getId());
+            if (passenger.getBlocked())     // Ako je neki od putnika blokiran, ne moze da se poruci voznja.
+                return false;
             for (Ride ride : passenger.getRides()) {
                 if (ride.getStatus().equals(RideStatus.ACTIVE))
                     return false;
@@ -89,4 +91,6 @@ public class PassengerServiceJPA {
         }
         return true;
     }
+
+
 }

@@ -274,8 +274,13 @@ public class DriverController {
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
+        driver.setActive(true);
+        driverServiceJPA.save(driver);
+
         WorkingHours workingHours = new WorkingHours(driver, workingHoursDTOResponse);
         workingHoursServiceJPA.save(workingHours);
+
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
         return new ResponseEntity<>(workingHoursDTOResult, HttpStatus.OK);
     }
@@ -333,6 +338,11 @@ public class DriverController {
         }
         workingHours.setEnd(workingHoursDTOResponse.getEnd());
         workingHoursServiceJPA.save(workingHours);
+
+        Driver driver = workingHours.getDriver();
+        driver.setActive(false);
+        driverServiceJPA.save(driver);
+
         WorkingHoursDTOResult workingHoursDTOResult = new WorkingHoursDTOResult(workingHours);
         return (ResponseEntity<T>) new ResponseEntity<WorkingHoursDTOResult>(workingHoursDTOResult, HttpStatus.OK);
     }

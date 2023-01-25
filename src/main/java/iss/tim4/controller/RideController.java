@@ -236,6 +236,11 @@ public class RideController {
         ride.setStatus(RideStatus.ACTIVE);
         ride.setStartTime(LocalDateTime.now());
         rideServiceJPA.save(ride);
+
+        Driver driver = ride.getDriver();
+        driver.setActive(false);
+        driverServiceJPA.save(driver);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 

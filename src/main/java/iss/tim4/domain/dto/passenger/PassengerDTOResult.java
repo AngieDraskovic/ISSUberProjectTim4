@@ -29,6 +29,8 @@ public class PassengerDTOResult {
     private String email;
     @NotEmpty(message = "Field address is required!")
     private String address;
+    private boolean active;
+    private boolean blocked;
 
 
     public PassengerDTOResult(Passenger passenger){
@@ -39,5 +41,8 @@ public class PassengerDTOResult {
         this.profilePicture = passenger.getProfilePicture();
         this.telephoneNumber = passenger.getTelephoneNumber();
         this.address = passenger.getAddress();
+        this.active = passenger.getActive();
+        this.blocked = passenger.getBlocked();
     }
+
 }
