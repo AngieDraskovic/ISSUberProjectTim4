@@ -5,8 +5,9 @@ import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.RejectionDTO;
 import iss.tim4.domain.dto.RouteDTO;
 import iss.tim4.domain.dto.driver.DriverRideDTO;
+import iss.tim4.domain.dto.favourite.route.FavouriteRouteDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
-import iss.tim4.domain.dto.review.ReviewDTO;
+import iss.tim4.domain.dto.review.ReviewDTOResult;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Review;
 import iss.tim4.domain.model.Ride;
@@ -35,6 +36,8 @@ public class RideDTOResponse {
     private DriverRideDTO driver;
     @NotNull (message = "Field estimatedTimeInMinutes is required!")
     private Double estimatedTimeInMinutes;
+    @NotNull (message = "Field kilometers is required!")
+    private Double kilometers;
     @NotNull (message = "Field status is required!")
     private RideStatus status;
     private RejectionDTO rejection;
@@ -50,7 +53,8 @@ public class RideDTOResponse {
     private String departure;
     @NotNull (message = "Field destination is required!")
     private String destination;
-    private ReviewDTO[] reviews;
+    private ReviewDTOResult[] reviews;
+    private FavouriteRouteDTOResult favouriteRoute;
 
     public RideDTOResponse(Ride ride) {
         this.id = ride.getId();
@@ -67,6 +71,7 @@ public class RideDTOResponse {
         }
         this.passengers = p;
         this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+        this.kilometers = ride.getKilometers();
         this.vehicleType = ride.getVehicleType().getVehicleName();
         this.babyTransport = ride.getBabyTransport();
         this.petTransport = ride.getPetTransport();
@@ -87,12 +92,14 @@ public class RideDTOResponse {
         }
         this.locations = locationDTOS;
         Set<Review> reviews = ride.getReviews();
-        ReviewDTO[] reviewDTOS = new ReviewDTO[reviews.size()];
+        ReviewDTOResult[] reviewDTOS = new ReviewDTOResult[reviews.size()];
         iter = 0;
         for(Review review : reviews){
-            reviewDTOS[iter] = new ReviewDTO(review);
+            reviewDTOS[iter] = new ReviewDTOResult(review);
             iter++;
         }
         this.reviews = reviewDTOS;
+//        if (ride.getFavouriteRoute() != null)
+//            this.favouriteRoute = new FavouriteRouteDTOResult(ride.getFavouriteRoute());
     }
 }

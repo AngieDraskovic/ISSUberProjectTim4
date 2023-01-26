@@ -28,6 +28,8 @@ public class RideDTO {
     private DriverDTOResult driver;
     @NotNull (message = "Field estimatedTime is required!")
     private Double estimatedTime;
+    @NotNull (message = "Field kilometers is required!")
+    private Double kilometers;
     @NotNull (message = "Field rideStatus is required!")
     private RideStatus rideStatus;
     private RejectionDTO rejectionDTO;
@@ -41,6 +43,7 @@ public class RideDTO {
         this.startTime = ride.getStartTime();
         this.endTime = ride.getEndTime();
         this.driver = new DriverDTOResult(ride.getDriver());
+        this.kilometers = ride.getKilometers();
         this.estimatedTime = ride.getEstimatedTimeInMinutes();
         this.rideStatus = ride.getStatus();
         this.rejectionDTO = new RejectionDTO(ride.getRejection());

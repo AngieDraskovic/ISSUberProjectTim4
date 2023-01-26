@@ -38,6 +38,9 @@ public class Ride {
     @Column(name = "estimated_time_in_minutes", nullable = false)
     private Double estimatedTimeInMinutes;
 
+    @Column(name = "kilometers", nullable = false)
+    private Double kilometers;
+
     @Column(name = "status", nullable = false)
     private RideStatus status;
 
@@ -76,10 +79,15 @@ public class Ride {
     @JoinColumn(name = "vehicle_type", referencedColumnName = "id")
     private VehicleType vehicleType;
 
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "favourite_id", referencedColumnName = "id")
+//    private FavouriteRoute favouriteRoute;
+
     public Ride(RideDTORequest rideDTO) {
         this.startTime = rideDTO.getStartTime();
         this.endTime = null;
         this.estimatedTimeInMinutes = rideDTO.getEstimatedTime();
+        this.kilometers = rideDTO.getKilometers();
         this.status = RideStatus.ACCEPTED;
         this.babyTransport = rideDTO.getBabyTransport();
         this.petTransport = rideDTO.getPetTransport();

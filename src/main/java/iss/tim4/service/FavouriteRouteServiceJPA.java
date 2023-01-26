@@ -36,4 +36,8 @@ public class FavouriteRouteServiceJPA {
     public void remove(Integer id) {
         favouriteRouteRepositoryJPA.deleteById(id);
     }
+
+    public void removeRouteFromFavourites(Integer passengerId, String startAddress, String endAddress) {
+        favouriteRouteRepositoryJPA.removeRouteFromFavourites(passengerId, startAddress, endAddress);
+    }
 }
