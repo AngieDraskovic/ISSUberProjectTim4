@@ -298,6 +298,7 @@ public class RideController {
         return new ResponseEntity<>(ridesDTO, HttpStatus.OK);
     }
 
+
     @PostMapping(value = "/favorites", consumes = "application/json")
     @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoutes(@RequestBody FavouriteRouteDTORequest favouriteRouteDTORequest) throws Exception {
@@ -321,7 +322,7 @@ public class RideController {
 
     @GetMapping(value = "/favorites")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<Set<FavouriteRouteDTOResult>> getFavoriteLocations() {
+    public ResponseEntity<Set<FavouriteRouteDTOResult>> getFavoriteRoutes() {
 
         Set<FavouriteRouteDTOResult> favouriteRouteDTOResults = new HashSet<FavouriteRouteDTOResult>();
         List<FavouriteRoute> favouriteRoutes = favouriteRouteServiceJPA.findAll();
@@ -335,7 +336,7 @@ public class RideController {
 
     @GetMapping(value = "/{id}/favorites")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<List<FavouriteRouteDTOResult>> getFavoriteLocationsByPassenger(@PathVariable("id") Integer id) {
+    public ResponseEntity<List<FavouriteRouteDTOResult>> getFavoriteRoutesByPassenger(@PathVariable("id") Integer id) {
         Passenger passenger = passengerServiceJPA.findOne(id);
         List<FavouriteRouteDTOResult> favouriteRouteDTOResults = new ArrayList<FavouriteRouteDTOResult>();
 
@@ -347,13 +348,33 @@ public class RideController {
     }
 
 
-    @DeleteMapping(value = "/favorites/{id}")
+    @DeleteMapping(value = "/favorites/{id}/{passengerId}")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id) {
-        if(favouriteRouteServiceJPA.findOne(id) == null){
+    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) {
+        if(rideServiceJPA.findOne(id) == null){
             return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
         }
-        favouriteRouteServiceJPA.remove(id);
+        Ride ride = rideServiceJPA.findOne(id);
+        Route route = ride.getRoutes().stream().findFirst().orElseGet(null);
+        String departureAddress = route.getStartLocation().getAddress();
+        String destinationAddress = route.getEndLocation().getAddress();
+
+//        Passenger passenger = passengerServiceJPA.findOne(passengerId);
+
+        Passenger passenger = passengerServiceJPA.findOne(passengerId);
+        FavouriteRoute favouriteRoute = passengerServiceJPA.findFavouriteRouteByAddress(passenger, departureAddress, destinationAddress);
+        passenger.getFavouriteRoutes().remove(favouriteRoute);
+        passengerServiceJPA.save(passenger);
+
+//        Route route = ride.getRoutes().stream().findFirst().orElseGet(null);
+//        String departureAddress = route.getStartLocation().getAddress();
+//        String destinationAddress = route.getEndLocation().getAddress();
+//        favouriteRouteServiceJPA.removeRouteFromFavourites(passengerId, departureAddress, destinationAddress);
+//
+//        passenger.removeFromFavorites(departureAddress, destinationAddress);
+//        passengerServiceJPA.save(passenger);
+
+//        favouriteRouteServiceJPA.remove(id);
         return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
 

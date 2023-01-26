@@ -10,10 +10,7 @@ import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.user.UserDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
-import iss.tim4.domain.model.Passenger;
-import iss.tim4.domain.model.Ride;
-import iss.tim4.domain.model.Role;
-import iss.tim4.domain.model.User;
+import iss.tim4.domain.model.*;
 import iss.tim4.repository.PassengerRepositoryJPA;
 import iss.tim4.repository.RideRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -92,5 +89,14 @@ public class PassengerServiceJPA {
         return true;
     }
 
+
+    public FavouriteRoute findFavouriteRouteByAddress(Passenger passenger, String departureAddress, String destinationAddress) {
+        for (FavouriteRoute favouriteRoute : passenger.getFavouriteRoutes()) {
+            if (favouriteRoute.getLocations().iterator().next().getStartLocation().getAddress().equals(departureAddress) &&
+            favouriteRoute.getLocations().iterator().next().getEndLocation().getAddress().equals(destinationAddress))
+                return favouriteRoute;
+        }
+        return null;
+    }
 
 }

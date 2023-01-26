@@ -56,6 +56,10 @@ public class FavouriteRoute {
     @ToString.Exclude
     private Set<Passenger> passengers = new HashSet<Passenger>();
 
+//    @OneToOne(mappedBy = "favouriteRoute")
+//    @ToString.Exclude
+//    private Ride ride;
+
     public FavouriteRoute(FavouriteRouteDTORequest favouriteRouteDTORequest) {
         this.favouriteName = favouriteRouteDTORequest.getFavoriteName();
         this.scheduledTime = LocalDateTime.now();
@@ -67,5 +71,15 @@ public class FavouriteRoute {
     }
 
 
+    public FavouriteRoute(Ride ride) {
+        this.favouriteName = "def";
+        this.scheduledTime = LocalDateTime.now();
+        this.vehicleType = ride.getVehicleType().getVehicleName();
+        this.babyTransport = ride.getBabyTransport();
+        this.petTransport = ride.getPetTransport();
+        this.kilometers = ride.getKilometers();
+        this.estimatedTimeInMinutes = ride.getEstimatedTimeInMinutes();
+//        this.locations = ride.getRoutes();
 
+    }
 }
