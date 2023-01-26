@@ -21,15 +21,15 @@ import javax.validation.constraints.NotNull;
 public class VehicleDTOResponse {
 
     private VehicleName vehicleType;
-    @Size(min = 1, max = 30, message = "Field model format is not valid!")
+    @Size(min = 1, max = 10, message = "Field model format is not valid!")
     private String model;
-    @NotNull (message = "Field license number is required!")
+    @NotEmpty (message = "Field license number is required!")
     private String licenseNumber;
 
     private LocationDTO currentLocation;
 
-    @Min(value = 1, message = "Field passengerSeats is grater than 1!")
-    @Max(value = 8, message = "Field passengerSeats is less than 8!")
+    @Min(value = 1, message = "Field passengerSeats cannot be lesser than 1!")
+    @Max(value = 8, message = "Field passengerSeats cannot be great than 8!")
     private Integer passengerSeats;
     @NotNull (message = "Field babyTransport is required!")
     private Boolean babyTransport;

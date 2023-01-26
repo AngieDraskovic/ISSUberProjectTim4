@@ -16,17 +16,17 @@ import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.time.format.DateTimeFormatter;
+import java.util.*;
 
 @RestController
 @RequestMapping("/api/ride")
@@ -128,6 +128,67 @@ public class RideController {
             rideDTOResponses.add(response);
         }
         //?
+        return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("driver/{driverId}/{startDate}/{endDate}")
+    public ResponseEntity<Object> getRidesDriverByDate(@PathVariable Integer driverId,
+                                           @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                           @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        Driver driver = driverServiceJPA.findOne(driverId);
+
+        if (driver == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Set<Ride> rides = driver.getRides();
+        LocalDateTime s = startDate.atStartOfDay();
+        LocalDateTime e = endDate.atStartOfDay();
+        List<Ride> filteredRides = rideServiceJPA.filterRidesByDate(s, e, rides);
+        List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
+        for(Ride r : filteredRides) {
+            RideDTOResponse response = new RideDTOResponse(r);
+            rideDTOResponses.add(response);
+        }
+
+        return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("passenger/{passengerId}/{startDate}/{endDate}")
+    public ResponseEntity<Object> getRidesPassengerByDate(@PathVariable Integer passengerId,
+                                                       @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                       @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+
+        Passenger passenger = passengerServiceJPA.findOne(passengerId);
+
+        if (passenger == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        Set<Ride> rides = passenger.getRides();
+        LocalDateTime s = startDate.atStartOfDay();
+        LocalDateTime e = endDate.atStartOfDay();
+        List<Ride> filteredRides = rideServiceJPA.filterRidesByDate(s, e, rides);
+        List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
+        for(Ride r : filteredRides) {
+            RideDTOResponse response = new RideDTOResponse(r);
+            rideDTOResponses.add(response);
+        }
+
+        return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
+    }
+
+    @GetMapping("{startDate}/{endDate}")
+    public ResponseEntity<Object> getRidesPassengerByDate(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate startDate,
+                                                          @PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") LocalDate endDate) {
+        List<Ride> rides = rideServiceJPA.findAll();
+        LocalDateTime s = startDate.atStartOfDay();
+        LocalDateTime e = endDate.atStartOfDay();
+        List<Ride> filteredRides = rideServiceJPA.filterListOfRidesByDate(s, e, rides);
+        List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
+        for(Ride r : filteredRides) {
+            RideDTOResponse response = new RideDTOResponse(r);
+            rideDTOResponses.add(response);
+        }
+
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
