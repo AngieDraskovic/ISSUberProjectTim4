@@ -1,6 +1,6 @@
 package iss.tim4.domain.dto;
 
-import iss.tim4.domain.dto.review.ReviewDTO;
+import iss.tim4.domain.dto.review.ReviewDTOResult;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,7 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 public class RideReviewsDTO {
     @NotNull (message = "Field vehicleReview is required!")
-    private ReviewDTO vehicleReview;
+    private ReviewDTOResult vehicleReview;
     @NotNull (message = "Field driverReview is required!")
-    private ReviewDTO driverReview;
+    private ReviewDTOResult driverReview;
 }

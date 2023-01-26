@@ -26,7 +26,7 @@ VALUES (200.00, 0),
 
 INSERT INTO VEHICLE
 (BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID, AVAILABLE)
-VALUES (true, 'Tesla', 4, true, '1FK-3DS', 0, 1, true),
+VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
        (false, 'Audi', 4, true, '2FK-3DS', 0, 2,  true),
        (true, 'Reno', 4, true, '3FK-3DS', 0, 3, true),
        (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, true),
@@ -83,11 +83,11 @@ VALUES (false, 'kuca-poso', false, '2022-12-29 15:21:20', 1, 1.5, 30);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, KILOMETERS, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE, PANIC_ID)
-VALUES  (true, '2023-01-04 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 0, 500, 6, 1, 2, null),
-        (false, '2022-12-26 11:21:20', 142.2, 1.2, false, '2023-01-21 12:53:20', 0, 600, 6, null, 2, null),
-        (true, '2022-12-31 15:21:20', 32.2, 3.1, true, '2023-01-21 10:53:20', 0, 550, 6, null, 2, null),
-        (true, '2022-12-30 15:21:20', 32.2, 1.1, false, '2023-01-21 11:53:20', 4, 700, 6, null, 2, null),
-        (true, '2022-12-27 15:21:20', 168.2, 2.3, false, '2023-01-21 12:53:20', 0, 600, 6, null, 2, null);
+VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 5, 500, 6, 1, 2, null),
+        (false, '2022-12-26 11:21:20', 142.2, 1.2, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null),
+        (true, '2022-12-31 15:21:20', 32.2, 3.1, true, '2023-01-21 10:53:20', 5, 550, 6, null, 2, null),
+        (true, '2022-12-30 15:21:20', 32.2, 1.1, false, '2023-01-21 11:53:20', 5, 700, 6, null, 2, null),
+        (true, '2022-12-27 15:21:20', 168.2, 2.3, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null);
 
 
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
@@ -118,13 +118,13 @@ INSERT INTO FAVOURITE_ROUTE_PASSENGER(PASSENGER_ID, FAVOURITE_ROUTE_ID)
 VALUES (3, 1);
 
 
-INSERT INTO REVIEW (COMMENT, GRADE, PASSENGER_ID, RIDE_ID, VEHICLE_ID)
-VALUES  ('dobar', 3, 1, 1, 1),
-        ('odlican', 5, 2, 2, 2),
-        ('odlican', 5, 3, 3, 1),
-        ('odlican', 5, 4, 4, 2),
-        ('odlican', 5, 5, 5, 3),
-        ('odlican', 5, 3, 2, 4);
+INSERT INTO REVIEW (COMMENT, DRIVER_GRADE, VEHICLE_GRADE, PASSENGER_ID, RIDE_ID, VEHICLE_ID)
+VALUES  ('dobar', 3, 3, 1, 1, 1),
+        ('odlican', 5, 5, 2, 2, 2),
+        ('odlican', 5, 5, 3, 3, 1),
+        ('odlican', 5, 5, 4, 4, 2),
+        ('odlican', 5, 5, 5, 5, 3),
+        ('odlican', 5, 5, 3, 2, 4);
 
 
 INSERT INTO USERS (ROLE, PROFILE_PICTURE, NAME, PASSWORD, SURNAME, EMAIL, ACTIVE, BLOCKED, telephone_number)
