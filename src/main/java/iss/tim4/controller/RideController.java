@@ -48,6 +48,8 @@ public class RideController {
     private RejectionServiceJPA rejectionServiceJPA;
     @Autowired
     private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
+    @Autowired
+    private VehicleServiceJPA vehicleServiceJPA;
 
     @Autowired
     private UserServiceJPA userServiceJPA;
@@ -241,6 +243,10 @@ public class RideController {
         driver.setActive(false);
         driverServiceJPA.save(driver);
 
+        Vehicle vehicle = driver.getVehicle();
+        vehicle.setAvailable(false);
+        vehicleServiceJPA.save(vehicle);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -259,6 +265,11 @@ public class RideController {
         ride.setStatus(RideStatus.FINISHED);
         ride.setEndTime(LocalDateTime.now());
         rideServiceJPA.save(ride);
+
+        Vehicle vehicle = ride.getDriver().getVehicle();
+        vehicle.setAvailable(true);
+        vehicleServiceJPA.save(vehicle);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -394,6 +405,10 @@ public class RideController {
         ride.setStatus(RideStatus.FINISHED);
         ride.setPanic(p);
         rideServiceJPA.save(ride);
+
+        Vehicle vehicle = ride.getDriver().getVehicle();
+        vehicle.setAvailable(true);
+        vehicleServiceJPA.save(vehicle);
 
         PanicDTO result = new PanicDTO(p);
         return new ResponseEntity<>(result, HttpStatus.OK);
