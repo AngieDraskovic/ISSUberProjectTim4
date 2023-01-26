@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Data
@@ -13,6 +15,8 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class RemarkDTORequest {
 
+
+    @Size(min = 5, max = 300, message = "Your remark is too short")
     private String message;
     private LocalDateTime date;
 

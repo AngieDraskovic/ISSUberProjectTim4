@@ -42,6 +42,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.security.Principal;
 import java.time.LocalDateTime;
 import java.util.Objects;
@@ -86,6 +87,16 @@ public class UserController {
         }
 
         return new ResponseEntity<>(userMoreDTO, HttpStatus.OK);
+    }
+
+    @GetMapping(value="/{email}")
+    public ResponseEntity<UserDTO> userDTOResponseEntity(@PathVariable("email") String email) throws UberException {
+        User user = userService.getUser(email);
+        if(user == null){
+            throw new UberException(HttpStatus.NOT_FOUND, "User with given email does not exist! ");
+        }
+        UserDTO userDTO = new UserDTO(user);
+        return new ResponseEntity<>(userDTO, HttpStatus.OK);
     }
 
     @GetMapping
@@ -202,6 +213,7 @@ public class UserController {
     @PostMapping(value = "/{id}/note")
     @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER', 'PASSENGER')")
     public ResponseEntity<Remark> remarkPost(
+            @Valid
             @PathVariable("id") Integer id,
             @RequestBody RemarkDTORequest remarkDTORequest) throws UberException {
         User user = userService.getUserById(id);
@@ -209,6 +221,9 @@ public class UserController {
             throw new UberException(HttpStatus.NOT_FOUND, "User does not exist!");
         }
         Remark remark = new Remark(remarkDTORequest);
+        if(remark.getMessage().equals("")){
+            throw new UberException(HttpStatus.BAD_REQUEST, "You need to leave a text in your remark!");
+        }
         remark.setUser(user);
 
         user.getRemarks().add(remark);

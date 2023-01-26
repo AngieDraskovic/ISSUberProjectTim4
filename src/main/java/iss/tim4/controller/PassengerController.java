@@ -36,6 +36,8 @@ import java.util.Random;
 
 import org.springframework.web.bind.annotation.CrossOrigin;
 
+import javax.validation.Valid;
+
 @RestController
 @RequestMapping("/api/passenger")
 @AllArgsConstructor
@@ -126,7 +128,7 @@ public class PassengerController {
 
     // update   --> /api/passenger/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id) {
+    public ResponseEntity<PassengerDTOResult> updatePassenger(@Valid @RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id) {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

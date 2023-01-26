@@ -90,6 +90,7 @@ VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 
         (true, '2022-12-27 15:21:20', 168.2, 2.3, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null);
 
 
+
 INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
 values  (2.5, 1, 2, 1),
         (2.5, 1, 3, 2),
