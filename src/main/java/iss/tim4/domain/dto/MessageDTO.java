@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
@@ -17,9 +18,9 @@ import java.time.LocalDateTime;
 public class MessageDTO {
 
     private Long id;
-    @NotNull (message = "Field sender is required!")
+    @Valid
     private UserDTO sender;
-    @NotNull (message = "Field receiver is required!")
+    @Valid
     private UserDTO receiver;
     @Size (max = 300, message = "Field text cannot be longer than 300 characters!")
     private String text;

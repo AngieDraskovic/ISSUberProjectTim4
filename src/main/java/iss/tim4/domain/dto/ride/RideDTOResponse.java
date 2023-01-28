@@ -16,6 +16,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -40,6 +41,7 @@ public class RideDTOResponse {
     private Double kilometers;
     @NotNull (message = "Field status is required!")
     private RideStatus status;
+    @Valid
     private RejectionDTO rejection;
     private Boolean babyTransport;
     private Boolean petTransport;
@@ -53,7 +55,9 @@ public class RideDTOResponse {
     private String departure;
     @NotNull (message = "Field destination is required!")
     private String destination;
+    @Valid
     private ReviewDTOResult[] reviews;
+    @Valid
     private FavouriteRouteDTOResult favouriteRoute;
 
     public RideDTOResponse(Ride ride) {

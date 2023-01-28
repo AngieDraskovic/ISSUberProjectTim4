@@ -68,13 +68,13 @@ public class RideController {
     @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot order a ride with these passengers!");
         }
         Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
         if (driver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new UberException(HttpStatus.BAD_REQUEST, "There is no available driver");
         }
-//        Driver driver = driverServiceJPA.findOne(6);
+
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
@@ -422,7 +422,7 @@ public class RideController {
 
     @DeleteMapping(value = "/favorites/{id}/{passengerId}")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) {
+    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) throws Exception {
         if(rideServiceJPA.findOne(id) == null){
             return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
         }
@@ -435,6 +435,9 @@ public class RideController {
 
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         FavouriteRoute favouriteRoute = passengerServiceJPA.findFavouriteRouteByAddress(passenger, departureAddress, destinationAddress);
+        if (favouriteRoute == null) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot delete route that does not exist!");
+        }
         passenger.getFavouriteRoutes().remove(favouriteRoute);
         passengerServiceJPA.save(passenger);
 

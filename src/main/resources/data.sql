@@ -29,7 +29,7 @@ INSERT INTO VEHICLE
 VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
        (false, 'Audi', 4, true, '2FK-3DS', 0, 2,  true),
        (true, 'Reno', 4, true, '3FK-3DS', 0, 3, true),
-       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, true),
+       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, false),
        (false, 'Belarus', 1, true, '5FK-3DS',0, 5, true),
        (false, 'Citroen C4', 1, true, '5FK-3DS',0, 6, true),
        (false, 'BMW X1', 1, true, '5FK-3DS',0, 7, true),
@@ -83,7 +83,7 @@ VALUES (false, 'kuca-poso', false, '2022-12-29 15:21:20', 1, 1.5, 30);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, KILOMETERS, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE, PANIC_ID)
-VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 0, 500, 6, 1, 2, null),
+VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 5, 500, 6, 1, 2, null),
         (false, '2022-12-26 11:21:20', 142.2, 1.2, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null),
         (true, '2022-12-31 15:21:20', 32.2, 3.1, true, '2023-01-21 10:53:20', 5, 550, 6, null, 2, null),
         (true, '2022-12-30 15:21:20', 32.2, 1.1, false, '2023-01-21 11:53:20', 5, 700, 6, null, 2, null),

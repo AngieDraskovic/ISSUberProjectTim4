@@ -46,6 +46,7 @@ public class WebSecurityConfiguration {
 			    .antMatchers("/api/passenger/**").permitAll()
 				.antMatchers("/api/ride/**").permitAll()
 				.antMatchers("/api/driver/**").permitAll()
+				.antMatchers("/api/vehicle/**").permitAll()
 				.antMatchers("/**").authenticated()
 				.and()
 				.headers().frameOptions().disable().and()
