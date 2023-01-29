@@ -1,7 +1,9 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.LocationDTO;
+
 import javax.persistence.*;
+
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -50,5 +52,9 @@ public class Location {
         this.address = locationDTO.getAddress();
         this.geoWidth = locationDTO.getLatitude();
         this.geoLength = locationDTO.getLongitude();
+    }
+
+    public double distanceTo(Location location) {
+        return Math.sqrt(Math.pow(this.getGeoLength() - location.getGeoLength(), 2) + Math.pow(this.getGeoWidth() - location.getGeoWidth(), 2))
     }
 }
