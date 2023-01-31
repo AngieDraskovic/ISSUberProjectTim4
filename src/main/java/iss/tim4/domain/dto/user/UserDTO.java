@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto.user;
 
+import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -26,7 +27,8 @@ public class UserDTO {
     private String email;
     @NotEmpty(message = "Field address is required!")
     private String address;
-
+    private boolean blocked;
+    private Role role;
 
     public UserDTO(User user) {
         this.id = user.getId();
@@ -36,5 +38,7 @@ public class UserDTO {
         this.profilePicture = user.getProfilePicture();
         this.telephoneNumber = user.getTelephoneNumber();
         this.address = user.getAddress();
+        this.blocked = user.getBlocked();
+        this.role = user.getRole();
     }
 }

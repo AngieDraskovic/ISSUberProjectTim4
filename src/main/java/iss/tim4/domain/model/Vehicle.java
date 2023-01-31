@@ -58,14 +58,23 @@ public class Vehicle {
 
     public Vehicle(Driver driver, VehicleDTOResponse vehicleDTOResponse) {
         this.model = vehicleDTOResponse.getModel();
-        this.vehicleName = VehicleName.valueOf(vehicleDTOResponse.getVehicleType());
+        this.vehicleName = vehicleDTOResponse.getVehicleType();
         this.regPlates = vehicleDTOResponse.getLicenseNumber();
         this.numSeats = vehicleDTOResponse.getPassengerSeats();
-        this.currLocation = new Location(vehicleDTOResponse.getCurrentLocation());
+        if(vehicleDTOResponse.getLicenseNumber()==null) {
+            this.currLocation = new Location(vehicleDTOResponse.getCurrentLocation());
+        }else{
+            this.currLocation = new Location("Svetislava Kasapinovica broj 33", 42.111, 43.11);
+
+        }
         this.babyProof = vehicleDTOResponse.getBabyTransport();
         this.petsAllowed = vehicleDTOResponse.getPetTransport();
         this.driver = driver;
-        this.available = vehicleDTOResponse.getAvailable();
+        if(vehicleDTOResponse.getAvailable() == null) {
+            this.available = true;
+        }else{
+            this.available = vehicleDTOResponse.getAvailable();
+        }
     }
 
 

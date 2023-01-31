@@ -96,7 +96,7 @@ public class DriverRequest {
         this.newEmail = driverRequestDTORequest.getNewEmail();
         this.newAddress = driverRequestDTORequest.getNewAddress();
         this.newModel = driverRequestDTORequest.getNewModel();
-        this.newVehicleName = VehicleName.valueOf(driverRequestDTORequest.getNewVehicleName());
+        this.newVehicleName =driverRequestDTORequest.getNewVehicleName();
         this.newRegPlates = driverRequestDTORequest.getNewRegPlates();
         this.newNumSeats = driverRequestDTORequest.getNewNumSeats();
         this.newBabyProof = driverRequestDTORequest.getNewBabyProof();

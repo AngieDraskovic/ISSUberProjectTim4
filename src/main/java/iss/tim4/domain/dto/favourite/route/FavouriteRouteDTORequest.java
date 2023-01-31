@@ -30,6 +30,8 @@ public class FavouriteRouteDTORequest {
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;
+    private double estimatedTimeInMinutes;
+    private double kilometers;
 
     public FavouriteRouteDTORequest(FavouriteRoute favouriteRoute) {
         this.favoriteName = favouriteRoute.getFavouriteName();
@@ -39,6 +41,8 @@ public class FavouriteRouteDTORequest {
         this.vehicleType = favouriteRoute.getVehicleType();
         this.babyTransport = favouriteRoute.getBabyTransport();
         this.petTransport = favouriteRoute.getPetTransport();
+        this.estimatedTimeInMinutes = favouriteRoute.getEstimatedTimeInMinutes();
+        this.kilometers = favouriteRoute.getKilometers();
     }
 
 

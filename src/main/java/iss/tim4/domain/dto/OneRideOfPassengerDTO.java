@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto;
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.driver.DriverRideDTO;
 import iss.tim4.domain.dto.passenger.PassengerRideDTO;
@@ -23,6 +24,7 @@ public class OneRideOfPassengerDTO {
     private LocalDateTime endTime;
     private Double totalCost;
     private DriverRideDTO driver;
+    private RideStatus status;
     private Double estimatedTimeInMinutes;
     private Boolean babyTransport;
     private Boolean petTransport;
@@ -37,6 +39,7 @@ public class OneRideOfPassengerDTO {
         this.endTime = ride.getEndTime();
         this.totalCost = ride.getTotalCost();
         this.driver = new DriverRideDTO(ride.getDriver());
+        this.status = ride.getStatus();
         Set<Passenger> passengers = ride.getPassengers();
         PassengerRideDTO[] p = new PassengerRideDTO[passengers.size()];
         int iter = 0;

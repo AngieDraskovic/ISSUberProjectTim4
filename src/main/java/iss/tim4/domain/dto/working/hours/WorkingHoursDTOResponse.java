@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto.working.hours;
 
+import iss.tim4.domain.dto.driver.DriverDTOResult;
 import iss.tim4.domain.model.WorkingHours;
 import lombok.AllArgsConstructor;
 import lombok.Data;

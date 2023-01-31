@@ -26,8 +26,9 @@ public class DriverDTOResult {
     private String email;
     @NotEmpty(message = "Field address is required!")
     private String address;
-    @NotEmpty(message = "Field password is required!")
-    private String password;
+    private boolean active;
+    private boolean blocked;
+
 
 
     public DriverDTOResult(Driver driver) {
@@ -38,7 +39,8 @@ public class DriverDTOResult {
         this.profilePicture = driver.getProfilePicture();
         this.telephoneNumber = driver.getTelephoneNumber();
         this.address = driver.getAddress();
-        this.password = driver.getPassword();
+        this.active = driver.getActive();
+        this.blocked = driver.getBlocked();
     }
 
     public void copyValues(DriverDTOResult driver) {

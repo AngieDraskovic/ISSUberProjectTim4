@@ -21,13 +21,13 @@ public class DriverSurveyController {
     @Autowired
     private DriverRequestServiceJPA driverRequestServiceJPA;
 
-    public Map<Driver, Integer> driverRideAgreement = new HashMap<>();
+    public Map<Integer, Integer> driverRideAgreement = new HashMap<>();
 
-    @MessageMapping("/driver-survey")
-    @SendTo("/topic/driver-request")
-    public DriverRequestDTOResult sendSpecific(String msg) throws Exception {
-        System.out.println(msg);
-        return new DriverRequestDTOResult(driverRequestServiceJPA.findOne(0));
+    @MessageMapping("/driver-survey/{id}/{agree}")
+    public void driverSurveyAnswer(String msg, @DestinationVariable Integer id, @DestinationVariable Integer agree) throws Exception {
+        if (msg.equals("ok")) {
+            driverRideAgreement.put(id, agree);
+        }
     }
 
     @MessageMapping("/chat")

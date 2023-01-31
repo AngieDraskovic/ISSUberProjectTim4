@@ -1,16 +1,16 @@
 package iss.tim4.service;
 
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
+import iss.tim4.domain.dto.passenger.PassengerDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
 import iss.tim4.domain.dto.user.UserDTO;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
-import iss.tim4.domain.model.Passenger;
-import iss.tim4.domain.model.Ride;
-import iss.tim4.domain.model.Role;
-import iss.tim4.domain.model.User;
+import iss.tim4.domain.model.*;
 import iss.tim4.repository.PassengerRepositoryJPA;
 import iss.tim4.repository.RideRepositoryJPA;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -66,5 +66,37 @@ public class PassengerServiceJPA {
         return passengerSet;
     }
 
+
+    /* Prolazi kroz sve putnike koji ucestvuju u voznji i vraca false ako je neki od njih vec porucio voznju (PENDING) */
+    public boolean possibleOrder(RideDTORequest newRide) {
+        for (PassengerDTOResult passengerDTOResult : newRide.getPassengers()) {
+            Passenger passenger = findOne(passengerDTOResult.getId());
+            if (passenger.getBlocked())     // Ako je neki od putnika blokiran, ne moze da se poruci voznja.
+                return false;
+            for (Ride ride : passenger.getRides()) {
+                if (ride.getStatus().equals(RideStatus.ACTIVE))
+                    return false;
+                if (ride.getStatus().equals(RideStatus.PENDING) || ride.getStatus().equals(RideStatus.ACCEPTED)){
+                    /* Ako je poruico voznju vec i ponovo porucuje, ali ovaj put za buducnost, vrsi se provjera
+                     * da li se ta buduca voznja preklapa sa tom koju je vec porucio. */
+                    if (ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTime().longValue()))
+                            && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((ride.getEstimatedTimeInMinutes().longValue())))) {
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    }
+
+
+    public FavouriteRoute findFavouriteRouteByAddress(Passenger passenger, String departureAddress, String destinationAddress) {
+        for (FavouriteRoute favouriteRoute : passenger.getFavouriteRoutes()) {
+            if (favouriteRoute.getLocations().iterator().next().getStartLocation().getAddress().equals(departureAddress) &&
+            favouriteRoute.getLocations().iterator().next().getEndLocation().getAddress().equals(destinationAddress))
+                return favouriteRoute;
+        }
+        return null;
+    }
 
 }

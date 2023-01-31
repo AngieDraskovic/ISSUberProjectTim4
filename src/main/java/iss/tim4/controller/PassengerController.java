@@ -23,15 +23,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 
 import org.springframework.web.bind.annotation.CrossOrigin;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping("/api/passenger")
@@ -53,15 +58,28 @@ public class PassengerController {
     private PasswordEncoder passwordEncoder;
     private final Random rand = new Random();
 
-
+/*
     // get all - /api/passenger
     @GetMapping
     public ResponseEntity<UberPageDTO<PassengerDTOResult>> getPassengers(Pageable pageable) {
         return new ResponseEntity<>(passengerServiceJPA.getAllPassengers(pageable), HttpStatus.OK);
     }
+*/
+    // get all - /api/passenger - SAMO DOBAVLJA PASSENGERE DA BI RADILO NA FRONTU, VJEROVATNO TREBA DA SE MIJENJA
+    @GetMapping
+    public ResponseEntity<List<PassengerDTOResult>> getPassengers2(Pageable pageable) {
+        List<PassengerDTOResult> passengerDTOResults = new ArrayList<PassengerDTOResult>();
+        List<Passenger> passengers = passengerServiceJPA.findAll();
+        for (Passenger passenger : passengers)
+            passengerDTOResults.add(new PassengerDTOResult(passenger));
+
+        return new ResponseEntity<>(passengerDTOResults, HttpStatus.OK);
+    }
+
 
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
     public ResponseEntity<PassengerDTOResult> getPassenger(@PathVariable("id") Integer id) {
         Passenger passenger = passengerServiceJPA.findOne(id);
 
@@ -110,17 +128,10 @@ public class PassengerController {
 
     // update   --> /api/passenger/1
     @PutMapping(value = "/{id}")
-    public ResponseEntity<PassengerDTOResult> updatePassenger(@RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id)
-            throws Exception {
+    public ResponseEntity<PassengerDTOResult> updatePassenger(@Valid @RequestBody PassengerDTOUpdate passengerDTO, @PathVariable Integer id) {
         Passenger passengerForUpdate = passengerServiceJPA.findOne(id);
         if (passengerForUpdate == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        if(userService.getUser(passengerDTO.getEmail())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that email already exists! ");
-        }
-        if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
-            throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
         }
         if(passengerDTO.getName() != null){
             passengerForUpdate.setName(passengerDTO.getName());

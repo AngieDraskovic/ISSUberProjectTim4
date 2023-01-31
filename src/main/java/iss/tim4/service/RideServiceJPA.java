@@ -12,7 +12,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Service
 public class RideServiceJPA {
@@ -58,6 +61,29 @@ public class RideServiceJPA {
     public double calculateCost(RideDTORequest rideDTO) {
         double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(rideDTO.getVehicleType());
         return pricePerType * rideDTO.getKilometers() * 120;
+    }
 
+    public List<Ride> filterRidesByDate(LocalDateTime startDate, LocalDateTime endDate, Set<Ride> rides){
+        List<Ride> filteredList = new ArrayList<>();
+        for(Ride r : rides){
+            if((r.getStartTime().isAfter(startDate) || r.getStartTime().equals(startDate)) &&
+                    ((r.getStartTime().isBefore(endDate) || r.getStartTime().equals(endDate)))){
+                filteredList.add(r);
+            }
+        }
+
+        return filteredList;
+    }
+
+    public List<Ride> filterListOfRidesByDate(LocalDateTime startDate, LocalDateTime endDate, List<Ride> rides){
+        List<Ride> filteredList = new ArrayList<>();
+        for(Ride r : rides){
+            if((r.getStartTime().isAfter(startDate) || r.getStartTime().equals(startDate)) &&
+                    ((r.getStartTime().isBefore(endDate) || r.getStartTime().equals(endDate)))){
+                filteredList.add(r);
+            }
+        }
+
+        return filteredList;
     }
 }

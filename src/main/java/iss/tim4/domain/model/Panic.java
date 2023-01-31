@@ -1,6 +1,9 @@
 package iss.tim4.domain.model;
 
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.PanicDTO;
+import iss.tim4.domain.dto.PanicDTORequest;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -31,9 +34,15 @@ public class Panic {
     @JoinColumn(name = "user_id",  referencedColumnName = "id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "ride_id", referencedColumnName = "id")
+    @OneToOne(mappedBy = "panic")
+    @ToString.Exclude
     private Ride ride;
+
+    public Panic(PanicDTORequest panicDTORequest) {
+        this.time = LocalDateTime.now();
+        this.reason = panicDTORequest.getReason();
+    }
+
 
     @Override
     public boolean equals(Object o) {

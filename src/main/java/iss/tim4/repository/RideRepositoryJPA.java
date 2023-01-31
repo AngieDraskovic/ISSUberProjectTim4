@@ -26,5 +26,9 @@ public interface RideRepositoryJPA extends JpaRepository<Ride,Integer> {
   List<Ride> findByPassengerId(@Param("passengerId") Integer passengerId);
 
 
+  @Query("SELECT r FROM Ride r WHERE r.driver.id = :driverId")
+  List<Ride> findByDriverId(@Param("driverId") Integer driverId);
+
+
 
 }

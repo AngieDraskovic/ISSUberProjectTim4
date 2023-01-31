@@ -24,15 +24,21 @@ public class Location {
     private String address;
 
     @Column(name = "geo_width", nullable = false)
-    private Double geoWidth;
+    private Double latitude;
 
     @Column(name = "geo_length", nullable = false)
-    private Double geoLength;
+    private Double longitude;
 
     public Location(LocationDTO locationDTO) {
         this.address = locationDTO.getAddress();
-        this.geoWidth = locationDTO.getLongitude();
-        this.geoLength = locationDTO.getLatitude();
+        this.latitude = locationDTO.getLongitude();
+        this.longitude = locationDTO.getLatitude();
+    }
+
+    public Location(String s, double v, double v1) {
+        this.address = s;
+        this.latitude = v;
+        this.longitude = v1;
     }
 
     @Override
@@ -50,11 +56,21 @@ public class Location {
 
     public void update(LocationDTO locationDTO) {
         this.address = locationDTO.getAddress();
-        this.geoWidth = locationDTO.getLatitude();
-        this.geoLength = locationDTO.getLongitude();
+        this.latitude = locationDTO.getLatitude();
+        this.longitude = locationDTO.getLongitude();
     }
 
-    public double distanceTo(Location location) {
-        return Math.sqrt(Math.pow(this.getGeoLength() - location.getGeoLength(), 2) + Math.pow(this.getGeoWidth() - location.getGeoWidth(), 2))
+    public double distanceTo(LocationDTO other) {
+        double earthRadius = 6371;
+        double dLat = Math.toRadians(other.getLatitude() - this.latitude);
+        double dLng = Math.toRadians(other.getLongitude() - this.longitude);
+        double a = Math.sin(dLat / 2) * Math.sin(dLat / 2)
+                + Math.cos(Math.toRadians(this.latitude))
+                * Math.cos(Math.toRadians(other.getLatitude())) * Math.sin(dLng / 2)
+                * Math.sin(dLng / 2);
+        double c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+        double dist = earthRadius * c;
+
+        return dist;
     }
 }

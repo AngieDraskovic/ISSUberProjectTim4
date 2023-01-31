@@ -1,5 +1,6 @@
 package iss.tim4.domain.dto.driver.request;
 
+import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.model.DriverRequest;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -35,7 +36,7 @@ public class DriverRequestDTORequest {
     @NotEmpty (message = "Field newModel is required!")
     private String newModel;
     @NotEmpty (message = "Field newVehicleName is required!")
-    private String newVehicleName;
+    private VehicleName newVehicleName;
     @NotEmpty (message = "Field newRegPlates is required!")
     private String newRegPlates;
     @Size(min = 2, max = 10, message = "Field newNumSeats format is not valid!")
@@ -56,7 +57,7 @@ public class DriverRequestDTORequest {
         this.newAddress = driverRequest.getNewAddress();
         this.vehicleId = driverRequest.getVehicle().getId();
         this.newModel = driverRequest.getNewModel();
-        this.newVehicleName = driverRequest.getNewVehicleName().toString();
+        this.newVehicleName = driverRequest.getNewVehicleName();
         this.newRegPlates = driverRequest.getNewRegPlates();
         this.newNumSeats = driverRequest.getNewNumSeats();
         this.newBabyProof = driverRequest.getNewBabyProof();

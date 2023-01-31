@@ -33,6 +33,8 @@ public class FavouriteRouteDTOResult {
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;
+    private double estimatedTimeInMinutes;
+    private double kilometers;
 
     public FavouriteRouteDTOResult(FavouriteRoute favouriteRoute) {
         this.id = favouriteRoute.getId();
@@ -43,6 +45,8 @@ public class FavouriteRouteDTOResult {
         this.vehicleType = favouriteRoute.getVehicleType();
         this.babyTransport = favouriteRoute.getBabyTransport();
         this.petTransport = favouriteRoute.getPetTransport();
+        this.estimatedTimeInMinutes = favouriteRoute.getEstimatedTimeInMinutes();
+        this.kilometers = favouriteRoute.getKilometers();
     }
 
 
