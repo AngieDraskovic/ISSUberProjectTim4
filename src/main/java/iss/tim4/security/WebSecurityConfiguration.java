@@ -5,6 +5,7 @@ import iss.tim4.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -42,10 +43,12 @@ public class WebSecurityConfiguration {
 				.antMatchers("/api/user/login").permitAll()
 				.antMatchers("/api/user/*/resetPassword").permitAll()
 				.antMatchers("/h2-console/**").permitAll()
-				.antMatchers("api/vehicle/**").permitAll()
+				.antMatchers("/api/vehicle/**").permitAll()
 			    .antMatchers("/api/passenger/**").permitAll()
 				.antMatchers("/api/ride/**").permitAll()
 				.antMatchers("/api/driver/**").permitAll()
+				.antMatchers("/app/**").permitAll()
+				.antMatchers("/chat/**").permitAll()
 				.antMatchers("/**").authenticated()
 				.and()
 				.headers().frameOptions().disable().and()
