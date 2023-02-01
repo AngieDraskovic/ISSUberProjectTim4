@@ -16,13 +16,21 @@ import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.GenericMessage;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.security.Principal;
+import java.text.DecimalFormat;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -47,6 +55,11 @@ public class RideController {
     @Autowired
     private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
     @Autowired
+    private DriverSurveyController driverSurveyController;
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
+
+    @Autowired
     private VehicleServiceJPA vehicleServiceJPA;
     @Autowired
     private UserServiceJPA userServiceJPA;
@@ -56,22 +69,70 @@ public class RideController {
     public <T> ResponseEntity<T> getRide(@PathVariable("id") Integer id) {
         Ride ride = rideServiceJPA.findOne(id);
         if (ride == null) {
-            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist",HttpStatus.NOT_FOUND);
+            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist", HttpStatus.NOT_FOUND);
         }
-        return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(new RideDTOResponse(ride) , HttpStatus.OK);
+        return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(new RideDTOResponse(ride), HttpStatus.OK);
     }
 
     @PostMapping(consumes = "application/json")
-    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
-    public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
+    @PreAuthorize("hasRole('PASSENGER')")
+    public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO, Principal user) throws Exception {
+//        rideDTO.getLocations()[0].getDeparture()
+        rideDTO.setAgreementCode(user.hashCode());
+        var actualUser = userServiceJPA.getUser(user.getName());
+        if (Arrays.stream(rideDTO.getPassengers()).noneMatch(p -> Objects.equals(p.getId(), actualUser.getId()))) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "User should be passenger");
+        }
+
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
-        Driver driver = driverServiceJPA.findAvailableDriver(rideDTO);
-        if (driver == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+
+        List<Driver> alreadyChecked = new ArrayList<>();
+        Driver driver = null;
+        messagingTemplate.convertAndSend(
+                "/topic/search-status/" + actualUser.getId(),
+                new GenericMessage<>("Asking driver...")
+        );
+
+        while (true) {
+            var closestDriver = driverServiceJPA.findAvailableDriver(rideDTO, alreadyChecked);
+            if (closestDriver == null) {
+                messagingTemplate.convertAndSend(
+                        "/topic/search-status/" + actualUser.getId(),
+                        new GenericMessage<>("Sorry, no drivers free at the moment. Try in a few minutes...")
+                );
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+            messagingTemplate.convertAndSend(
+                    "/topic/driver-survey/" + closestDriver.getId(),
+                    new GenericMessage<>(rideDTO)
+            );
+            try {
+                TimeUnit.SECONDS.sleep(60);
+            } catch (InterruptedException ie) {
+                Thread.currentThread().interrupt();
+            }
+            if (driverSurveyController.driverRideAgreement.containsKey(closestDriver.getId())
+                    && Objects.equals(driverSurveyController.driverRideAgreement.get(closestDriver.getId()),
+                    rideDTO.getAgreementCode())) {
+                messagingTemplate.convertAndSend(
+                        "/topic/search-status/" + actualUser.getId(),
+                        new GenericMessage<>("Driver found!")
+                );
+                driver = closestDriver;
+                break;
+            } else {
+                DecimalFormat df = new DecimalFormat("0.0");
+                String distance = df.format(closestDriver.getVehicle().getCurrLocation().distanceTo(rideDTO.getLocations()[0].getDeparture()));
+                messagingTemplate.convertAndSend(
+                        "/topic/search-status/" + actualUser.getId(),
+                        new GenericMessage<>("Increasing radius... (" + distance + " KM)")
+                );
+                alreadyChecked.add(closestDriver);
+            }
         }
-//        Driver driver = driverServiceJPA.findOne(6);
+
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
@@ -91,20 +152,22 @@ public class RideController {
 
         return new ResponseEntity<>(new RideDTOResponse(newRide), HttpStatus.OK);   // trebalo bi ovdje created
     }
+
     class CustomResponseEntity<T> extends ResponseEntity<T> {
         public CustomResponseEntity(T body, HttpStatus status) {
             super(body, status);
         }
     }
-    @GetMapping(value="/passenger/{passengerId}/rideHistory")
-    public ResponseEntity getPassengerRideHistory(@PathVariable("passengerId") Integer passengerId){
+
+    @GetMapping(value = "/passenger/{passengerId}/rideHistory")
+    public ResponseEntity getPassengerRideHistory(@PathVariable("passengerId") Integer passengerId) {
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         if (passenger == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Set<Ride> rides = passenger.getRides();
         List<RideDTOResponse> rideDTOResponses = new ArrayList<>();
-        for(Ride r : rides) {
+        for (Ride r : rides) {
             RideDTOResponse response = new RideDTOResponse(r);
             rideDTOResponses.add(response);
         }
@@ -234,10 +297,10 @@ public class RideController {
     @PreAuthorize("hasRole('PASSENGER')")
     public ResponseEntity<RideDTOResponse> cancelRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        if(ride==null){
+        if (ride == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.STARTED)){
+        if (!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.STARTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
         ride.getRejection().setReason("Ride is cancelled by passenger");
@@ -249,9 +312,9 @@ public class RideController {
 
     @PutMapping(value = "/{id}/panic")
     @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
-    public ResponseEntity<PanicDTO> panicRide(@RequestBody  ReasonDTO reasonDTO, @PathVariable Integer id){
+    public ResponseEntity<PanicDTO> panicRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id) {
         Ride ride = rideServiceJPA.findOne(id);
-        if(ride==null){
+        if (ride == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         Panic p = new Panic();
@@ -269,10 +332,10 @@ public class RideController {
     @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> acceptRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        if(ride==null){
-            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
+        if (ride == null) {
+            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.PENDING)){
+        if (!ride.getStatus().equals(RideStatus.PENDING)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot accept a ride that is not in status PENDING! ");
         }
         ride.setStatus(RideStatus.ACCEPTED);
@@ -280,12 +343,13 @@ public class RideController {
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
     }
+
     @PutMapping(value = "/{id}/start")
     @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> startRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        if(ride==null){
-            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
+        if (ride == null) {
+            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
         }
         if(!ride.getStatus().equals(RideStatus.ACCEPTED) && !ride.getStatus().equals(RideStatus.PENDING)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot start a ride that is not in status ACCEPTED! ");
@@ -311,10 +375,10 @@ public class RideController {
     @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> finishRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        if(ride==null){
-            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
+        if (ride == null) {
+            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.ACTIVE)){
+        if (!ride.getStatus().equals(RideStatus.STARTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot end a ride that is not in status STARTED! ");
         }
         ride.setStatus(RideStatus.FINISHED);
@@ -334,7 +398,6 @@ public class RideController {
     @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> rejectRide(@RequestBody RejectionDTO rejectionDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        System.out.println(ride.getStatus());
         if(ride==null){
             return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
         }
@@ -351,7 +414,7 @@ public class RideController {
         rideServiceJPA.save(ride);
 
         RideDTOResponse result = new RideDTOResponse(ride);
-        return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
+        return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
 
     }
 

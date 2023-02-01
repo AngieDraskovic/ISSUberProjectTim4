@@ -35,6 +35,6 @@ public class RideDTORequest {
     @NotNull (message = "Field kilometers is required!")
     @Min(value=0)
     private double kilometers;
-
+    private Integer agreementCode;
 
 }
