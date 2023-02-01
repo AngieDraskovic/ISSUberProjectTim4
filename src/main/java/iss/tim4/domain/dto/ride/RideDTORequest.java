@@ -9,6 +9,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -32,6 +33,8 @@ public class RideDTORequest {
     private Double estimatedTime;
 
     @NotNull (message = "Field kilometers is required!")
+    @Min(value=0)
     private double kilometers;
+
 
 }

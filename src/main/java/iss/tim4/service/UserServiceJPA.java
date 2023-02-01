@@ -133,10 +133,10 @@ public class UserServiceJPA implements UserService {
         activationRepositoryJPA.save(activation);
 
         String message = "Dear, " + user.getName() +
-                "!\n\n" + "This is your code for a password reset:\n" + activation.getCode() +
+                "!\n\n" + "Click on this link to confirm password reset:\n http://localhost:4200/login/reset?code=" + activation.getCode() + "/?email=" +email +
+                "/?id=" + user.getId() +
                 "\n\nIf you did not perform password reset - contact our support: " +
                 "support@easy.go" + "\n\nBest regards,\nEasyGo team!";
-
         emailService.sendSimpleMessage(email, "Password reset", message);
     }
 
