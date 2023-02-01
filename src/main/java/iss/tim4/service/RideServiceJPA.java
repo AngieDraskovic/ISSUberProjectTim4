@@ -24,7 +24,7 @@ public class RideServiceJPA {
     private RideRepositoryJPA rideRepositoryJPA;
 
     @Autowired
-    VehicleTypeServiceJPA vehicleTypeServiceJPA;
+    private VehicleTypeServiceJPA vehicleTypeServiceJPA;
 
     public Ride findOne(Integer id) {
         return rideRepositoryJPA.findById(id).orElse(null);
@@ -46,10 +46,6 @@ public class RideServiceJPA {
         return rideRepositoryJPA.save(ride);
     }
 
-    public void remove(Integer id) {
-        rideRepositoryJPA.deleteById(id);
-    }
-
     public List<Object[]> getRideWithLocation(){
         return rideRepositoryJPA.getRidesFromRoutes();
     }
@@ -59,6 +55,10 @@ public class RideServiceJPA {
     }
 
     public double calculateCost(RideDTORequest rideDTO) {
+        if(rideDTO.getKilometers() < 0) {
+            throw new IllegalArgumentException("Kilometers can not be negative");
+        }
+        System.out.println(rideDTO.getVehicleType());
         double pricePerType = vehicleTypeServiceJPA.getPriceForVehicleType(rideDTO.getVehicleType());
         return pricePerType * rideDTO.getKilometers() * 120;
     }

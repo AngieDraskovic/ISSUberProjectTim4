@@ -7,6 +7,7 @@ import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.service.PassengerServiceJPA;
 import lombok.*;
+import net.bytebuddy.asm.Advice;
 import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -93,6 +94,33 @@ public class Ride {
         this.petTransport = rideDTO.getPetTransport();
     }
 
+
+    // for testing :)
+    public Ride(LocalDateTime start, LocalDateTime end, Double price, Double minutes, Double kilometers,
+                RideStatus status, boolean pets, boolean baby){
+        this.startTime = start;
+        this.endTime = end;
+        this.status = status;
+        this.babyTransport = baby;
+        this.petTransport = pets;
+        this.totalCost = price;
+        this.estimatedTimeInMinutes = minutes;
+        this.kilometers = kilometers;
+
+    }
+    public Ride(Integer id, LocalDateTime start, LocalDateTime end, Double price, Double minutes, Double kilometers,
+                RideStatus status, boolean pets, boolean baby){
+        this.id = id;
+        this.startTime = start;
+        this.endTime = end;
+        this.status = status;
+        this.babyTransport = baby;
+        this.petTransport = pets;
+        this.totalCost = price;
+        this.estimatedTimeInMinutes = minutes;
+        this.kilometers = kilometers;
+
+    }
 
     public void addPassenger(Passenger passenger) {
         passengers.add(passenger);

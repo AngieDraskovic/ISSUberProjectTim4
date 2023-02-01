@@ -53,8 +53,6 @@ public class RideController {
     @Autowired
     private RouteServiceJPA routeServiceJPA;
     @Autowired
-    private RejectionServiceJPA rejectionServiceJPA;
-    @Autowired
     private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
     @Autowired
     private DriverSurveyController driverSurveyController;
@@ -63,7 +61,6 @@ public class RideController {
 
     @Autowired
     private VehicleServiceJPA vehicleServiceJPA;
-
     @Autowired
     private UserServiceJPA userServiceJPA;
 
@@ -140,7 +137,6 @@ public class RideController {
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
         VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
-
         Ride newRide = new Ride(rideDTO);
         newRide.setDriver(driver);
         newRide.setTotalCost(totalCost);
@@ -151,7 +147,6 @@ public class RideController {
         newRide.setRoutes(routes);
         newRide.setVehicleType(vehicleType);
         newRide.setStatus(RideStatus.PENDING);
-
         rideServiceJPA.save(newRide);
 
 
@@ -176,7 +171,6 @@ public class RideController {
             RideDTOResponse response = new RideDTOResponse(r);
             rideDTOResponses.add(response);
         }
-        //?
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
@@ -404,9 +398,10 @@ public class RideController {
     @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> rejectRide(@RequestBody RejectionDTO rejectionDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
-        if (ride == null) {
-            return (ResponseEntity<T>) new ResponseEntity<>("Ride does not exist!", HttpStatus.NOT_FOUND);
+        if(ride==null){
+            return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!" , HttpStatus.NOT_FOUND);
         }
+        System.out.println(ride.getStatus());
         if(!ride.getStatus().equals(RideStatus.PENDING) && !ride.getStatus().equals(RideStatus.ACCEPTED)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or ACCEPTED! ");
         }

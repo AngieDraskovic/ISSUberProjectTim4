@@ -4,9 +4,11 @@ import iss.tim4.domain.dto.security.EmailPasswordDTO;
 import iss.tim4.domain.dto.security.TokenDTO;
 import iss.tim4.domain.model.Role;
 import iss.tim4.domain.model.User;
+import iss.tim4.errors.UberException;
 import iss.tim4.security.jwt.JwtTokenUtil;
 import iss.tim4.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -30,7 +32,7 @@ public class LoginController {
 	private JwtTokenUtil jwtTokenUtil;
 
 	@PostMapping()
-	public TokenDTO login(@RequestBody EmailPasswordDTO passwordDTO) {
+	public TokenDTO login(@RequestBody EmailPasswordDTO passwordDTO) throws UberException {
 		UsernamePasswordAuthenticationToken authReq = new UsernamePasswordAuthenticationToken(
 				passwordDTO.getEmail(),
 				passwordDTO.getPassword()
@@ -41,6 +43,11 @@ public class LoginController {
 		sc.setAuthentication(auth);
 
 		User user = userService.getUser(passwordDTO.getEmail());
+		if(user.getRole().equals(Role.PASSENGER)){
+			if(!user.getActive()){
+				throw new UberException(HttpStatus.BAD_REQUEST, "You have not confirmed your email! ");
+			}
+		}
 		String token = jwtTokenUtil.generateToken(passwordDTO.getEmail(), user.getRole(), user.getId());
 
 		return new TokenDTO(token, null);

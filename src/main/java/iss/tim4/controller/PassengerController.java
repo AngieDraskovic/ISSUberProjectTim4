@@ -1,14 +1,11 @@
 package iss.tim4.controller;
 
 import iss.tim4.domain.dto.*;
-import iss.tim4.domain.dto.passenger.PassengerDTO;
-import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
+import iss.tim4.domain.dto.passenger.PassengerDTOPost;
 import iss.tim4.domain.dto.passenger.PassengerDTOResult;
 import iss.tim4.domain.dto.passenger.PassengerDTOUpdate;
-import iss.tim4.domain.model.Activation;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.PassengerActivation;
-import iss.tim4.domain.model.Ride;
 import iss.tim4.errors.UberException;
 
 import iss.tim4.repository.PassengerActivationRepository;
@@ -92,7 +89,7 @@ public class PassengerController {
 
     // create /api/passenger
     @PostMapping(consumes = "application/json")
-    public ResponseEntity<PassengerDTOResult> createPassenger(@RequestBody PassengerDTOResponse passengerDTO) throws Exception {
+    public ResponseEntity<PassengerDTOResult> createPassenger(@Valid @RequestBody PassengerDTOPost passengerDTO) throws Exception {
         Passenger passenger = new Passenger();
 
         if(userService.getUser(passengerDTO.getEmail())!=null){
@@ -100,6 +97,9 @@ public class PassengerController {
         }
         if(userService.getUserByTelephoneNumber(passengerDTO.getTelephoneNumber())!=null){
             throw new UberException(HttpStatus.BAD_REQUEST, "User with that telephone number already exists! ");
+        }
+        if(!passengerDTO.getConfirmPassword().equals(passengerDTO.getPassword())){
+            throw new UberException(HttpStatus.BAD_REQUEST, "Passwords do not match!");
         }
         passenger.setName(passengerDTO.getName());
         passenger.setSurname(passengerDTO.getSurname());

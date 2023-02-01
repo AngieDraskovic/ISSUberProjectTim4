@@ -1,0 +1,30 @@
+INSERT INTO USERS(id, role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
+VALUES  (111, 'PASSENGER', true, 'NS, 21000', false, 'passenger-test@gmail.com', 'Alex', 'alex123', 'alex.jpg', 'Mishutkin', '+7 977 1123');
+
+INSERT INTO LOCATION (ID, ADDRESS, GEO_LENGTH, GEO_WIDTH)
+VALUES (111, 'dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
+       (222, 'Narodnog Fronta 12, Novi Sad', 74.2, 84.3);
+
+INSERT INTO VEHICLE_TYPE
+    (PRICE, VEHICLE_NAME)
+VALUES (200.00, 0);
+
+INSERT INTO VEHICLE
+(ID, BABY_PROOF, MODEL, NUM_SEATS, PETS_ALLOWED, REG_PLATES, VEHICLE_NAME, LOCATION_ID, AVAILABLE)
+VALUES (888, true, 'TEST', 4, false, '1FK-test', 0, 1, true);
+
+INSERT INTO USERS
+(ID, ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
+VALUES (222, 'DRIVER', true, 'NS, 21000', false, 'driver-test@gmail.com', 'Dejan', 'dejan123', 'dejan.jpg', 'Stankovic', '+8 977 27 20', 888);
+
+
+INSERT INTO RIDE
+(ID, BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, KILOMETERS, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
+ VEHICLE_TYPE, PANIC_ID)
+VALUES  (333, true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 0, 1503.01, 222, null, 1, null);
+
+INSERT INTO ROUTE (KILOMETERS, END_LOCATION_ID, START_LOCATION_ID, RIDE_ID)
+values  (2.5, 111, 222, 333);
+
+INSERT INTO PARTICIPATION(RIDE_ID, PASSENGER_ID)
+VALUES  (333, 111);
