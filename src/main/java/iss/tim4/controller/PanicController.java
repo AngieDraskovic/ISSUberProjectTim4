@@ -24,17 +24,12 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:4200")
 public class PanicController {
     @Autowired
-    @Qualifier("panicServiceImpl")
-    private PanicService panicService;
+    private PanicServiceJPA panicService;
 
-//    @GetMapping
-//    public ResponseEntity<Collection<PanicDTO>> getDrivers() {
-//        return new ResponseEntity<>(panicServiceJPA.findAll(), HttpStatus.OK);
-//    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<UberPageDTO<PanicDTO>> getDrivers(Pageable pageable) {
+    public ResponseEntity<UberPageDTO<PanicDTO>> getPanics(Pageable pageable) {
         return new ResponseEntity<>(panicService.findAll(pageable), HttpStatus.OK);
     }
 }

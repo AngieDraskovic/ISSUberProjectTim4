@@ -233,7 +233,7 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Calculate The Cost Of Ride With Valid Data")
     public void shouldCalculateCost(){
-        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0);
+        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0,1);
 
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(10.0);
         double expectedCost = 1200.0;
@@ -249,7 +249,7 @@ RideServiceTest {
     @DisplayName("Test Should Calculate Cost With Zero Kilometers")
     public void shoudCalculateCostWithZeroKilometers() {
 
-        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 0.0);
+        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 0.0, 1);
         double expectedCost = 0.0;
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(10.0);
 
@@ -262,7 +262,7 @@ RideServiceTest {
     @DisplayName("Test Should Throw An Exception When Calculating Cost With Negative Kilometers")
     public void shouldCalculateCostWithNegativeKilometers() {
 
-        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, -1.0);
+        RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, -1.0,1);
 
         assertThrows(IllegalArgumentException.class, (Executable) () -> rideService.calculateCost(rideDTO));
 
@@ -271,7 +271,7 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Return Cost Of Ride For Luxury Vehicle Type")
     public void shouldCalculateCostWithDifferentVehicleType() {
-        RideDTORequest rideDTO = new RideDTORequest(VehicleName.LUXURY, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0);
+        RideDTORequest rideDTO = new RideDTORequest(VehicleName.LUXURY, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0, 1);
         double expectedCost = 2400.0;
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(20.0);
 
@@ -284,7 +284,7 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Throw An Exception When Vehicle Type Is Null")
     public void shouldThrowAnExceptionWhenTypeIsNull() {
-        RideDTORequest rideDTO = new RideDTORequest(null, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0);
+        RideDTORequest rideDTO = new RideDTORequest(null, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0, 1);
 
         Mockito.when(vehicleTypeService.getPriceForVehicleType(null)).thenAnswer(invocation -> {
                     throw new IllegalArgumentException();

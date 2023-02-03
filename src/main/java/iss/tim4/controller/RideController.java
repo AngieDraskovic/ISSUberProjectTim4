@@ -263,6 +263,8 @@ public class RideController {
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
+
+
     @GetMapping(value = "/passenger/{passengerId}/active")
     @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
     public <T> ResponseEntity<T> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
@@ -300,30 +302,14 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if (!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.STARTED)) {
+        System.out.println(ride.getStatus());
+        if (!ride.getStatus().equals(RideStatus.PENDING) && !ride.getStatus().equals(RideStatus.STARTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
-        ride.getRejection().setReason("Ride is cancelled by passenger");
+       // ride.getRejection().setReason("Ride is cancelled by passenger");
         ride.setStatus(RideStatus.CANCELED);
+
         RideDTOResponse result = new RideDTOResponse(ride);
-        return new ResponseEntity<>(result, HttpStatus.OK);
-
-    }
-
-    @PutMapping(value = "/{id}/panic")
-    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
-    public ResponseEntity<PanicDTO> panicRide(@RequestBody ReasonDTO reasonDTO, @PathVariable Integer id) {
-        Ride ride = rideServiceJPA.findOne(id);
-        if (ride == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        Panic p = new Panic();
-        //p.setId(563);
-        p.setReason(reasonDTO.getReason());
-        p.setTime(LocalDateTime.parse("2022-10-10T10:32:32"));
-        p.setUser(userServiceJPA.getUserById(id));
-        p.setRide(ride);
-        PanicDTO result = new PanicDTO(p);
         return new ResponseEntity<>(result, HttpStatus.OK);
 
     }
@@ -378,8 +364,8 @@ public class RideController {
         if (ride == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Ride does not exist!", HttpStatus.NOT_FOUND);
         }
-        if (!ride.getStatus().equals(RideStatus.STARTED)) {
-            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot end a ride that is not in status STARTED! ");
+        if (!ride.getStatus().equals(RideStatus.ACTIVE)) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot end a ride that is not in status ACTIVE! ");
         }
         ride.setStatus(RideStatus.FINISHED);
         ride.setEndTime(LocalDateTime.now());
@@ -506,32 +492,49 @@ public class RideController {
 //        passengerServiceJPA.save(passenger);
 
 //        favouriteRouteServiceJPA.remove(id);
-        return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
+        return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);     // TODO: Treba deleted, ali ne znam koji je status
     }
 
     @PutMapping(value = "/{id}/panic-ride")
     @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
-    public ResponseEntity<PanicDTO> panicRide2(@RequestBody  PanicDTORequest panicDTORequest, @PathVariable Integer id){
+    public ResponseEntity<PanicDTO> panicRide2(@RequestBody  PanicDTORequest panicDTORequest, @PathVariable Integer id, Principal user) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        User user = userServiceJPA.getUserById(panicDTORequest.getUserId());
-
+        if(ride.getPanic()!=null){
+            throw new UberException(HttpStatus.BAD_REQUEST , "There is already a panic for this ride caused by: " + ride.getPanic().getUser().getEmail());
+        }
+        // user that clicked on panic
+        var actualUser = userServiceJPA.getUser(user.getName());
         Panic p = new Panic(panicDTORequest);
-        p.setUser(user);
+        p.setUser(actualUser);
         p.setRide(ride);
-
-        ride.setStatus(RideStatus.FINISHED);
+        p.setTime(LocalDateTime.now());
         ride.setPanic(p);
         rideServiceJPA.save(ride);
-
-        Vehicle vehicle = ride.getDriver().getVehicle();
-        vehicle.setAvailable(true);
-        vehicleServiceJPA.save(vehicle);
-
         PanicDTO result = new PanicDTO(p);
+        List<User> admins = userServiceJPA.findByRole(Role.ADMIN);
+        // sends message to all admins
+        for(User admin : admins){
+            messagingTemplate.convertAndSend(
+                    "/topic/panic/" + admin.getId(),
+                    new GenericMessage<>(result)
+            );
+        }
+
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+
+    @GetMapping(value="/active")
+    public ResponseEntity activeRides(){
+        List<Ride> activeRides = rideServiceJPA.getActiveRides();
+        List<RideDTO> response = new ArrayList<>();
+        for(Ride r : activeRides){
+            response.add(new RideDTO(r));
+        }
+
+        return new ResponseEntity(response, HttpStatus.OK);
+    }
 }

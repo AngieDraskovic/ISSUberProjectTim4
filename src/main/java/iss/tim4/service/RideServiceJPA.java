@@ -2,6 +2,7 @@ package iss.tim4.service;
 
 
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.dto.OneRideOfPassengerDTO;
 import iss.tim4.domain.dto.UberPageDTO;
 import iss.tim4.domain.dto.ride.RideDTORequest;
@@ -85,5 +86,9 @@ public class RideServiceJPA {
         }
 
         return filteredList;
+    }
+
+    public List<Ride> getActiveRides(){
+        return rideRepositoryJPA.findActiveRides(RideStatus.ACTIVE);
     }
 }

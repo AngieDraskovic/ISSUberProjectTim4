@@ -1,5 +1,6 @@
 package iss.tim4.repository;
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.model.Ride;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,6 +30,7 @@ public interface RideRepositoryJPA extends JpaRepository<Ride,Integer> {
   @Query("SELECT r FROM Ride r WHERE r.driver.id = :driverId")
   List<Ride> findByDriverId(@Param("driverId") Integer driverId);
 
-
+  @Query("SELECT r FROM Ride r WHERE r.status = :status")
+  List<Ride> findActiveRides(@Param("status") RideStatus status);
 
 }
