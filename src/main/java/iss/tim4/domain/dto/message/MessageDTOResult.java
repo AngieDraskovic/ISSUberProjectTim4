@@ -1,4 +1,4 @@
-package iss.tim4.domain.dto;
+package iss.tim4.domain.dto.message;
 
 import iss.tim4.domain.MessageType;
 import iss.tim4.domain.dto.user.UserDTO;
@@ -15,9 +15,9 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class MessageDTO {
+public class MessageDTOResult {
 
-    private Long id;
+    private Integer id;
     @Valid
     private UserDTO sender;
     @Valid
@@ -30,7 +30,7 @@ public class MessageDTO {
     private MessageType type;
     private Integer rideId;    // Ne mora za voznju biti poruka
 
-    public MessageDTO(Message message) {
+    public MessageDTOResult(Message message) {
         this.id = message.getId();
         this.sender = new UserDTO(message.getSender());
         this.receiver = new UserDTO(message.getReceiver());

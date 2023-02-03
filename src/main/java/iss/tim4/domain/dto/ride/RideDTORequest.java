@@ -21,7 +21,6 @@ public class RideDTORequest {
 
     @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
-
     private Boolean babyTransport;
     private Boolean petTransport;
     private PassengerDTOResult[] passengers;
@@ -35,6 +34,6 @@ public class RideDTORequest {
     private Double estimatedTime;
 
     @DecimalMin(value = "0.0", inclusive = true, message = "Ride must be above 0.0 kilometers")
-    private double kilometers;
+    private Double kilometers;
 
 }

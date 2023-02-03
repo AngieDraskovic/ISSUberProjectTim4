@@ -79,7 +79,7 @@ public class PassengerController {
 
     // get by id - /api/passenger/1
     @GetMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
+//    @PreAuthorize("hasAnyRole('ADMIN', 'PASSENGER')")
     public ResponseEntity<PassengerDTOResult> getPassenger(@PathVariable("id") Integer id) {
         Passenger passenger = passengerServiceJPA.findOne(id);
 
