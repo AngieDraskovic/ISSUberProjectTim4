@@ -2,6 +2,8 @@ package iss.tim4.domain.model;
 
 import iss.tim4.domain.MessageType;
 import javax.persistence.*;
+
+import iss.tim4.domain.dto.message.MessageDTORequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -17,7 +19,7 @@ public class Message {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @OneToOne
     @JoinColumn(name = "sender_id", referencedColumnName = "id")
@@ -38,6 +40,14 @@ public class Message {
 
     @Column(name = "ride_id")
     private Integer rideId;
+
+
+    public Message(MessageDTORequest messageDTORequest) {
+        this.text = messageDTORequest.getText();
+        this.time = messageDTORequest.getTime();
+        this.type = messageDTORequest.getType();
+        this.rideId = messageDTORequest.getRideId();
+    }
 
     @Override
     public boolean equals(Object o) {

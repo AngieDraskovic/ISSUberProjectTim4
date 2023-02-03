@@ -11,6 +11,8 @@ import iss.tim4.domain.dto.ride.RideDTO;
 import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.model.*;
 import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
@@ -54,6 +56,12 @@ public class RideController {
     @Autowired
     private UserServiceJPA userServiceJPA;
 
+    @Autowired
+    private LocationServiceJPA locationServiceJPA;
+    @Autowired
+    private WorkingHoursServiceJPA workingHoursServiceJPA;
+
+
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public <T> ResponseEntity<T> getRide(@PathVariable("id") Integer id) {
@@ -65,7 +73,7 @@ public class RideController {
     }
 
     @PostMapping(consumes = "application/json")
-    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
+//    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot order a ride with these passengers!");
@@ -207,31 +215,50 @@ public class RideController {
     }
 
     @GetMapping(value = "/passenger/{passengerId}/active")
-    @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
     public <T> ResponseEntity<T> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         if (passenger == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+
+        Ride activeRide = new Ride();
         Set<Ride> rides = passenger.getRides();
-        Ride activeRide = rides.iterator().next();      // ovdje samo zelim da uzmem prvi element liste da vrati, jer sad necu implementirati logiku za aktinu voznju
-        activeRide.setStatus(RideStatus.ACTIVE);            // ovdje ovo nije potrebno, samo za kontrolnu tacku sam ovako uradila
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
 
 
     @GetMapping(value = "/driver/{driverId}/active")
-    @PreAuthorize("hasAnyRole('DRIVER', 'ADMIN')")
+//    @PreAuthorize("hasAnyRole('DRIVER', 'ADMIN')")
     public <T> ResponseEntity<T> getDriverActiveRide(@PathVariable("driverId") Integer driverId) {
         Driver driver = driverServiceJPA.findOne(driverId);
         if (driver == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+        Ride activeRide = new Ride();
         Set<Ride> rides = driver.getRides();
-        Ride activeRide = rides.iterator().next();          // i ovdje kao i u gornjoj metodi :D
-        activeRide.setStatus(RideStatus.ACTIVE);
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
 
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
@@ -272,7 +299,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/accept")
-    @PreAuthorize("hasRole('DRIVER')")
+//    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> acceptRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -282,6 +309,8 @@ public class RideController {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot accept a ride that is not in status PENDING! ");
         }
         ride.setStatus(RideStatus.ACCEPTED);
+        rideServiceJPA.save(ride);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -314,7 +343,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/end")
-    @PreAuthorize("hasRole('DRIVER')")
+//    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> finishRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -337,7 +366,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/cancel")
-    @PreAuthorize("hasRole('DRIVER')")
+//    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> rejectRide(@RequestBody RejectionDTO rejectionDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -454,7 +483,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/panic-ride")
-    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
+//    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<PanicDTO> panicRide2(@RequestBody  PanicDTORequest panicDTORequest, @PathVariable Integer id){
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -477,5 +506,29 @@ public class RideController {
         PanicDTO result = new PanicDTO(p);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
+
+
+    // #Test android - post location  api/ride/location
+    @PostMapping(value = "/location", consumes = "application/json")
+    public ResponseEntity<LocationDTO> createLocation(@RequestBody LocationDTO locationDTO) throws Exception {
+        Location location = new Location(locationDTO);
+        locationServiceJPA.save(location);
+        return new ResponseEntity<>(locationDTO, HttpStatus.OK);
+    }
+
+
+    // #Test android - post working-hours  api/ride/test-working-hours
+    @PostMapping(value = "/test-working-hours", consumes = "application/json")
+    public ResponseEntity<WorkingHoursDTOResponse> createLocation(@Valid @RequestBody WorkingHoursDTOResponse workingHoursDTOResponse) throws Exception {
+        WorkingHours workingHours = new WorkingHours();
+        workingHours.setStart(workingHoursDTOResponse.getStart());
+        workingHours.setEnd(workingHoursDTOResponse.getEnd());
+        workingHours.setDriver(driverServiceJPA.findOne(6));
+
+        workingHoursServiceJPA.save(workingHours);
+
+        return new ResponseEntity<>(workingHoursDTOResponse, HttpStatus.OK);
+    }
+
 
 }
