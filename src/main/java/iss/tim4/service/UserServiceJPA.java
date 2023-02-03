@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -143,6 +144,11 @@ public class UserServiceJPA implements UserService {
     @Override
     public void save(User user){
         userRepositoryJPA.save(user);
+    }
+
+
+    public List<User> findByRole(Role role){
+        return userRepositoryJPA.findByRole(Role.ADMIN);
     }
 
 }

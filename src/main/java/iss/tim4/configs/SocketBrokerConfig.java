@@ -23,5 +23,8 @@ public class SocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.addEndpoint("/driver-survey").setAllowedOriginPatterns("*");
         registry.addEndpoint("/driver-survey").setAllowedOriginPatterns("*").withSockJS();
+
+        registry.addEndpoint("/panic").setAllowedOriginPatterns("*");
+        registry.addEndpoint("/panic").setAllowedOriginPatterns("*").withSockJS();
     }
 }
