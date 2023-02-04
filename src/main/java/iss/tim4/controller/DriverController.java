@@ -110,7 +110,7 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")      // moram dodati i drivera radi mobilnih aplikacija
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')") 
     public ResponseEntity<DriverDTOResult> updateDriver(@Valid @RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -274,7 +274,7 @@ public class DriverController {
     // #12 create driver working-hours - POST api/driver/1/working-hours
     @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
     @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
-    public ResponseEntity<WorkingHoursDTOResult> createDriverVehicle(@Valid @RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("id") Integer id) {
+    public ResponseEntity<WorkingHoursDTOResult> createDriverWorkingHour(@Valid @RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
@@ -302,7 +302,7 @@ public class DriverController {
         return new ResponseEntity<>(driverServiceJPA.getRidesOfDriver(pageable, id), HttpStatus.OK);
     }
 
-    // #13.5 get driver next rides - GET api/driver/1/ride
+    // #13.5 get driver next rides - GET api/driver/1/next-rides
     @GetMapping(value = "/{id}/next-rides")
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<List<OneRideOfPassengerDTO>> getDriverNextRides(@PathVariable("id") Integer id, Pageable pageable) {

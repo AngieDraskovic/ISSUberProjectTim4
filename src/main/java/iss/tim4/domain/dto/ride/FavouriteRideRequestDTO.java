@@ -12,6 +12,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 import java.util.Set;
 
 @Data
@@ -19,10 +21,13 @@ import java.util.Set;
 @NoArgsConstructor
 public class FavouriteRideRequestDTO {
 
-
+    // Ovo moze biti null jer je bespotrebno
     private String favoriteName;
+    @Valid
     private RouteDTO[] locations;
+    @Valid
     private PassengerDTOResult[] passengers;            // passengers who have it as a favourite location
+    @NotNull
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;

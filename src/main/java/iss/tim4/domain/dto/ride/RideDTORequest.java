@@ -9,6 +9,9 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.NonNull;
 
+
+import javax.validation.Valid;
+import javax.validation.constraints.DecimalMin;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -20,16 +23,16 @@ public class RideDTORequest {
 
     @NotNull (message = "Field vehicleType is required!")
     private VehicleName vehicleType;
-
     private Boolean babyTransport;
     private Boolean petTransport;
     private PassengerDTOResult[] passengers;
+    @Valid
     private RouteDTO[] locations;
 
     @NotNull (message = "Field startTime is required!")
     private LocalDateTime startTime;
 
-    @NotNull (message = "Field estimatedTime is required!")
+    @DecimalMin(value = "0.0", inclusive = true, message = "EstimatedTime must be above 0.0 minutes")
     private Double estimatedTime;
 
     @NotNull (message = "Field kilometers is required!")
