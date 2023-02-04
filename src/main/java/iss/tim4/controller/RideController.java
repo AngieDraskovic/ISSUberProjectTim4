@@ -332,7 +332,7 @@ public class RideController {
         }
 
         System.out.println(ride.getStatus());
-        if (!ride.getStatus().equals(RideStatus.ACCEPTED) {
+        if (!ride.getStatus().equals(RideStatus.ACCEPTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
        // ride.getRejection().setReason("Ride is cancelled by passenger");
