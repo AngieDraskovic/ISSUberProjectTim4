@@ -12,7 +12,7 @@ import javax.validation.constraints.Size;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class PassengerDTOResponse {
+public class PassengerDTOPost {
 
     private Integer id;
     @NotEmpty(message = "Field name is required!")
@@ -31,7 +31,10 @@ public class PassengerDTOResponse {
     //private boolean blocked;
    // private boolean active;
 
-    public PassengerDTOResponse(Passenger passenger){
+    @NotEmpty(message = "Field for confirming password is required! ")
+    private String confirmPassword;
+
+    public PassengerDTOPost(Passenger passenger){
         this.id = passenger.getId();
         this.name = passenger.getName();
         this.surname = passenger.getSurname();
@@ -40,11 +43,12 @@ public class PassengerDTOResponse {
         this.telephoneNumber = passenger.getTelephoneNumber();
         this.address = passenger.getAddress();
         this.password = passenger.getPassword();
+        this.confirmPassword = passenger.getPassword();
         // this.blocked = passenger.getBlocked();
         // this.active = passenger.getActive();
     }
 
-    public void copyValues(PassengerDTOResponse passenger) {
+    public void copyValues(PassengerDTOPost passenger) {
         this.setName(passenger.getName());
     }
 }

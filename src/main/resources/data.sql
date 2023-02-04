@@ -84,10 +84,10 @@ VALUES (false, 'kuca-poso', false, '2022-12-29 15:21:20', 1, 1.5, 30);
 INSERT INTO RIDE
 (BABIES, END_TIME, ESTIMATED_TIME_IN_MINUTES, KILOMETERS, PETS, START_TIME, STATUS, TOTAL_COST, DRIVER_ID, REJECTION_ID,
  VEHICLE_TYPE, PANIC_ID)
-VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 0, 500, 6, 1, 2, null),
-        (false, '2022-12-26 11:21:20', 142.2, 1.2, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null),
+VALUES  (true, '2023-01-24 04:33:20', 102.2, 0.9, false, '2023-01-21 16:53:20', 0, 500, 6, 1, 2, 1),
+        (false, '2022-12-26 11:21:20', 142.2, 1.2, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, 2),
         (true, '2022-12-31 15:21:20', 32.2, 3.1, true, '2023-01-21 10:53:20', 5, 550, 6, null, 2, null),
-        (true, '2022-12-30 15:21:20', 32.2, 1.1, false, '2023-01-21 11:53:20', 5, 700, 6, null, 2, null),
+        (true, '2022-12-30 15:21:20', 32.2, 1.1, false, '2023-01-21 11:53:20', 4, 700, 6, null, 2, null),
         (true, '2022-12-27 15:21:20', 168.2, 2.3, false, '2023-01-21 12:53:20', 5, 600, 6, null, 2, null);
 
 
@@ -130,8 +130,8 @@ VALUES  ('dobar', 3, 3, 1, 1, 1),
 
 
 INSERT INTO USERS (ROLE, PROFILE_PICTURE, NAME, PASSWORD, SURNAME, EMAIL, ACTIVE, BLOCKED, telephone_number)
-VALUES  ('ADMIN', 'novak.jpg', 'Novak', 'novak123', 'Djokovic', 'nole', TRUE, FALSE, '+7 1'),
-        ('ADMIN', 'terza.jpg', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza', TRUE, FALSE, '+8 1');
+VALUES  ('ADMIN', 'novak.jpg', 'Novak', 'novak123', 'Djokovic', 'novak@gmail.com', TRUE, FALSE, '+7 1');
+
 
 INSERT INTO DRIVER_REQUEST(NEW_ADDRESS, NEW_BABY_PROOF, NEW_EMAIL, NEW_MODEL, NEW_NAME, NEW_NUM_SEATS, NEW_PETS_ALLOWED, NEW_PROFILE_PICTURE, NEW_REG_PLATES, NEW_SURNAME, NEW_TELEPHONE_NUMBER, NEW_VEHICLE_NAME, STATUS, DRIVER_ID, VEHICLE_ID)
 VALUES ('nova adresa', true, 'mejl@gmail.com', 'bmw', 'Marko', 4, true, 'slika.jpg', 'SFD-4S', 'Markovic', '034952398', 2, 1, 9, 4);

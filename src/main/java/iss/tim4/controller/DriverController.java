@@ -110,7 +110,7 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")      // moram dodati i drivera radi mobilnih aplikacija
     public ResponseEntity<DriverDTOResult> updateDriver(@Valid @RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){

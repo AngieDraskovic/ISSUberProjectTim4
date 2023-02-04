@@ -1,7 +1,7 @@
 package iss.tim4.service;
 
 import iss.tim4.domain.dto.*;
-import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
+import iss.tim4.domain.dto.passenger.PassengerDTOPost;
 import iss.tim4.domain.dto.review.ReviewDTOResult;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
@@ -21,7 +21,7 @@ public class ReviewServiceImpl implements ReviewService {
                 5,
                 5,
                 "KEK",
-                new PassengerDTOResponse(passengerServiceJPA.findAll().get(0)));
+                new PassengerDTOPost(passengerServiceJPA.findAll().get(0)));
     }
 
     @Override

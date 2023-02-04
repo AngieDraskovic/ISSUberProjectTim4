@@ -25,6 +25,7 @@ import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
+import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 
@@ -133,16 +134,21 @@ public class UserServiceJPA implements UserService {
         activationRepositoryJPA.save(activation);
 
         String message = "Dear, " + user.getName() +
-                "!\n\n" + "This is your code for a password reset:\n" + activation.getCode() +
+                "!\n\n" + "Click on this link to confirm password reset:\n http://localhost:4200/login/reset?code=" + activation.getCode() + "/?email=" +email +
+                "/?id=" + user.getId() +
                 "\n\nIf you did not perform password reset - contact our support: " +
                 "support@easy.go" + "\n\nBest regards,\nEasyGo team!";
-
         emailService.sendSimpleMessage(email, "Password reset", message);
     }
 
     @Override
     public void save(User user){
         userRepositoryJPA.save(user);
+    }
+
+
+    public List<User> findByRole(Role role){
+        return userRepositoryJPA.findByRole(Role.ADMIN);
     }
 
 }
