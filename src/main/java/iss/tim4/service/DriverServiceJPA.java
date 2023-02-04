@@ -24,10 +24,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class DriverServiceJPA {
@@ -73,12 +70,20 @@ public class DriverServiceJPA {
         return rideRepositoryJPA.findByDriverId(driverId);
     }
 
-    public Driver findAvailableDriver(RideDTORequest rideDTO) {
+    public Driver findAvailableDriver(RideDTORequest rideDTO)
+    {
+        return findAvailableDriver(rideDTO, List.of());
+    }
+
+    public Driver findAvailableDriver(RideDTORequest rideDTO, List<Driver> alreadyAsked) {
         List<Driver> allDrivers = findAll();
         List<Driver> availableDrivers = new ArrayList<Driver>();    // Sve slobodne ovde pa cemo posle od njih najblizeg da nadjemo
         List<Driver> busyDrivers = new ArrayList<Driver>();     // Ako su svi zauzeti biramo onog koji je najblizi da zavrsi voznju
         HashMap<Driver, Ride> possibleBusyDrivers;
         for (Driver driver : allDrivers) {
+            if (alreadyAsked.stream().anyMatch(driver1 -> Objects.equals(driver1.getId(), driver.getId()))) {
+                continue;
+            }
             if (!driver.getActive() || driver.getBlocked())
                 continue;
             if (!driver.compatibileVehicle(rideDTO))

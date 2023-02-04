@@ -1,6 +1,6 @@
 package iss.tim4.domain.dto.review;
 
-import iss.tim4.domain.dto.passenger.PassengerDTOResponse;
+import iss.tim4.domain.dto.passenger.PassengerDTOPost;
 import iss.tim4.domain.model.Review;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,13 +28,13 @@ public class ReviewDTOResult {
     @Size(max = 300, message = "Field comment cannot be longer than 300 characters!")
     private String comment;
     @NotNull (message = "Field passenger is required!")
-    private PassengerDTOResponse passenger;
+    private PassengerDTOPost passenger;
 
     public ReviewDTOResult(Review review) {
         this.id = review.getId();
         this.driverGrade = review.getDriverGrade();
         this.vehicleGrade = review.getVehicleGrade();
         this.comment = review.getComment();
-        this.passenger = new PassengerDTOResponse(review.getPassenger());
+        this.passenger = new PassengerDTOPost(review.getPassenger());
     }
 }

@@ -23,6 +23,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.Header;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -30,6 +34,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -105,7 +110,7 @@ public class DriverController {
 
     // #4 update driver - GET api/driver/1
     @PutMapping(value = "/{id}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')") 
     public ResponseEntity<DriverDTOResult> updateDriver(@Valid @RequestBody DriverDTOUpdate driverDTOResponse, @PathVariable Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -353,7 +358,7 @@ public class DriverController {
     @PostMapping(value = "/driver-request", consumes = "application/json")
     @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<DriverRequestDTOResult> createDriverRequest(@RequestBody DriverRequestDTORequest driverRequestDTORequest) {
-        Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId().intValue());
+        Driver driver = driverServiceJPA.findOne(driverRequestDTORequest.getDriverId());
         Vehicle vehicle = vehicleServiceJPA.findOne(driverRequestDTORequest.getVehicleId());
         DriverRequest driverRequest = new DriverRequest(driver, vehicle, driverRequestDTORequest);
         driverRequestServiceJPA.save(driverRequest);

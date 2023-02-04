@@ -9,14 +9,15 @@ INSERT INTO USERS(id, role, active, address, blocked, email, name, password, pro
 VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'strahinja@gmail.com', 'Strahinja', 'strahinja123', 'strahinja.jpg', 'Erakovic', '+7 977 977 27 21');
 
 INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
-VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 54.6, 64.2),
-       ('Narodnog Fronta 12, Novi Sad', 74.2, 84.3),
-       ('Futoska 12, Novi Sad', 54.4, 64.7),
-       ('Strazilovska 24, Novi Sad', 54.8, 64.0),
-       ('Hadzi Ruvimova 22, Novi Sad', 45.8, 20.0),
-       ('Kisacka 56, Novi Sad', 54.8, 64.0),
-       ('Aleksandra Tisme 8 22, Novi Sad', 54.8, 64.0),
-       ('Patrijarha Rajacica 16a, Novi Sad', 42.3, 21.1);
+VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 45.259728, 19.813830),
+       ('Dorda Raicovica 20, Novi Sad', 45.264812, 19.849088),
+       ('Narodnog Fronta 12, Novi Sad', 45.241902, 19.841965),
+       ('Futoska 12, Novi Sad', 45.248779, 19.816070),
+       ('Strazilovska 24, Novi Sad', 45.248601, 19.848709),
+       ('Hadzi Ruvimova 22, Novi Sad', 45.257372, 19.816070),
+       ('Kisacka 56, Novi Sad', 45.265093, 19.836606),
+       ('Aleksandra Tisme 8 22, Novi Sad', 45.258883, 19.849630),
+       ('Patrijarha Rajacica 16a, Novi Sad', 45.254684, 19.873344);
 
 INSERT INTO VEHICLE_TYPE
     (PRICE, VEHICLE_NAME)
@@ -60,7 +61,7 @@ VALUES  ('1.jpg', 'DRIVER licence', 6),
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
 VALUES  ('2023-01-17 00:21:20','2023-01-17 01:24:20', 6),
-        ('2022-10-10 10:21:20','2022-10-10 17:21:20', 7),
+        ('2022-10-10 20:21:20','2022-10-10 21:21:20', 7),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 8),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 9),
         ('2023-01-17 02:21:20', '2023-01-17 03:21:20', 6);
@@ -129,8 +130,8 @@ VALUES  ('dobar', 3, 3, 1, 1, 1),
 
 
 INSERT INTO USERS (ROLE, PROFILE_PICTURE, NAME, PASSWORD, SURNAME, EMAIL, ACTIVE, BLOCKED, telephone_number)
-VALUES  ('ADMIN', 'novak.jpg', 'Novak', 'novak123', 'Djokovic', 'nole', TRUE, FALSE, '+7 1'),
-        ('ADMIN', 'terza.jpg', 'Zvezdan', 'zvezdan123', 'Terzic', 'terza', TRUE, FALSE, '+8 1');
+VALUES  ('ADMIN', 'novak.jpg', 'Novak', 'novak123', 'Djokovic', 'novak@gmail.com', TRUE, FALSE, '+7 1');
+
 
 INSERT INTO DRIVER_REQUEST(NEW_ADDRESS, NEW_BABY_PROOF, NEW_EMAIL, NEW_MODEL, NEW_NAME, NEW_NUM_SEATS, NEW_PETS_ALLOWED, NEW_PROFILE_PICTURE, NEW_REG_PLATES, NEW_SURNAME, NEW_TELEPHONE_NUMBER, NEW_VEHICLE_NAME, STATUS, DRIVER_ID, VEHICLE_ID)
 VALUES ('nova adresa', true, 'mejl@gmail.com', 'bmw', 'Marko', 4, true, 'slika.jpg', 'SFD-4S', 'Markovic', '034952398', 2, 1, 9, 4);

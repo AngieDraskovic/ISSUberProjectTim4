@@ -147,6 +147,7 @@ public class UserController {
 
     @PutMapping(value = "/{id}/resetPassword")
     public ResponseEntity<Void> resetPassword(
+            @Valid
             @PathVariable("id") Integer id,
             @RequestBody ResetPasswordDTO newPassword
     ) throws UberException {
