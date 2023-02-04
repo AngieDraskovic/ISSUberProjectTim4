@@ -1,5 +1,7 @@
 package iss.tim4.domain.dto.ride;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.RejectionDTO;
@@ -28,7 +30,9 @@ public class RideDTOResponse {
 
     private Integer id;
     @NotNull(message = "Field startTime is required!")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime endTime;
     @NotNull (message = "Field totalCost is required!")
     private Double totalCost;
