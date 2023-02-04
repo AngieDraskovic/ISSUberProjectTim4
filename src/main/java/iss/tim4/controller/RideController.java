@@ -73,7 +73,7 @@ public class RideController {
     }
 
     @PostMapping(consumes = "application/json")
-//    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
+    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<RideDTOResponse> createRide(@Valid @RequestBody RideDTORequest rideDTO) throws Exception {
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot order a ride with these passengers!");
@@ -215,7 +215,7 @@ public class RideController {
     }
 
     @GetMapping(value = "/passenger/{passengerId}/active")
-//    @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
     public <T> ResponseEntity<T> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         if (passenger == null) {
@@ -240,7 +240,7 @@ public class RideController {
 
 
     @GetMapping(value = "/driver/{driverId}/active")
-//    @PreAuthorize("hasAnyRole('DRIVER', 'ADMIN')")
+    @PreAuthorize("hasAnyRole('DRIVER', 'ADMIN')")
     public <T> ResponseEntity<T> getDriverActiveRide(@PathVariable("driverId") Integer driverId) {
         Driver driver = driverServiceJPA.findOne(driverId);
         if (driver == null) {
@@ -270,7 +270,7 @@ public class RideController {
         if(ride==null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        if(!ride.getStatus().equals(RideStatus.PENDING) || !ride.getStatus().equals(RideStatus.STARTED)){
+        if(!ride.getStatus().equals(RideStatus.PENDING)){
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
         ride.getRejection().setReason("Ride is cancelled by passenger");
@@ -299,7 +299,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/accept")
-//    @PreAuthorize("hasRole('DRIVER')")
+    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> acceptRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -343,7 +343,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/end")
-//    @PreAuthorize("hasRole('DRIVER')")
+    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> finishRide(@PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -366,7 +366,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/cancel")
-//    @PreAuthorize("hasRole('DRIVER')")
+    @PreAuthorize("hasRole('DRIVER')")
     public <T> ResponseEntity<T> rejectRide(@RequestBody RejectionDTO rejectionDTO, @PathVariable Integer id) throws UberException {
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){
@@ -483,7 +483,7 @@ public class RideController {
     }
 
     @PutMapping(value = "/{id}/panic-ride")
-//    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
+    @PreAuthorize("hasAnyRole('DRIVER', 'PASSENGER')")
     public ResponseEntity<PanicDTO> panicRide2(@RequestBody  PanicDTORequest panicDTORequest, @PathVariable Integer id){
         Ride ride = rideServiceJPA.findOne(id);
         if(ride==null){

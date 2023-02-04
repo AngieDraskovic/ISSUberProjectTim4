@@ -91,7 +91,7 @@ public class DriverController {
 
     // #3 get driver by id - GET api/driver/1
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-//    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public <T> ResponseEntity<T> getDriver(@PathVariable("id") Integer id) throws UberException {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -253,7 +253,7 @@ public class DriverController {
 
     // #11.5 get active driver working hours - GET api/driver/1/active-working-hours
     @GetMapping(value = "/{id}/active-working-hour", produces = MediaType.APPLICATION_JSON_VALUE)                      //TODO Mora biti pageable
-//    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public <T> ResponseEntity<T> getDriverActiveWorkingHour(@PathVariable("id")  Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -268,7 +268,7 @@ public class DriverController {
 
     // #12 create driver working-hours - POST api/driver/1/working-hours
     @PostMapping(value = "/{id}/working-hour", consumes = "application/json")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public ResponseEntity<WorkingHoursDTOResult> createDriverWorkingHour(@Valid @RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("id") Integer id) {
         Driver driver = driverServiceJPA.findOne(id);
         if(driver == null){
@@ -299,7 +299,7 @@ public class DriverController {
 
     // #13.5 get driver next rides - GET api/driver/1/next-rides
     @GetMapping(value = "/{id}/next-rides")
-//    @PreAuthorize("hasRole('DRIVER')")
+    @PreAuthorize("hasRole('DRIVER')")
     public ResponseEntity<List<OneRideOfPassengerDTO>> getDriverNextRides(@PathVariable("id") Integer id, Pageable pageable) {
         Driver driver = driverServiceJPA.findOne(id);
         if (driver == null) {
@@ -330,7 +330,7 @@ public class DriverController {
 
     // #15 update driver vehicle - PUT api/driver/working-hour/1
     @PutMapping(value = "/working-hour/{working-hour-id}", consumes = "application/json")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'DRIVER')")
     public <T> ResponseEntity<T> updateWorkingHour(@RequestBody WorkingHoursDTOResponse workingHoursDTOResponse, @PathVariable("working-hour-id") Integer id) {
         WorkingHours workingHours = workingHoursServiceJPA.findOne(id);
         if(workingHours==null){
