@@ -13,9 +13,13 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.messaging.support.GenericMessage;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
@@ -32,19 +36,23 @@ public class VehicleController {
     @Autowired
     private LocationServiceJPA locationServiceJPA;
 
+    @Autowired
+    private SimpMessagingTemplate messagingTemplate;
     // #1
-     @GetMapping("/all")
-    public ResponseEntity getAllVehicles() {
-         vehicleServiceJPA.checkVehicleAvailability();
-         List<Vehicle> vehicles = vehicleServiceJPA.findAll();
-         List<VehicleDTOResponse> vehicleDTOResponses = new ArrayList<>();
-         for(Vehicle v : vehicles) {
+    @Transactional
+    @Scheduled(cron = "*/5 * * * * *")
+    public void getAllVehicles() {
+        vehicleServiceJPA.checkVehicleAvailability();
+        List<Vehicle> vehicles = vehicleServiceJPA.findAll();
+        List<VehicleDTOResponse> vehicleDTOResponses = new ArrayList<>();
+        for (Vehicle v : vehicles) {
             VehicleDTOResponse result = new VehicleDTOResponse(v);
             vehicleDTOResponses.add(result);
-         }
-         return new ResponseEntity<>(vehicleDTOResponses, HttpStatus.OK);
-
+        }
+        messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(vehicleDTOResponses));
     }
+
+
     // #2 update vehicle location - PUT api/vehicle/1/location
     @PreAuthorize("hasRole('DRIVER')")
     @PutMapping(value = "/{id}/location", consumes = "application/json")

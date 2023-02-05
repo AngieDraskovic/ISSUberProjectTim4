@@ -10,13 +10,13 @@ VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'strahinja@gmail.com', 'Stra
 
 INSERT INTO LOCATION (ADDRESS, GEO_WIDTH, GEO_LENGTH)
 VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 45.259728, 19.813830),
-       ('Dorda Raicovica 20, Novi Sad', 45.264812, 19.849088),
+       ('dr Svetislava Kasapinovica 55, Novi Sad', 45.264812, 19.849088),
        ('Narodnog Fronta 12, Novi Sad', 45.241902, 19.841965),
        ('Futoska 12, Novi Sad', 45.248779, 19.816070),
        ('Strazilovska 24, Novi Sad', 45.248601, 19.848709),
        ('Hadzi Ruvimova 22, Novi Sad', 45.257372, 19.816070),
        ('Kisacka 56, Novi Sad', 45.265093, 19.836606),
-       ('Aleksandra Tisme 8 22, Novi Sad', 45.258883, 19.849630),
+       ('Aleksandra Tisme 8, Novi Sad', 45.258883, 19.849630),
        ('Patrijarha Rajacica 16a, Novi Sad', 45.254684, 19.873344);
 
 INSERT INTO VEHICLE_TYPE

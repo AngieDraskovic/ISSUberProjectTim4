@@ -24,9 +24,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.support.GenericMessage;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.security.Principal;
 import java.text.DecimalFormat;
@@ -599,15 +601,16 @@ public class RideController {
 
 
 
-    @GetMapping(value="/active")
-    public ResponseEntity activeRides(){
+    @Transactional
+    @Scheduled(cron = "*/5 * * * * *")
+    public void activeRides(){
         List<Ride> activeRides = rideServiceJPA.getActiveRides();
         List<RideDTO> response = new ArrayList<>();
         for(Ride r : activeRides){
             response.add(new RideDTO(r));
         }
 
-        return new ResponseEntity(response, HttpStatus.OK);
+        messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(response));
     }
 
 }
