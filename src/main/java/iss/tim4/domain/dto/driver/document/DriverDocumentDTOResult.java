@@ -5,15 +5,21 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class DriverDocumentDTOResult {
 
-    private Long id;
+    private Integer id;
+    @NotEmpty (message = "Field name is required!")
     private String name;
+    @NotEmpty (message = "Field documentImage is required!")
     private String documentImage;
-    private Long driverId;
+    @NotNull (message = "Field driverId is required!")
+    private Integer driverId;
 
     public DriverDocumentDTOResult(DriverDocument driverDocument) {
         this.id = driverDocument.getId();

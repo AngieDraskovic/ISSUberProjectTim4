@@ -1,7 +1,7 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -17,7 +17,7 @@ public class WorkingHours {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "start_time")
     private LocalDateTime start;

@@ -1,7 +1,7 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.driver.document.DriverDocumentDTOResponse;
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -16,7 +16,7 @@ public class DriverDocument {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "name", nullable = false)
     private String name;

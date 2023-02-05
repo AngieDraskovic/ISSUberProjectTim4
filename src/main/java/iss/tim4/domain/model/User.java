@@ -1,6 +1,6 @@
 package iss.tim4.domain.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -14,44 +14,48 @@ import java.util.Set;
 @RequiredArgsConstructor
 @Entity
 @Table(name = "users")
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name="role", discriminatorType=DiscriminatorType.STRING)
+@DiscriminatorValue("DEFAULT")
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    protected Integer id;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "role", nullable = false, insertable=false, updatable=false)
+    private Role role;
 
     @Column(name = "name", nullable = false)
-    private String name;
+    protected String name;
 
     @Column(name = "surname", nullable = false)
-    private String surname;
+    protected String surname;
 
-    @Column(name = "img_path")  // nullable=true (default value)
-    private String imgPath;
+    @Column(name = "profile_picture")  // nullable=true (default value)
+    protected String profilePicture;
 
-    @Column(name = "phone", unique = true, nullable = false)
-    private String phone;
+    @Column(name = "telephone_number", unique = true, nullable = false)
+    protected String telephoneNumber;
 
     @Column(name = "email", unique = true, nullable = false)
-    private String email;
+    protected String email;
 
-    @Column(name = "address", nullable = false)
-    private String address;
+    @Column(name = "address")
+    protected String address;
 
     @Column(name = "password", nullable = false)
-    private String password;
+    protected String password;
 
     @Column(name = "blocked", nullable = false)
-    private Boolean blocked;
+    protected Boolean blocked;
 
-    /* I nema neke velike potrebe da se u bazi cuva da li je korisnik trenutno aktivan, ali
-       nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
-     */
     @Column(name = "active", nullable = false)
-    private Boolean active;
+    protected Boolean active;
 
     @OneToMany(mappedBy = "user", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<Remark> remarks = new HashSet<Remark>();
+    protected Set<Remark> remarks = new HashSet<Remark>();
 
     public void addRemark(Remark remark){
         remarks.add(remark);
@@ -69,5 +73,13 @@ public class User {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public org.springframework.security.core.userdetails.UserDetails toUserDetails() {
+        return org.springframework.security.core.userdetails.User
+                .withUsername(this.getEmail())
+                .password(this.getPassword())
+                .roles(this.getRole().toString())
+                .build();
     }
 }

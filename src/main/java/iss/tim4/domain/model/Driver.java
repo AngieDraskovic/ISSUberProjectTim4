@@ -1,7 +1,11 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.dto.driver.DriverDTOResponse;
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import iss.tim4.domain.dto.driver.request.DriverDTOUpdate;
+import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -14,41 +18,8 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Driver {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @Column(name = "profilePicture")  // nullable=true (default value)
-    private String profilePicture;
-
-    @Column(name = "telephoneNumber", unique = true, nullable = false)
-    private String telephoneNumber;
-
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
-    @Column(name = "address", nullable = false)
-    private String address;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "blocked", nullable = false)
-    private Boolean blocked;
-
-    /* I nema neke velike potrebe da se u bazi cuva da li je korisnik trenutno aktivan, ali
-    nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
-     */
-    @Column(name = "active", nullable = false)
-    private Boolean active;
+@DiscriminatorValue("DRIVER")
+public class Driver extends User {
 
     @OneToMany(mappedBy = "driver", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @ToString.Exclude
@@ -62,6 +33,7 @@ public class Driver {
     @JoinColumn(name = "vehicle_id", referencedColumnName = "id")
     @ToString.Exclude
     private Vehicle vehicle;
+
 
     public Driver(DriverDTOResponse driverDTOResponse) {
         this.name = driverDTOResponse.getName();
@@ -111,5 +83,42 @@ public class Driver {
         this.email = driverDTOResponse.getEmail();
         this.address = driverDTOResponse.getAddress();
         this.password = driverDTOResponse.getPassword();
+    }
+
+    public void updateDriver(DriverDTOUpdate driverDTOResponse) {
+        this.name = driverDTOResponse.getName();
+        this.surname = driverDTOResponse.getSurname();
+        this.profilePicture = driverDTOResponse.getProfilePicture();
+        this.telephoneNumber = driverDTOResponse.getTelephoneNumber();
+        this.email = driverDTOResponse.getEmail();
+        this.address = driverDTOResponse.getAddress();
+       // this.password = driverDTOResponse.getPassword();
+    }
+
+    public boolean isAvailable(RideDTORequest newRide) {
+        for (Ride ride : this.rides) {
+            if (this.isBusy(ride, newRide))
+                return false;
+        }
+        return true;
+    }
+
+    public boolean isBusy(Ride ride, RideDTORequest newRide) {
+        return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTime().longValue()))
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes(ride.getEstimatedTimeInMinutes().longValue()));
+    }
+
+    public boolean isBusy2(Ride ride, Ride newRide) {
+        return ride.getStartTime().isBefore(newRide.getStartTime().plusMinutes( newRide.getEstimatedTimeInMinutes().longValue()))
+                && newRide.getStartTime().isBefore(ride.getStartTime().plusMinutes((ride.getEstimatedTimeInMinutes().longValue())));
+    }
+
+
+    public boolean compatibileVehicle(RideDTORequest rideDTO) {
+        if (!rideDTO.getVehicleType().equals(this.vehicle.getVehicleName()))
+            return false;
+        if (rideDTO.getPetTransport() && !this.vehicle.getPetsAllowed())
+            return false;
+        return !rideDTO.getBabyTransport() || this.vehicle.getBabyProof();
     }
 }

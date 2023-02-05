@@ -1,6 +1,8 @@
 package iss.tim4.domain.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import iss.tim4.domain.dto.passenger.PassengerRideDTO;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -13,41 +15,8 @@ import java.util.Set;
 @ToString
 @RequiredArgsConstructor
 @Entity
-public class Passenger {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
-
-    @Column(name = "name", nullable = false)
-    private String name;
-
-    @Column(name = "surname", nullable = false)
-    private String surname;
-
-    @Column(name = "profile_picture")  // nullable=true (default value)
-    private String profilePicture;
-
-    @Column(name = "telephone_number", unique = true, nullable = false)
-    private String telephoneNumber;
-
-    @Column(name = "email", unique = true, nullable = false)
-    private String email;
-
-    @Column(name = "address", nullable = false)
-    private String address;
-
-    @Column(name = "password", nullable = false)
-    private String password;
-
-    @Column(name = "blocked", nullable = false)
-    private Boolean blocked;
-
-    /* I nema neke velike potrebe da se u bazi cuva da li je korisnik trenutno aktivan, ali
-       nek stoji da ne razmisljamo o tome, nek su svi atributi u bazi.
-     */
-    @Column(name = "active", nullable = false)
-    private Boolean active;
+@DiscriminatorValue("PASSENGER")
+public class Passenger extends User {
 
     /* Naziv tabele je participation jer putnici ucestvuju u voznji, a glupo bi bilo i ordering jer ne mora putnik
     *  da poruci voznju da bi ucestvovao u njoj, moze jedan putnik da poruci za vise njih. */
@@ -55,6 +24,12 @@ public class Passenger {
     @JoinTable(name = "participation", joinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "ride_id", referencedColumnName = "id"))
     @ToString.Exclude
     private Set<Ride> rides = new HashSet<Ride>();
+
+    @ManyToMany(cascade = {CascadeType.PERSIST,CascadeType.MERGE,CascadeType.DETACH})
+    @JoinTable(name = "favourite_route_passenger", joinColumns = @JoinColumn(name = "passenger_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "favourite_route_id", referencedColumnName = "id"))
+    @ToString.Exclude
+    private Set<FavouriteRoute> favouriteRoutes = new HashSet<FavouriteRoute>();
+
 
     /* Unidirekciona veza putnika i njegovih omiljenih ruta. U tabeli FavouriteRoute se cuva id putnika.    TODO:promjeniti da bude klasa FavouriteRoute
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
@@ -69,6 +44,7 @@ public class Passenger {
         rides.add(ride);
         ride.getPassengers().add(this);
     }
+
 
 
 

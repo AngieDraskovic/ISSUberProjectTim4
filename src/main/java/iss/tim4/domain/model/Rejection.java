@@ -1,6 +1,8 @@
 package iss.tim4.domain.model;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import iss.tim4.domain.dto.RejectionDTO;
 import lombok.*;
 import org.hibernate.Hibernate;
 
@@ -19,6 +21,7 @@ public class Rejection {
     private Long id;
 
     @OneToOne(mappedBy = "rejection")
+    @ToString.Exclude
     private Ride ride;
 
     @Column(name = "reason", nullable = false)
@@ -28,9 +31,13 @@ public class Rejection {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "rejection_time", nullable = false)
     private LocalDateTime time;
 
+    public Rejection(RejectionDTO rejectionDTO) {
+        this.reason = rejectionDTO.getReason();
+        this.time = rejectionDTO.getTimeOfRejection();
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -16,7 +16,7 @@ public class DriverDocumentServiceJPA {
     private DriverDocumentRepositoryJPA driverDocumentRepositoryJPA;
 
     public DriverDocument findOne(Integer id) {
-        return driverDocumentRepositoryJPA.findById(id).orElseGet(null);
+        return driverDocumentRepositoryJPA.findById(id).orElse(null);
     }
 
     public List<DriverDocument> findAll() {
@@ -35,7 +35,7 @@ public class DriverDocumentServiceJPA {
         driverDocumentRepositoryJPA.deleteById(id);
     }
 
-    public Integer removeByDriverId(Long driverId) { return driverDocumentRepositoryJPA.deleteByDriverId(driverId); }
+    public Integer removeByDriverId(Integer driverId) { return driverDocumentRepositoryJPA.deleteByDriverId(driverId); }
 
 
 }

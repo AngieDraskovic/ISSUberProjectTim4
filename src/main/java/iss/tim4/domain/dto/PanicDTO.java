@@ -7,6 +7,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
 @Data
@@ -15,9 +17,13 @@ import java.time.LocalDateTime;
 public class PanicDTO {
 
     private Integer id;
+    @NotNull (message = "Field user is required!")
     private UserDTO user;
+    @NotNull (message = "Field ride is required!")
     private RideDTOResponse ride;
+    @NotNull (message = "Field message is required!")
     private LocalDateTime time;
+    @NotEmpty (message = "Field reason is required!")
     private String reason;
 
     public PanicDTO(Panic panic){

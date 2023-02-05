@@ -11,12 +11,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class VehicleDTOResult {
 
-    private Long id;
-    private Long driverId;
+    private Integer id;
+    private Integer driverId;
     private VehicleName vehicleType;
     private String model;
     private String licenseNumber;
-    private LocationDTO currLocation;
+    private LocationDTO currentLocation;
     private Integer passengerSeats;
     private Boolean babyTransport;
     private Boolean petTransport;
@@ -28,7 +28,7 @@ public class VehicleDTOResult {
         this.vehicleType = vehicle.getVehicleName();
         this.licenseNumber = vehicle.getRegPlates();
         this.passengerSeats = vehicle.getNumSeats();
-        this.currLocation = new LocationDTO(vehicle.getCurrLocation());
+        this.currentLocation = new LocationDTO(vehicle.getCurrLocation());
         this.babyTransport = vehicle.getBabyProof();
         this.petTransport = vehicle.getPetsAllowed();
     }

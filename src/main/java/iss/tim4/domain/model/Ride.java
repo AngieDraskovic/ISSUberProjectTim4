@@ -1,9 +1,15 @@
 package iss.tim4.domain.model;
 
 import iss.tim4.domain.RideStatus;
-import jakarta.persistence.*;
+import javax.persistence.*;
+
+import iss.tim4.domain.dto.ride.RideDTOExample;
+import iss.tim4.domain.dto.ride.RideDTORequest;
+import iss.tim4.service.PassengerServiceJPA;
 import lombok.*;
+import net.bytebuddy.asm.Advice;
 import org.hibernate.Hibernate;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.HashSet;
@@ -19,12 +25,12 @@ public class Ride {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "start_time", nullable = false)
     private LocalDateTime startTime;
 
-    @Column(name = "end_time", nullable = false)
+    @Column(name = "end_time")      // Ako voznja nije zavrsena, endTime je null
     private LocalDateTime endTime;
 
     @Column(name = "total_cost", nullable = false)
@@ -33,11 +39,11 @@ public class Ride {
     @Column(name = "estimated_time_in_minutes", nullable = false)
     private Double estimatedTimeInMinutes;
 
+    @Column(name = "kilometers", nullable = false)
+    private Double kilometers;
+
     @Column(name = "status", nullable = false)
     private RideStatus status;
-
-    @Column(name = "panic", nullable = false)
-    private Boolean panic;
 
     @Column(name = "babies", nullable = false)
     private Boolean babyTransport;
@@ -67,9 +73,54 @@ public class Ride {
     private Rejection rejection;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "panic_id", referencedColumnName = "id")
+    private Panic panic;
+
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "vehicle_type", referencedColumnName = "id")
     private VehicleType vehicleType;
 
+//    @OneToOne(cascade = CascadeType.ALL)
+//    @JoinColumn(name = "favourite_id", referencedColumnName = "id")
+//    private FavouriteRoute favouriteRoute;
+
+    public Ride(RideDTORequest rideDTO) {
+        this.startTime = rideDTO.getStartTime();
+        this.endTime = null;
+        this.estimatedTimeInMinutes = rideDTO.getEstimatedTime();
+        this.kilometers = rideDTO.getKilometers();
+        this.status = RideStatus.ACCEPTED;
+        this.babyTransport = rideDTO.getBabyTransport();
+        this.petTransport = rideDTO.getPetTransport();
+    }
+
+
+    // for testing :)
+    public Ride(LocalDateTime start, LocalDateTime end, Double price, Double minutes, Double kilometers,
+                RideStatus status, boolean pets, boolean baby){
+        this.startTime = start;
+        this.endTime = end;
+        this.status = status;
+        this.babyTransport = baby;
+        this.petTransport = pets;
+        this.totalCost = price;
+        this.estimatedTimeInMinutes = minutes;
+        this.kilometers = kilometers;
+
+    }
+    public Ride(Integer id, LocalDateTime start, LocalDateTime end, Double price, Double minutes, Double kilometers,
+                RideStatus status, boolean pets, boolean baby){
+        this.id = id;
+        this.startTime = start;
+        this.endTime = end;
+        this.status = status;
+        this.babyTransport = baby;
+        this.petTransport = pets;
+        this.totalCost = price;
+        this.estimatedTimeInMinutes = minutes;
+        this.kilometers = kilometers;
+
+    }
 
     public void addPassenger(Passenger passenger) {
         passengers.add(passenger);
@@ -84,6 +135,12 @@ public class Ride {
     public void addRoute(Route route){
         routes.add(route);
         route.setRide(this);
+    }
+
+    public void setRoutes(Set<Route> routes) {
+        this.routes = routes;
+        for (Route route : routes)
+            route.setRide(this);
     }
 
     public boolean equals(Object o) {
