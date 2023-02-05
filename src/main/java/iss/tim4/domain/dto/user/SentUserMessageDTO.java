@@ -13,7 +13,7 @@ import javax.validation.constraints.Size;
 @NoArgsConstructor
 @AllArgsConstructor
 public class SentUserMessageDTO {
-    private Long id;
+    private Integer id;
     @NotNull (message = "Field timeOfSending is required!")
     private String timeOfSending;
     @NotNull (message = "Field senderId is required!")

@@ -18,15 +18,29 @@ import java.util.Map;
 @Controller
 public class DriverSurveyController {
 
+    public HashMap<Integer, Object> driverRideSurveyThreads = new HashMap<>();
     @Autowired
     private DriverRequestServiceJPA driverRequestServiceJPA;
 
     public Map<Integer, Integer> driverRideAgreement = new HashMap<>();
 
-    @MessageMapping("/driver-survey/{id}/{agree}")
-    public void driverSurveyAnswer(String msg, @DestinationVariable Integer id, @DestinationVariable Integer agree) throws Exception {
-        if (msg.equals("ok")) {
-            driverRideAgreement.put(id, agree);
+    @MessageMapping("/driver-survey/{id}")
+    public void driverSurveyAnswer(Integer agree, @DestinationVariable Integer id) throws Exception {
+        System.out.println("Driver " + id + " agreed to request with code " + agree);
+        driverRideAgreement.put(id, agree);
+        synchronized (driverRideSurveyThreads.get(agree)) {
+            driverRideSurveyThreads.get(agree).notify();
+            driverRideSurveyThreads.remove(agree);
+        }
+    }
+
+    @MessageMapping("/driver-survey/{id}/decline")
+    public void driverSurveyAnswerBad(Integer agree, @DestinationVariable Integer id) throws Exception {
+        System.out.println("Driver " + id + " declined request with code " + agree);
+        driverRideAgreement.put(id, -1);
+        synchronized (driverRideSurveyThreads.get(agree)) {
+            driverRideSurveyThreads.get(agree).notify();
+            driverRideSurveyThreads.remove(agree);
         }
     }
 

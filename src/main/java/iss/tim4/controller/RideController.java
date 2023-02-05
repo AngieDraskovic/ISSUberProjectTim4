@@ -11,6 +11,8 @@ import iss.tim4.domain.dto.ride.RideDTO;
 import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.model.*;
 import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
@@ -55,6 +57,8 @@ public class RideController {
     @Autowired
     private RouteServiceJPA routeServiceJPA;
     @Autowired
+    private RejectionServiceJPA rejectionServiceJPA;
+    @Autowired
     private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
     @Autowired
     private DriverSurveyController driverSurveyController;
@@ -63,9 +67,32 @@ public class RideController {
 
     @Autowired
     private VehicleServiceJPA vehicleServiceJPA;
+
     @Autowired
     private UserServiceJPA userServiceJPA;
+    
+    @Autowired
+    private LocationServiceJPA locationServiceJPA;
+    
+    @Autowired
+    private WorkingHoursServiceJPA workingHoursServiceJPA;
 
+
+    public void updateRideStatus(RideDTOResponse rideDTOResponse) {
+        messagingTemplate.convertAndSend(
+                "/topic/ride-for-driver/" + rideDTOResponse.getDriver().getId(),
+                new GenericMessage<>(rideDTOResponse)
+        );
+        for (var passenger : rideDTOResponse.getPassengers()) {
+            messagingTemplate.convertAndSend(
+                    "/topic/ride-for-passenger/" + passenger.getId(),
+                    new GenericMessage<>(rideDTOResponse)
+            );
+        }
+    }
+
+    
+    
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public <T> ResponseEntity<T> getRide(@PathVariable("id") Integer id) {
@@ -82,12 +109,13 @@ public class RideController {
 //        rideDTO.getLocations()[0].getDeparture()
         rideDTO.setAgreementCode(user.hashCode());
         var actualUser = userServiceJPA.getUser(user.getName());
+        System.out.println(actualUser.getName() + "'s position https://www.google.com/maps/place/" + rideDTO.getLocations()[0].getDeparture().getLatitude() + ",%20" + rideDTO.getLocations()[0].getDeparture().getLongitude());
         if (Arrays.stream(rideDTO.getPassengers()).noneMatch(p -> Objects.equals(p.getId(), actualUser.getId()))) {
             throw new UberException(HttpStatus.BAD_REQUEST, "User should be passenger");
         }
 
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot order a ride with these passengers!");
         }
 
         List<Driver> alreadyChecked = new ArrayList<>();
@@ -110,14 +138,21 @@ public class RideController {
                     "/topic/driver-survey/" + closestDriver.getId(),
                     new GenericMessage<>(rideDTO)
             );
+            System.out.println("Asking driver " + closestDriver.getName() + " with code " + rideDTO.getAgreementCode());
+            System.out.println(closestDriver.getName() + "'s position https://www.google.com/maps/place/" + closestDriver.getVehicle().getCurrLocation().getLatitude() + ",%20" + closestDriver.getVehicle().getCurrLocation().getLongitude());
             try {
-                TimeUnit.SECONDS.sleep(60);
+                Object o = new Object();
+                driverSurveyController.driverRideSurveyThreads.put(rideDTO.getAgreementCode(), o);
+                synchronized (driverSurveyController.driverRideSurveyThreads.get(rideDTO.getAgreementCode())) {
+                    o.wait(120000);
+                }
             } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
+                System.out.println("Interrupted!");
             }
             if (driverSurveyController.driverRideAgreement.containsKey(closestDriver.getId())
                     && Objects.equals(driverSurveyController.driverRideAgreement.get(closestDriver.getId()),
                     rideDTO.getAgreementCode())) {
+                driverSurveyController.driverRideAgreement.remove(closestDriver.getId());
                 messagingTemplate.convertAndSend(
                         "/topic/search-status/" + actualUser.getId(),
                         new GenericMessage<>("Driver found!")
@@ -126,19 +161,22 @@ public class RideController {
                 break;
             } else {
                 DecimalFormat df = new DecimalFormat("0.0");
-                String distance = df.format(closestDriver.getVehicle().getCurrLocation().distanceTo(rideDTO.getLocations()[0].getDeparture()));
+                String distance = df.format(closestDriver.getVehicle().getCurrLocation()
+                        .distanceTo(rideDTO.getLocations()[0].getDeparture()));
                 messagingTemplate.convertAndSend(
                         "/topic/search-status/" + actualUser.getId(),
                         new GenericMessage<>("Increasing radius... (" + distance + " KM)")
                 );
                 alreadyChecked.add(closestDriver);
             }
+
         }
 
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
         VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
+
         Ride newRide = new Ride(rideDTO);
         newRide.setDriver(driver);
         newRide.setTotalCost(totalCost);
@@ -149,10 +187,12 @@ public class RideController {
         newRide.setRoutes(routes);
         newRide.setVehicleType(vehicleType);
         newRide.setStatus(RideStatus.PENDING);
+
         rideServiceJPA.save(newRide);
 
-
-        return new ResponseEntity<>(new RideDTOResponse(newRide), HttpStatus.OK);   // trebalo bi ovdje created
+        RideDTOResponse newRideDTO = new RideDTOResponse(newRide);
+        this.updateRideStatus(newRideDTO);
+        return new ResponseEntity<>(newRideDTO, HttpStatus.OK);   // trebalo bi ovdje created
     }
 
     class CustomResponseEntity<T> extends ResponseEntity<T> {
@@ -265,8 +305,6 @@ public class RideController {
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
-
-
     @GetMapping(value = "/passenger/{passengerId}/active")
     @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
     public <T> ResponseEntity<T> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
@@ -274,10 +312,20 @@ public class RideController {
         if (passenger == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+
+        Ride activeRide = new Ride();
         Set<Ride> rides = passenger.getRides();
-        Ride activeRide = rides.iterator().next();      // ovdje samo zelim da uzmem prvi element liste da vrati, jer sad necu implementirati logiku za aktinu voznju
-        activeRide.setStatus(RideStatus.ACTIVE);            // ovdje ovo nije potrebno, samo za kontrolnu tacku sam ovako uradila
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
 
@@ -289,10 +337,19 @@ public class RideController {
         if (driver == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+        Ride activeRide = new Ride();
         Set<Ride> rides = driver.getRides();
-        Ride activeRide = rides.iterator().next();          // i ovdje kao i u gornjoj metodi :D
-        activeRide.setStatus(RideStatus.ACTIVE);
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
 
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
@@ -304,8 +361,9 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         System.out.println(ride.getStatus());
-        if (!ride.getStatus().equals(RideStatus.PENDING) && !ride.getStatus().equals(RideStatus.STARTED)) {
+        if (!ride.getStatus().equals(RideStatus.ACCEPTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
        // ride.getRejection().setReason("Ride is cancelled by passenger");
@@ -327,6 +385,8 @@ public class RideController {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot accept a ride that is not in status PENDING! ");
         }
         ride.setStatus(RideStatus.ACCEPTED);
+        rideServiceJPA.save(ride);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -355,6 +415,7 @@ public class RideController {
         vehicleServiceJPA.save(vehicle);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
     }
@@ -378,6 +439,7 @@ public class RideController {
         vehicleServiceJPA.save(vehicle);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
     }
@@ -402,6 +464,7 @@ public class RideController {
         rideServiceJPA.save(ride);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
 
     }
@@ -469,7 +532,7 @@ public class RideController {
 
     @DeleteMapping(value = "/favorites/{id}/{passengerId}")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) {
+    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) throws Exception {
         if(rideServiceJPA.findOne(id) == null){
             return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
         }
@@ -482,6 +545,9 @@ public class RideController {
 
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         FavouriteRoute favouriteRoute = passengerServiceJPA.findFavouriteRouteByAddress(passenger, departureAddress, destinationAddress);
+        if (favouriteRoute == null) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot delete route that does not exist!");
+        }
         passenger.getFavouriteRoutes().remove(favouriteRoute);
         passengerServiceJPA.save(passenger);
 
@@ -494,7 +560,7 @@ public class RideController {
 //        passengerServiceJPA.save(passenger);
 
 //        favouriteRouteServiceJPA.remove(id);
-        return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);     // TODO: Treba deleted, ali ne znam koji je status
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
 
     @PutMapping(value = "/{id}/panic-ride")
@@ -515,6 +581,11 @@ public class RideController {
         p.setTime(LocalDateTime.now());
         ride.setPanic(p);
         rideServiceJPA.save(ride);
+
+        Vehicle vehicle = ride.getDriver().getVehicle();
+        vehicle.setAvailable(true);
+        vehicleServiceJPA.save(vehicle);
+
         PanicDTO result = new PanicDTO(p);
         List<User> admins = userServiceJPA.findByRole(Role.ADMIN);
         // sends message to all admins
@@ -540,4 +611,5 @@ public class RideController {
 
         messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(response));
     }
+
 }
