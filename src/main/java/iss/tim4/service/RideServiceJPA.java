@@ -47,13 +47,13 @@ public class RideServiceJPA {
         return rideRepositoryJPA.save(ride);
     }
 
+
+    // NISAM OVU TESTIRALA
     public List<Object[]> getRideWithLocation(){
         return rideRepositoryJPA.getRidesFromRoutes();
     }
 
-    public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
-        return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
-    }
+    // NISAM OVU TESTIRALA
 
     public double calculateCost(RideDTORequest rideDTO) {
         if(rideDTO.getKilometers() < 0) {
@@ -87,8 +87,13 @@ public class RideServiceJPA {
 
         return filteredList;
     }
-
+    // nisam ni ovu testirala
     public List<Ride> getActiveRides(){
         return rideRepositoryJPA.findActiveRides(RideStatus.ACTIVE);
     }
+
+    public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
+        return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
+    }
+
 }

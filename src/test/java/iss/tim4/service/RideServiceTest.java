@@ -60,11 +60,14 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Retrieve Ride By Id")
     public void shouldFindRideById() {
+        //arrrange
         Ride ride = new Ride(123, LocalDateTime.now(), LocalDateTime.now(), 500.0, 5.0,5.0, RideStatus.PENDING, true, true );
         Mockito.when(rideRepository.findById(123)).thenReturn(Optional.of(ride));
 
+        //act
         Ride actualRide = rideService.findOne(123);
 
+        //assert
         verify(rideRepository).findById(123);
 
         Assertions.assertThat(actualRide.getId()).isEqualTo(ride.getId());
@@ -79,21 +82,24 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Return Null If Ride ID does not exist")
     public void shouldNotFindRideThatDoesntExist() {
+        // arrange
         Mockito.when(rideRepository.findById(123)).thenReturn(Optional.empty());
 
+        //act
         Ride ride = rideService.findOne(123);
         verify(rideRepository).findById(123);
-
+        //assert
         Assertions.assertThat(ride).isEqualTo(null);
     }
 
     @Test
     @DisplayName("Test Should Throw An Exception When Ride ID Is Null")
     public void shouldThrowAnExceptionWithIllegalRideId() {
+        //arrange
         Mockito.when(rideRepository.findById(null)).thenAnswer(invocation -> {
             throw new NullPointerException();
         });
-
+        // act and assert
         assertThrows(NullPointerException.class, (Executable) () -> rideService.findOne(null));
     }
 
@@ -101,13 +107,15 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Find All Rides")
     public void shouldFindAllRides() {
+        // arrange
         List<Ride> rides = Arrays.asList(new Ride( LocalDateTime.now(), LocalDateTime.now(), 500.0, 5.0,5.0, RideStatus.PENDING, true, true),
                 new Ride( LocalDateTime.now(), LocalDateTime.now(), 300.0, 2.0,2.0, RideStatus.PENDING, false, false ));
         Mockito.when(rideRepository.findAll()).thenReturn(rides);
+        // act
         List<Ride> result = rideService.findAll();
 
         verify(rideRepository).findAll();
-
+        // assert
         Assertions.assertThat(result).isNotEmpty();
         Assertions.assertThat(result).isEqualTo(rides);
         Assertions.assertThat(result.size()).isEqualTo(2);
@@ -116,10 +124,13 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Retrieve Empty List When Repository Is Empty")
     public void shouldRetrieveEmptyList() {
+        // arrange
         List<Ride> rides = new ArrayList<>();
         Mockito.when(rideRepository.findAll()).thenReturn(rides);
+        // act
         List<Ride> result = rideService.findAll();
 
+        // assert
         verify(rideRepository).findAll();
 
         Assertions.assertThat(result).isEmpty();
@@ -129,12 +140,13 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Find All Rides Pageable")
     public void shouldFindAllRidesPageable() {
+        // arrange
         Pageable pageable = mock(Pageable.class);
         Page<Ride> expectedPage = mock(Page.class);
         Mockito.when(rideRepository.findAll(pageable)).thenReturn(expectedPage);
-
+        //act
         Page<Ride> result = rideService.findAll(pageable);
-
+        //assert
         verify(rideRepository).findAll(pageable);
 
         Assertions.assertThat(result).isEqualTo(expectedPage);
@@ -144,9 +156,12 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Retrieve Null Value With Null Pageable")
     public void shouldTestWithNullPageable() {
+        //arrange
         Pageable pageable = null;
         Mockito.when(rideRepository.findAll(pageable)).thenReturn(null);
+        //act
         Page<Ride> result = rideService.findAll(pageable);
+        //assert
         Assertions.assertThat(result).isNull();
     }
 
@@ -154,11 +169,13 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Find All Rides Passenger Has")
     public void shouldFindPassengersRides(){
+        //arrange
         List<Ride> rides = Arrays.asList(new Ride( LocalDateTime.now(), LocalDateTime.now(), 500.0, 5.0,5.0, RideStatus.PENDING, true, true),
                                         new Ride( LocalDateTime.now(), LocalDateTime.now(), 300.0, 2.0,2.0, RideStatus.PENDING, false, false ));
         Mockito.when(rideRepository.findByPassengerId(PASSENGER_ID)).thenReturn(rides);
+        //act
         List<Ride> result = rideService.findByPassengerId(PASSENGER_ID);
-
+        //assert
         verify(rideRepository).findByPassengerId(PASSENGER_ID);
 
         Assertions.assertThat(result).isNotEmpty();
@@ -169,10 +186,11 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Retrieve An Empty List When Passenger ID Does Not Exist")
     public void shouldRetrieveEmptyListForInvalidId(){
+        //arrange
         Mockito.when(rideRepository.findByPassengerId(INVALID_PASSENGER_ID)).thenReturn(new ArrayList<>());
-
+        //act
         List<Ride> result = rideService.findByPassengerId(INVALID_PASSENGER_ID);
-
+        //assert
         verify(rideRepository).findByPassengerId(INVALID_PASSENGER_ID);
 
         Assertions.assertThat(result).isEmpty();
@@ -183,10 +201,11 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Throw An Exception When Passenger ID Is Null")
     public void shouldThrowExceptionPassengersRides(){
+        //arrange
         Mockito.when(rideRepository.findByPassengerId(null)).thenAnswer(invocation -> {
             throw new NullPointerException();
         });
-
+        //act and assert
         assertThrows(NullPointerException.class, (Executable) () -> rideService.findByPassengerId(null));
 
     }
@@ -197,8 +216,11 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Save New Ride ")
     public void shouldSaveNewRide(){
+        //arrange
         Ride ride = new Ride(123, LocalDateTime.now(), LocalDateTime.now(), 500.0, 5.0,5.0, RideStatus.PENDING, true, true );
+        //act
         rideService.save(ride);
+        //assert
         verify(rideRepository, times(1)).save(rideArgumentCaptor.capture());
         Assertions.assertThat(rideArgumentCaptor.getValue().getId()).isEqualTo(123);
     }
@@ -207,21 +229,23 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Throw Exception For Saving Null Ride ")
     public void shouldThrowExceptionSaveNull(){
+        //arrange
         Mockito.when(rideRepository.save(null)).thenAnswer(invocation -> {
             throw new NullPointerException();
         });
-
+        // act and assert
         assertThrows(NullPointerException.class, (Executable) () -> rideService.save(null));
     }
 
     @Test
     @DisplayName("Test Should Throw Exception For When Saving Invalid Ride ")
     public void shouldThrowExceptionSavingInvalidRide(){
+        //arrange
         Ride ride = new Ride();
         Mockito.when(rideRepository.save(ride)).thenAnswer(invocation -> {
             throw new  ConstraintViolationException("Values of ride cannot be null", null, null, null);
         });
-
+        //act and assert
         assertThrows(ConstraintViolationException.class, (Executable) () -> rideService.save(ride));
     }
 
@@ -233,13 +257,14 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Calculate The Cost Of Ride With Valid Data")
     public void shouldCalculateCost(){
+        // arrange
         RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0,1);
-
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(10.0);
         double expectedCost = 1200.0;
-
+        // act
         double result = rideService.calculateCost(rideDTO);
 
+        // assert
         verify(vehicleTypeService).getPriceForVehicleType(VehicleName.STANDARD);
 
         Assertions.assertThat(result).isEqualTo(expectedCost);
@@ -248,22 +273,22 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Calculate Cost With Zero Kilometers")
     public void shoudCalculateCostWithZeroKilometers() {
-
+        //arrange
         RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 0.0, 1);
         double expectedCost = 0.0;
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(10.0);
-
+        // act
         double result = rideService.calculateCost(rideDTO);
-
+        //assert
         Assertions.assertThat(result).isEqualTo(0);
     }
 
     @Test
     @DisplayName("Test Should Throw An Exception When Calculating Cost With Negative Kilometers")
     public void shouldCalculateCostWithNegativeKilometers() {
-
+        //arrange
         RideDTORequest rideDTO = new RideDTORequest(VehicleName.STANDARD, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, -1.0,1);
-
+        //act and assert
         assertThrows(IllegalArgumentException.class, (Executable) () -> rideService.calculateCost(rideDTO));
 
     }
@@ -271,12 +296,13 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Return Cost Of Ride For Luxury Vehicle Type")
     public void shouldCalculateCostWithDifferentVehicleType() {
+        //arrange
         RideDTORequest rideDTO = new RideDTORequest(VehicleName.LUXURY, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0, 1);
         double expectedCost = 2400.0;
         Mockito.when(vehicleTypeService.getPriceForVehicleType(rideDTO.getVehicleType())).thenReturn(20.0);
-
+        //act
         double result = rideService.calculateCost(rideDTO);
-
+        //assert
         Assertions.assertThat(result).isEqualTo(expectedCost);
 
     }
@@ -284,11 +310,13 @@ RideServiceTest {
     @Test
     @DisplayName("Test Should Throw An Exception When Vehicle Type Is Null")
     public void shouldThrowAnExceptionWhenTypeIsNull() {
+        //arrange
         RideDTORequest rideDTO = new RideDTORequest(null, true, true, new PassengerDTOResult[]{},new RouteDTO[]{}, LocalDateTime.now(), 5.0, 1.0, 1);
-
         Mockito.when(vehicleTypeService.getPriceForVehicleType(null)).thenAnswer(invocation -> {
                     throw new IllegalArgumentException();
                 });
+
+        // act and assert
         assertThrows(IllegalArgumentException.class, (Executable) () -> rideService.calculateCost(rideDTO));
 
 
@@ -497,6 +525,7 @@ RideServiceTest {
 
     }
 
+    // -------
 
 
 

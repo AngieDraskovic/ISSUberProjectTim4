@@ -4,6 +4,7 @@ import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.model.Passenger;
 import iss.tim4.domain.model.Ride;
 
+import iss.tim4.domain.model.Vehicle;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.time.LocalDateTime;
 
@@ -24,7 +26,6 @@ public class RideRepositoryTest {
     private static final Integer PASSENGER_ID = 111;
     private static final Integer DRIVER_ID = 222;
 
-    private static final Integer RIDE_ID = 333;
     @Autowired
     private RideRepositoryJPA rideRepository;
 
@@ -47,10 +48,7 @@ public class RideRepositoryTest {
     public void shouldSaveTroughSqlAndFindByDriver(){
         // act
         List<Ride> rides = rideRepository.findByDriverId(DRIVER_ID);
-
-        for(Ride r : rides ){
-            System.out.println(r.getId());
-        }
+        //assert
         assertThat(rides).isNotEmpty();
         assertThat(rides.size()).isEqualTo(1);
         assertThat(rides.get(0).getDriver().getId()).isEqualTo(DRIVER_ID);
@@ -72,15 +70,25 @@ public class RideRepositoryTest {
         assertThat(rides.get(0).getPassengers().size()).isEqualTo(1);
     }
 
+
     @Test
     @Sql("classpath:data-test.sql")
     public void shouldGetRidesBasedOnRoutes(){
+        //arrange
+        List<Integer> responseIds = new ArrayList<>();
+        List<Integer> rideIds = new ArrayList<>(){};
+        rideIds.add(1);
+        rideIds.add(2);
+        rideIds.add(3);
+        rideIds.add(4);
+        rideIds.add(5);
+        //act
         List<Object[]> ridesFromRoutes = rideRepository.getRidesFromRoutes();
         for(Object[] o : ridesFromRoutes){
-          //  Ride ride = rideServiceJPA.findOne(Integer.parseInt((o[0]).toString()));
-            System.out.println(o[0].toString());
-            //assertThat(Integer.parseInt((o[0]).toString())).isEqualTo(RIDE_ID);
+            responseIds.add(Integer.parseInt(o[0].toString()));
         }
+        //assert
         assertThat(ridesFromRoutes).isNotEmpty();
+        assertThat(responseIds).isEqualTo(rideIds);
     }
 }
