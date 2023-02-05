@@ -11,6 +11,8 @@ import iss.tim4.domain.dto.ride.RideDTO;
 import iss.tim4.domain.dto.ride.RideDTOExample;
 import iss.tim4.domain.dto.ride.RideDTORequest;
 import iss.tim4.domain.dto.ride.RideDTOResponse;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTORequest;
+import iss.tim4.domain.dto.working.hours.WorkingHoursDTOResponse;
 import iss.tim4.domain.model.*;
 import iss.tim4.errors.UberException;
 import iss.tim4.service.*;
@@ -66,6 +68,13 @@ public class RideController {
 
     @Autowired
     private UserServiceJPA userServiceJPA;
+    
+    @Autowired
+    private LocationServiceJPA locationServiceJPA;
+    
+    @Autowired
+    private WorkingHoursServiceJPA workingHoursServiceJPA;
+
 
     public void updateRideStatus(RideDTOResponse rideDTOResponse) {
         messagingTemplate.convertAndSend(
@@ -80,6 +89,8 @@ public class RideController {
         }
     }
 
+    
+    
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public <T> ResponseEntity<T> getRide(@PathVariable("id") Integer id) {
@@ -102,7 +113,7 @@ public class RideController {
         }
 
         if (!passengerServiceJPA.possibleOrder(rideDTO)) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot order a ride with these passengers!");
         }
 
         List<Driver> alreadyChecked = new ArrayList<>();
@@ -156,6 +167,7 @@ public class RideController {
                 );
                 alreadyChecked.add(closestDriver);
             }
+
         }
 
         double totalCost = rideServiceJPA.calculateCost(rideDTO);
@@ -298,10 +310,20 @@ public class RideController {
         if (passenger == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+
+        Ride activeRide = new Ride();
         Set<Ride> rides = passenger.getRides();
-        Ride activeRide = rides.iterator().next();      // ovdje samo zelim da uzmem prvi element liste da vrati, jer sad necu implementirati logiku za aktinu voznju
-        activeRide.setStatus(RideStatus.ACTIVE);            // ovdje ovo nije potrebno, samo za kontrolnu tacku sam ovako uradila
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
 
@@ -313,10 +335,19 @@ public class RideController {
         if (driver == null) {
             return (ResponseEntity<T>) new ResponseEntity<String>("Active ride does not exist", HttpStatus.NOT_FOUND);
         }
+        Ride activeRide = new Ride();
         Set<Ride> rides = driver.getRides();
-        Ride activeRide = rides.iterator().next();          // i ovdje kao i u gornjoj metodi :D
-        activeRide.setStatus(RideStatus.ACTIVE);
-        RideDTOResponse result = new RideDTOResponse(activeRide);
+        for (Ride ride: rides)
+            if (ride.getStatus().equals(RideStatus.ACTIVE)) {
+                activeRide = ride;
+                break;
+            }
+
+        RideDTOResponse result;
+        if (activeRide.getDriver() != null)
+            result = new RideDTOResponse(activeRide);
+        else
+            result = new RideDTOResponse();
 
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
     }
@@ -328,8 +359,9 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+
         System.out.println(ride.getStatus());
-        if (!ride.getStatus().equals(RideStatus.PENDING) && !ride.getStatus().equals(RideStatus.STARTED)) {
+        if (!ride.getStatus().equals(RideStatus.ACCEPTED)) {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot cancel a ride that is not in status PENDING or STARTED! ");
         }
        // ride.getRejection().setReason("Ride is cancelled by passenger");
@@ -351,6 +383,8 @@ public class RideController {
             throw new UberException(HttpStatus.BAD_REQUEST, "Cannot accept a ride that is not in status PENDING! ");
         }
         ride.setStatus(RideStatus.ACCEPTED);
+        rideServiceJPA.save(ride);
+
         RideDTOResponse result = new RideDTOResponse(ride);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
@@ -496,7 +530,7 @@ public class RideController {
 
     @DeleteMapping(value = "/favorites/{id}/{passengerId}")
     @PreAuthorize("hasRole('PASSENGER')")
-    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) {
+    public ResponseEntity<String> deleteFavoriteRoute(@PathVariable("id") Integer id, @PathVariable("passengerId") Integer passengerId) throws Exception {
         if(rideServiceJPA.findOne(id) == null){
             return new ResponseEntity<String>("Favorite location does not exist!", HttpStatus.NOT_FOUND);
         }
@@ -509,6 +543,9 @@ public class RideController {
 
         Passenger passenger = passengerServiceJPA.findOne(passengerId);
         FavouriteRoute favouriteRoute = passengerServiceJPA.findFavouriteRouteByAddress(passenger, departureAddress, destinationAddress);
+        if (favouriteRoute == null) {
+            throw new UberException(HttpStatus.BAD_REQUEST, "Cannot delete route that does not exist!");
+        }
         passenger.getFavouriteRoutes().remove(favouriteRoute);
         passengerServiceJPA.save(passenger);
 
@@ -561,6 +598,7 @@ public class RideController {
     }
 
 
+
     @GetMapping(value="/active")
     public ResponseEntity activeRides(){
         List<Ride> activeRides = rideServiceJPA.getActiveRides();
@@ -571,4 +609,5 @@ public class RideController {
 
         return new ResponseEntity(response, HttpStatus.OK);
     }
+
 }

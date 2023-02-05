@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -32,10 +33,12 @@ public class RideDTO {
     private Double kilometers;
     @NotNull (message = "Field rideStatus is required!")
     private RideStatus rideStatus;
+    @Valid
     private RejectionDTO rejectionDTO;
     private Boolean panic;
     private Boolean babyProof;
     private Boolean pets;
+    @Valid
     private VehicleTypeDTO vehicleType;
 
     public RideDTO(Ride ride) {
