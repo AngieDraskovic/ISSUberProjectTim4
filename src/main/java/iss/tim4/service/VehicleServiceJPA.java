@@ -53,6 +53,8 @@ public class VehicleServiceJPA {
                 System.out.println("Start time:" + ride.getStartTime());
                 System.out.println("End time: " + ride.getEndTime());
                 v.setAvailable(false);
+            }else{
+                v.setAvailable(true);
             }
         }
     }

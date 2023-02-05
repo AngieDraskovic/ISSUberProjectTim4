@@ -26,5 +26,6 @@ public class SocketBrokerConfig implements WebSocketMessageBrokerConfigurer {
 
         registry.addEndpoint("/panic").setAllowedOriginPatterns("*");
         registry.addEndpoint("/panic").setAllowedOriginPatterns("*").withSockJS();
+
     }
 }
