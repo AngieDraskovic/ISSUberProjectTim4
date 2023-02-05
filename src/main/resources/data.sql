@@ -8,7 +8,7 @@ VALUES  ('PASSENGER', true, 'NS, 21000', false, 'alex@gmail.com', 'Alex', 'alex1
 INSERT INTO USERS(id, role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
 VALUES (123, 'PASSENGER', true, 'NS, 21000', false, 'strahinja@gmail.com', 'Strahinja', 'strahinja123', 'strahinja.jpg', 'Erakovic', '+7 977 977 27 21');
 
-INSERT INTO LOCATION (ADDRESS, GEO_LENGTH, GEO_WIDTH)
+INSERT INTO LOCATION (ADDRESS, GEO_WIDTH, GEO_LENGTH)
 VALUES ('dr Svetislava Kasapinovica 33, Novi Sad', 45.259728, 19.813830),
        ('Dorda Raicovica 20, Novi Sad', 45.264812, 19.849088),
        ('Narodnog Fronta 12, Novi Sad', 45.241902, 19.841965),
@@ -61,7 +61,7 @@ VALUES  ('1.jpg', 'DRIVER licence', 6),
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
 VALUES  ('2023-01-17 00:21:20','2023-01-17 01:24:20', 6),
-        ('2022-10-10 20:21:20','2022-10-10 21:21:20', 7),
+        ('2022-10-10 09:21:20','2022-10-10 16:21:20', 7),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 8),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 9),
         ('2023-01-17 02:21:20', '2023-01-17 03:21:20', 6);

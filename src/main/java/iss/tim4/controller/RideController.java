@@ -55,6 +55,8 @@ public class RideController {
     @Autowired
     private RouteServiceJPA routeServiceJPA;
     @Autowired
+    private RejectionServiceJPA rejectionServiceJPA;
+    @Autowired
     private FavouriteRouteServiceJPA favouriteRouteServiceJPA;
     @Autowired
     private DriverSurveyController driverSurveyController;
@@ -63,15 +65,32 @@ public class RideController {
 
     @Autowired
     private VehicleServiceJPA vehicleServiceJPA;
-    @Autowired
-    private UserServiceJPA userServiceJPA;
 
     @Autowired
+    private UserServiceJPA userServiceJPA;
+    
+    @Autowired
     private LocationServiceJPA locationServiceJPA;
+    
     @Autowired
     private WorkingHoursServiceJPA workingHoursServiceJPA;
 
 
+    public void updateRideStatus(RideDTOResponse rideDTOResponse) {
+        messagingTemplate.convertAndSend(
+                "/topic/ride-for-driver/" + rideDTOResponse.getDriver().getId(),
+                new GenericMessage<>(rideDTOResponse)
+        );
+        for (var passenger : rideDTOResponse.getPassengers()) {
+            messagingTemplate.convertAndSend(
+                    "/topic/ride-for-passenger/" + passenger.getId(),
+                    new GenericMessage<>(rideDTOResponse)
+            );
+        }
+    }
+
+    
+    
     // get by id - /api/ride/1
     @GetMapping(value = "/{id}")
     public <T> ResponseEntity<T> getRide(@PathVariable("id") Integer id) {
@@ -88,6 +107,7 @@ public class RideController {
 //        rideDTO.getLocations()[0].getDeparture()
         rideDTO.setAgreementCode(user.hashCode());
         var actualUser = userServiceJPA.getUser(user.getName());
+        System.out.println(actualUser.getName() + "'s position https://www.google.com/maps/place/" + rideDTO.getLocations()[0].getDeparture().getLatitude() + ",%20" + rideDTO.getLocations()[0].getDeparture().getLongitude());
         if (Arrays.stream(rideDTO.getPassengers()).noneMatch(p -> Objects.equals(p.getId(), actualUser.getId()))) {
             throw new UberException(HttpStatus.BAD_REQUEST, "User should be passenger");
         }
@@ -116,14 +136,21 @@ public class RideController {
                     "/topic/driver-survey/" + closestDriver.getId(),
                     new GenericMessage<>(rideDTO)
             );
+            System.out.println("Asking driver " + closestDriver.getName() + " with code " + rideDTO.getAgreementCode());
+            System.out.println(closestDriver.getName() + "'s position https://www.google.com/maps/place/" + closestDriver.getVehicle().getCurrLocation().getLatitude() + ",%20" + closestDriver.getVehicle().getCurrLocation().getLongitude());
             try {
-                TimeUnit.SECONDS.sleep(60);
+                Object o = new Object();
+                driverSurveyController.driverRideSurveyThreads.put(rideDTO.getAgreementCode(), o);
+                synchronized (driverSurveyController.driverRideSurveyThreads.get(rideDTO.getAgreementCode())) {
+                    o.wait(120000);
+                }
             } catch (InterruptedException ie) {
-                Thread.currentThread().interrupt();
+                System.out.println("Interrupted!");
             }
             if (driverSurveyController.driverRideAgreement.containsKey(closestDriver.getId())
                     && Objects.equals(driverSurveyController.driverRideAgreement.get(closestDriver.getId()),
                     rideDTO.getAgreementCode())) {
+                driverSurveyController.driverRideAgreement.remove(closestDriver.getId());
                 messagingTemplate.convertAndSend(
                         "/topic/search-status/" + actualUser.getId(),
                         new GenericMessage<>("Driver found!")
@@ -132,7 +159,8 @@ public class RideController {
                 break;
             } else {
                 DecimalFormat df = new DecimalFormat("0.0");
-                String distance = df.format(closestDriver.getVehicle().getCurrLocation().distanceTo(rideDTO.getLocations()[0].getDeparture()));
+                String distance = df.format(closestDriver.getVehicle().getCurrLocation()
+                        .distanceTo(rideDTO.getLocations()[0].getDeparture()));
                 messagingTemplate.convertAndSend(
                         "/topic/search-status/" + actualUser.getId(),
                         new GenericMessage<>("Increasing radius... (" + distance + " KM)")
@@ -146,6 +174,7 @@ public class RideController {
         Set<Passenger> passengers = passengerServiceJPA.getPassengers(rideDTO.getPassengers());
         Set<Route> routes = routeServiceJPA.getRoutes(rideDTO);
         VehicleType vehicleType = vehicleTypeServiceJPA.findByVehicleName(rideDTO.getVehicleType());
+
         Ride newRide = new Ride(rideDTO);
         newRide.setDriver(driver);
         newRide.setTotalCost(totalCost);
@@ -156,10 +185,12 @@ public class RideController {
         newRide.setRoutes(routes);
         newRide.setVehicleType(vehicleType);
         newRide.setStatus(RideStatus.PENDING);
+
         rideServiceJPA.save(newRide);
 
-
-        return new ResponseEntity<>(new RideDTOResponse(newRide), HttpStatus.OK);   // trebalo bi ovdje created
+        RideDTOResponse newRideDTO = new RideDTOResponse(newRide);
+        this.updateRideStatus(newRideDTO);
+        return new ResponseEntity<>(newRideDTO, HttpStatus.OK);   // trebalo bi ovdje created
     }
 
     class CustomResponseEntity<T> extends ResponseEntity<T> {
@@ -272,8 +303,6 @@ public class RideController {
         return new ResponseEntity<>(rideDTOResponses, HttpStatus.OK);
     }
 
-
-
     @GetMapping(value = "/passenger/{passengerId}/active")
     @PreAuthorize("hasAnyRole('PASSENGER', 'ADMIN')")
     public <T> ResponseEntity<T> getPassengerActiveRide(@PathVariable("passengerId") Integer passengerId) {
@@ -384,6 +413,7 @@ public class RideController {
         vehicleServiceJPA.save(vehicle);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
     }
@@ -407,6 +437,7 @@ public class RideController {
         vehicleServiceJPA.save(vehicle);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<RideDTOResponse>(result, HttpStatus.OK);
 
     }
@@ -431,6 +462,7 @@ public class RideController {
         rideServiceJPA.save(ride);
 
         RideDTOResponse result = new RideDTOResponse(ride);
+        updateRideStatus(result);
         return (ResponseEntity<T>) new ResponseEntity<>(result, HttpStatus.OK);
 
     }
@@ -526,7 +558,7 @@ public class RideController {
 //        passengerServiceJPA.save(passenger);
 
 //        favouriteRouteServiceJPA.remove(id);
-        return new ResponseEntity<>("Deleted", HttpStatus.NO_CONTENT);     // TODO: Treba deleted, ali ne znam koji je status
+        return new ResponseEntity<>("Deleted", HttpStatus.OK);     // TODO: Treba deleted, ali ne znam koji je status
     }
 
     @PutMapping(value = "/{id}/panic-ride")
@@ -547,6 +579,11 @@ public class RideController {
         p.setTime(LocalDateTime.now());
         ride.setPanic(p);
         rideServiceJPA.save(ride);
+
+        Vehicle vehicle = ride.getDriver().getVehicle();
+        vehicle.setAvailable(true);
+        vehicleServiceJPA.save(vehicle);
+
         PanicDTO result = new PanicDTO(p);
         List<User> admins = userServiceJPA.findByRole(Role.ADMIN);
         // sends message to all admins
