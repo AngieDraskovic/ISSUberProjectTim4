@@ -482,7 +482,8 @@ public class RideController {
 
 
     @PostMapping(value = "/favorites", consumes = "application/json")
-    @PreAuthorize("hasRole('PASSENGER')")
+    @PreAuthorize("" +
+            "('PASSENGER')")
     public ResponseEntity<FavouriteRouteDTOResult> createFavouriteRoutes(@RequestBody FavouriteRouteDTORequest favouriteRouteDTORequest) throws Exception {
 
         FavouriteRoute favouriteRoute = new FavouriteRoute(favouriteRouteDTORequest);

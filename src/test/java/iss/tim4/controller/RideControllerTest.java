@@ -510,6 +510,16 @@ public class RideControllerTest {
 //
 //    }
 
+    @Test
+    @DisplayName("Test Should Retrieve All Rides")
+    @Sql("classpath:data-test.sql")
+    public void shouldReturnAllRides() throws Exception {
+        mockMvc.perform(get("/api/ride/all"))
+                .andExpect(status().is(200))
+                .andExpect(content().contentType(MediaType.APPLICATION_JSON))
+                .andExpect(jsonPath("$.size()", Matchers.is(8)));
+    }
+
 
 
 }
