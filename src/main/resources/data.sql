@@ -1,5 +1,5 @@
 INSERT INTO USERS(role, active, address, blocked, email, name, password, profile_picture, surname, telephone_number)
-VALUES  ('PASSENGER', true, 'NS, 21000', false, 'alex@gmail.com', 'Alex', 'alex123', 'alex.jpg', 'Mishutkin', '+7 977 977 27 20'),
+VALUES  ('PASSENGER', true, 'NS, 21000', true, 'alex@gmail.com', 'Alex', 'alex123', 'alex.jpg', 'Mishutkin', '+7 977 977 27 20'),
         ('PASSENGER', true, 'NS, 21000', false, 'ana@gmail.com', 'Ana', 'ana123', 'ana.jpg', 'Draskovic', '+7 977 977 27 22'),
         ('PASSENGER', true, 'NS, 21000', false, 'mirko@gmail.com', 'Mirko', 'mirko123', 'mirko.jpg', 'Ivanic', '+7 977 977 27 23'),
         ('PASSENGER', true, 'NS, 21000', false, 'nemanja@gmail.com', 'Nemanja', 'nemanja123', 'nemanja.jpg', 'Stojcevic', '+7 977 977 27 24'),
@@ -61,7 +61,7 @@ VALUES  ('1.jpg', 'DRIVER licence', 6),
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
 VALUES  ('2023-01-17 00:21:20','2023-01-17 01:24:20', 6),
-        ('2022-10-10 09:21:20','2022-10-10 16:21:20', 7),
+        ('2022-10-10 15:21:20','2022-10-10 21:21:20', 7),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 8),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 9),
         ('2023-01-17 02:21:20', '2023-01-17 03:21:20', 6);
