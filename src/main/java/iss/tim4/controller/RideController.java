@@ -488,13 +488,19 @@ public class RideController {
         FavouriteRoute favouriteRoute = new FavouriteRoute(favouriteRouteDTORequest);
 
         Set<Passenger> passengers = new HashSet<Passenger>();
+        Passenger lastPassenger = new Passenger();
         for (PassengerRideDTO passengerRideDTO : favouriteRouteDTORequest.getPassengers()) {
-            passengers.add(passengerServiceJPA.findOne(passengerRideDTO.getId()));
+            lastPassenger = passengerServiceJPA.findOne(passengerRideDTO.getId());
+            passengers.add(lastPassenger);
         }
         Set<Route> locations = routeServiceJPA.getRoutes2(favouriteRouteDTORequest.getLocations());
 
         favouriteRoute.setPassengers(passengers);
         favouriteRoute.setLocations(locations);
+
+        for (FavouriteRoute passengerFavorite : lastPassenger.getFavouriteRoutes())
+            if (passengerFavorite.equals(favouriteRoute))
+                throw new UberException(HttpStatus.BAD_REQUEST, "Already exist in favorite routes.");
 
         favouriteRouteServiceJPA.save(favouriteRoute);
         FavouriteRouteDTOResult favouriteRouteDTOResult = new FavouriteRouteDTOResult(favouriteRoute);

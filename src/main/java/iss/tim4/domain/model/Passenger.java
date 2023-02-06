@@ -49,12 +49,8 @@ public class Passenger extends User {
 
 
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Passenger that = (Passenger) o;
-        return id != null && Objects.equals(id, that.id);
+    public boolean equals(Passenger o) {
+        return Objects.equals(o.id, this.id);
     }
 
     @Override
