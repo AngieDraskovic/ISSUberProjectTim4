@@ -1,5 +1,6 @@
 package iss.tim4.service;
 
+import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.model.Driver;
 import iss.tim4.domain.model.Ride;
 import iss.tim4.domain.model.Vehicle;
@@ -47,15 +48,13 @@ public class VehicleServiceJPA {
         List<Object[]> listOfRideswithRoutes = rideServiceJPA.getRideWithLocation();
         for(Object[] o : listOfRideswithRoutes){
             Ride ride = rideServiceJPA.findOne(Integer.parseInt((o[0]).toString()));
+            if (ride.getStatus() != RideStatus.ACCEPTED && ride.getStatus() != RideStatus.ACTIVE) {
+                continue;
+            }
             Object[] vehicleObject = vehicleRepositoryJPA.getDriversVehicle(ride.getDriver().getId());
             Vehicle v = findOne(Integer.parseInt(vehicleObject[0].toString()));
-            if(ride.getStartTime().isBefore(LocalDateTime.now()) &&  ride.getEndTime().isAfter(LocalDateTime.now())) {
-                System.out.println("Start time:" + ride.getStartTime());
-                System.out.println("End time: " + ride.getEndTime());
-                v.setAvailable(false);
-            }else{
-                v.setAvailable(true);
-            }
+            v.setAvailable(!ride.getStartTime().isBefore(LocalDateTime.now()) ||
+                    (ride.getEndTime() != null && !ride.getEndTime().isAfter(LocalDateTime.now())));
         }
     }
 }
