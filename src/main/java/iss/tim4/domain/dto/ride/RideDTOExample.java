@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
 
@@ -16,7 +17,9 @@ import java.time.LocalDateTime;
 public class RideDTOExample {
     private boolean babyTransport;
     private boolean petTransport;
+    @Valid
     private PassengerDTOResult[] passengers;
+    @Valid
     private RouteDTO[] locations;
 
     @NotNull (message = "Field vehicleName is required!")

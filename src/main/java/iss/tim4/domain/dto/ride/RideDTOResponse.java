@@ -1,5 +1,7 @@
 package iss.tim4.domain.dto.ride;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.jsr310.ser.LocalDateTimeSerializer;
 import iss.tim4.domain.RideStatus;
 import iss.tim4.domain.VehicleName;
 import iss.tim4.domain.dto.RejectionDTO;
@@ -16,6 +18,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDateTime;
@@ -28,7 +31,9 @@ public class RideDTOResponse {
 
     private Integer id;
     @NotNull(message = "Field startTime is required!")
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime startTime;
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
     private LocalDateTime endTime;
     @NotNull (message = "Field totalCost is required!")
     private Double totalCost;
@@ -40,6 +45,7 @@ public class RideDTOResponse {
     private Double kilometers;
     @NotNull (message = "Field status is required!")
     private RideStatus status;
+    @Valid
     private RejectionDTO rejection;
     private Boolean babyTransport;
     private Boolean petTransport;
@@ -53,7 +59,9 @@ public class RideDTOResponse {
     private String departure;
     @NotNull (message = "Field destination is required!")
     private String destination;
+    @Valid
     private ReviewDTOResult[] reviews;
+    @Valid
     private FavouriteRouteDTOResult favouriteRoute;
 
     public RideDTOResponse(Ride ride) {
