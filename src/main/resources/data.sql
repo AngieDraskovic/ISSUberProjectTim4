@@ -38,11 +38,11 @@ VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
 
 INSERT INTO USERS
 (ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
-VALUES ('DRIVER', false, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', 'dejan.jpg', 'Stankovic', '+8 977 977 27 20', 1),
-       ('DRIVER', false, 'NS, 21000 2', false, 'vladan@gmail.com', 'Vladan', 'vladan123', 'vladan.jpg', 'Milojevic', '+8 977 977 27 21', 2),
-       ('DRIVER', false, 'NS, 21000 3', true, 'milos@gmail.com', 'Milos', 'milos123', 'milos.jpg', 'Milojevic', '+8 977 977 27 22', 3),
-       ('DRIVER', false, 'NS, 21000 4', false, 'aleksandar@gmail.com', 'Aleksandar', 'aleksandar123', 'aleksandar.jpg', 'Jakovljevic', '+8 977 977 27 23', 4),
-       ('DRIVER', false, 'NS, 21000 5', false, 'jelena@gmail.com', 'Jelena', 'jelena123', 'jelena.jpg', 'Jakovljevic', '+8 977 977 27 5', 5);
+VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', 'dejan.jpg', 'Stankovic', '+8 977 977 27 20', 1),
+       ('DRIVER', true, 'NS, 21000 2', false, 'vladan@gmail.com', 'Vladan', 'vladan123', 'vladan.jpg', 'Milojevic', '+8 977 977 27 21', 2),
+       ('DRIVER', true, 'NS, 21000 3', true, 'milos@gmail.com', 'Milos', 'milos123', 'milos.jpg', 'Milojevic', '+8 977 977 27 22', 3),
+       ('DRIVER', true, 'NS, 21000 4', false, 'aleksandar@gmail.com', 'Aleksandar', 'aleksandar123', 'aleksandar.jpg', 'Jakovljevic', '+8 977 977 27 23', 4),
+       ('DRIVER', true, 'NS, 21000 5', false, 'jelena@gmail.com', 'Jelena', 'jelena123', 'jelena.jpg', 'Jakovljevic', '+8 977 977 27 5', 5);
 
 -- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
 
@@ -61,7 +61,7 @@ VALUES  ('1.jpg', 'DRIVER licence', 6),
 
 INSERT INTO WORKING_HOURS(START_TIME, END_TIME, DRIVER_ID)
 VALUES  ('2023-01-17 00:21:20','2023-01-17 01:24:20', 6),
-        ('2022-10-10 09:21:20','2022-10-10 16:21:20', 7),
+        ('2022-10-10 15:21:20','2022-10-10 21:21:20', 7),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 8),
         ('2022-10-10 10:21:20','2022-10-10 17:21:20', 9),
         ('2023-01-17 02:21:20', '2023-01-17 03:21:20', 6);
