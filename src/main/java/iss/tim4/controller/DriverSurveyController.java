@@ -23,6 +23,7 @@ public class DriverSurveyController {
     private DriverRequestServiceJPA driverRequestServiceJPA;
 
     public Map<Integer, Integer> driverRideAgreement = new HashMap<>();
+    public Map<Integer, Integer> driverRideAgreementTest = new HashMap<>();
 
     @MessageMapping("/driver-survey/{id}")
     public void driverSurveyAnswer(Integer agree, @DestinationVariable Integer id) throws Exception {

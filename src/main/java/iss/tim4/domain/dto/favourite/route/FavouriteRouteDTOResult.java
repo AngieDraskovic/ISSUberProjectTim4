@@ -21,15 +21,15 @@ import java.util.Set;
 public class FavouriteRouteDTOResult {
 
     private Integer id;
-    @NotEmpty(message = "Field favoriteName is required!")
+
     private String favoriteName;
-    @NotNull (message = "Field scheduledTime is required!")
+
     private LocalDateTime scheduledTime;
-    @NotNull(message = "Field locations is required!")
+
     private RouteDTO[] locations;
-    @NotNull (message = "Field passengers is required!")
+
     private PassengerRideDTO[] passengers;
-    @NotNull (message = "Field vehicleType is required!")
+
     private VehicleName vehicleType;
     private boolean babyTransport;
     private boolean petTransport;

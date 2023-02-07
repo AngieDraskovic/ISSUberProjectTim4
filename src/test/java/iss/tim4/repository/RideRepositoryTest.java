@@ -91,4 +91,15 @@ public class RideRepositoryTest {
         assertThat(ridesFromRoutes).isNotEmpty();
         assertThat(responseIds).isEqualTo(rideIds);
     }
+
+    @Test
+    @Sql("classpath:data-test.sql")
+    public void shouldFindActiveRides() {
+        List<Ride> activeRides = rideRepository.findActiveRides(RideStatus.ACTIVE);
+        assertThat(activeRides).isNotEmpty();
+        for (Ride r : activeRides) {
+            assertThat(r.getStatus().equals(RideStatus.ACTIVE));
+            }
+        }
+
 }

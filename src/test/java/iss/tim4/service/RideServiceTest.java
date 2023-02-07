@@ -527,6 +527,25 @@ RideServiceTest {
 
     // -------
 
+    @Test
+    @DisplayName("Test Should Return Active Rides")
+    public void shouldReturnActiveRides(){
+        Ride ride1 = new Ride(LocalDateTime.of(2023, 1, 15, 10, 30),
+                LocalDateTime.of(2023, 1, 15, 10, 33),
+                500.0, 5.0,5.0, RideStatus.ACTIVE, true, true );
+        Ride ride2 = new Ride(LocalDateTime.of(2023, 1, 20, 10, 30),
+                LocalDateTime.of(2023, 1, 20, 10, 33),
+                500.0, 5.0,5.0, RideStatus.ACTIVE, true, true );
+        List<Ride> activeRides = new ArrayList<>();
+        activeRides.add(ride1);
+        activeRides.add(ride2);
+        Mockito.when(rideRepository.findActiveRides(RideStatus.ACTIVE)).thenReturn(activeRides);
+
+        List<Ride> result = rideService.getActiveRides();
+        Assertions.assertThat(result).isNotEmpty();
+        Assertions.assertThat(result).isEqualTo(activeRides);
+    }
+
 
 
 

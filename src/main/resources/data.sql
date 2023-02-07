@@ -30,7 +30,7 @@ INSERT INTO VEHICLE
 VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
        (false, 'Audi', 4, true, '2FK-3DS', 0, 2,  true),
        (true, 'Reno', 4, true, '3FK-3DS', 0, 3, true),
-       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, false),
+       (true, 'Malinovaja Lada', 2, true, '4FK-3DS', 0, 4, true),
        (false, 'Belarus', 1, true, '5FK-3DS',0, 5, true),
        (false, 'Citroen C4', 1, true, '5FK-3DS',0, 6, true),
        (false, 'BMW X1', 1, true, '5FK-3DS',0, 7, true),

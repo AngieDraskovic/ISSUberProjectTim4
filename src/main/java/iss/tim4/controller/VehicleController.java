@@ -47,6 +47,7 @@ public class VehicleController {
         List<VehicleDTOResponse> vehicleDTOResponses = new ArrayList<>();
         for (Vehicle v : vehicles) {
             VehicleDTOResponse result = new VehicleDTOResponse(v);
+            System.out.println(result.getCurrentLocation().getLatitude() + " " + result.getCurrentLocation().getLongitude());
             vehicleDTOResponses.add(result);
         }
         messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(vehicleDTOResponses));

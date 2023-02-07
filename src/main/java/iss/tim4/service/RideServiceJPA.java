@@ -53,8 +53,6 @@ public class RideServiceJPA {
         return rideRepositoryJPA.getRidesFromRoutes();
     }
 
-    // NISAM OVU TESTIRALA
-
     public double calculateCost(RideDTORequest rideDTO) {
         if(rideDTO.getKilometers() < 0) {
             throw new IllegalArgumentException("Kilometers can not be negative");
@@ -87,13 +85,11 @@ public class RideServiceJPA {
 
         return filteredList;
     }
-    // nisam ni ovu testirala
+
     public List<Ride> getActiveRides(){
         return rideRepositoryJPA.findActiveRides(RideStatus.ACTIVE);
     }
 
-    public UberPageDTO<OneRideOfPassengerDTO> getAllRides(Pageable pageable) {
-        return new UberPageDTO<>(findAll(pageable).map(OneRideOfPassengerDTO::new));
-    }
+
 
 }
