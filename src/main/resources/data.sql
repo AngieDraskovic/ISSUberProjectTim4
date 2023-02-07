@@ -38,11 +38,11 @@ VALUES (true, 'Tesla', 4, true, '1FK-3DS', 1, 1, true),
 
 INSERT INTO USERS
 (ROLE, ACTIVE, ADDRESS, BLOCKED, EMAIL, NAME, PASSWORD, PROFILE_PICTURE, SURNAME, TELEPHONE_NUMBER, VEHICLE_ID)
-VALUES ('DRIVER', true, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', 'dejan.jpg', 'Stankovic', '+8 977 977 27 20', 1),
-       ('DRIVER', true, 'NS, 21000 2', false, 'vladan@gmail.com', 'Vladan', 'vladan123', 'vladan.jpg', 'Milojevic', '+8 977 977 27 21', 2),
-       ('DRIVER', true, 'NS, 21000 3', true, 'milos@gmail.com', 'Milos', 'milos123', 'milos.jpg', 'Milojevic', '+8 977 977 27 22', 3),
-       ('DRIVER', true, 'NS, 21000 4', false, 'aleksandar@gmail.com', 'Aleksandar', 'aleksandar123', 'aleksandar.jpg', 'Jakovljevic', '+8 977 977 27 23', 4),
-       ('DRIVER', true, 'NS, 21000 5', false, 'jelena@gmail.com', 'Jelena', 'jelena123', 'jelena.jpg', 'Jakovljevic', '+8 977 977 27 5', 5);
+VALUES ('DRIVER', false, 'NS, 21000', false, 'dejan@gmail.com', 'Dejan', 'dejan123', 'dejan.jpg', 'Stankovic', '+8 977 977 27 20', 1),
+       ('DRIVER', false, 'NS, 21000 2', false, 'vladan@gmail.com', 'Vladan', 'vladan123', 'vladan.jpg', 'Milojevic', '+8 977 977 27 21', 2),
+       ('DRIVER', false, 'NS, 21000 3', true, 'milos@gmail.com', 'Milos', 'milos123', 'milos.jpg', 'Milojevic', '+8 977 977 27 22', 3),
+       ('DRIVER', false, 'NS, 21000 4', false, 'aleksandar@gmail.com', 'Aleksandar', 'aleksandar123', 'aleksandar.jpg', 'Jakovljevic', '+8 977 977 27 23', 4),
+       ('DRIVER', false, 'NS, 21000 5', false, 'jelena@gmail.com', 'Jelena', 'jelena123', 'jelena.jpg', 'Jakovljevic', '+8 977 977 27 5', 5);
 
 -- NOT INSERT DRIVER WITH ID 123 BACAUSE WE ALREADY HAVE PASENGER WITH ID 123, ALL USERS ARE IN THE SAME TABLE USERS
 
