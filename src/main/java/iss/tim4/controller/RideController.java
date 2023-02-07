@@ -601,16 +601,15 @@ public class RideController {
 
 
 
-    @Transactional
-    @Scheduled(cron = "*/5 * * * * *")
-    public void activeRides(){
-        List<Ride> activeRides = rideServiceJPA.getActiveRides();
-        List<RideDTO> response = new ArrayList<>();
-        for(Ride r : activeRides){
-            response.add(new RideDTO(r));
-        }
-
-        messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(response));
-    }
-
+//    @Transactional
+//    @Scheduled(cron = "*/5 * * * * *")
+//    public void activeRides(){
+//        List<Ride> activeRides = rideServiceJPA.getActiveRides();
+//        List<RideDTOResponse> response = new ArrayList<>();
+//        for(Ride r : activeRides){
+//            response.add(new RideDTOResponse(r));
+//        }
+//
+//        messagingTemplate.convertAndSend("/topic/rides", new GenericMessage<>(response));
+//    }
 }

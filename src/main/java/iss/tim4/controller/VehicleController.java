@@ -23,6 +23,7 @@ import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 @RestController
 @RequestMapping("/api/vehicle")
@@ -38,9 +39,11 @@ public class VehicleController {
 
     @Autowired
     private SimpMessagingTemplate messagingTemplate;
+
+    private final Random random = new Random();
     // #1
     @Transactional
-    @Scheduled(cron = "*/5 * * * * *")
+    @Scheduled(cron = "*/1 * * * * *")
     public void getAllVehicles() {
         vehicleServiceJPA.checkVehicleAvailability();
         List<Vehicle> vehicles = vehicleServiceJPA.findAll();
@@ -50,6 +53,17 @@ public class VehicleController {
             vehicleDTOResponses.add(result);
         }
         messagingTemplate.convertAndSend("/topic/vehicles", new GenericMessage<>(vehicleDTOResponses));
+    }
+
+    @Transactional
+    @Scheduled(cron = "*/1 * * * * *")
+    public void moveCars(){
+        for (Vehicle v : vehicleServiceJPA.findAll()) {
+            Location l = v.getCurrLocation();
+            l.setLatitude(l.getLatitude() + random.nextDouble(-00.001, 00.001));
+            l.setLongitude(l.getLongitude() + random.nextDouble(-00.001, 00.001));
+            locationServiceJPA.save(l);
+        }
     }
 
 
