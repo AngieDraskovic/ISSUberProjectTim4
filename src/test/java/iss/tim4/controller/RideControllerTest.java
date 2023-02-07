@@ -161,9 +161,7 @@ public class RideControllerTest {
     }
 
 
-
-
-    /* TODO IMPLEMENTIRATI KADA ZAVRSIMO DO KRAJA POST RIDE :) */
+    
     @Test
     @DisplayName("Test Should Retrieve Passenger Ride History /api/ride/passenger/rideHistory")
     @Sql("classpath:data-test.sql")
