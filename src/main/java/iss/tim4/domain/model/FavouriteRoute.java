@@ -82,4 +82,21 @@ public class FavouriteRoute {
 //        this.locations = ride.getRoutes();
 
     }
+
+    public boolean equals(FavouriteRoute other) {
+        for (Route route : other.locations)
+            for (Route route1 : this.locations){
+                if (!route.getStartLocation().equals(route1.getStartLocation()) || !route.getEndLocation().equals(route1.getEndLocation()))
+                    return false;
+            }
+        if (!other.vehicleType.equals(this.vehicleType))
+            return false;
+        if (other.babyTransport != this.babyTransport)
+            return false;
+        if (other.petTransport != this.petTransport)
+            return false;
+
+        return other.passengers.equals(this.passengers);
+    }
+
 }

@@ -41,12 +41,8 @@ public class Location {
         this.longitude = v1;
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
-        Location location = (Location) o;
-        return id != null && Objects.equals(id, location.id);
+    public boolean equals(Location o) {
+        return o.address.equals(this.address);
     }
 
     @Override
